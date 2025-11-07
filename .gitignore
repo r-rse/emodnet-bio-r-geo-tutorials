@@ -5,3 +5,10 @@
 .attic
 .claude
 claude.md
+
+# Quarto
+_site/
+.quarto/
+
+# Cached data
+data-cache/

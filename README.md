@@ -1,5 +1,8 @@
 # EMODnet Biology R Geospatial Tutorials
 
+[![License: CC BY 4.0](https://img.shields.io/badge/License%20(content)-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![License: MIT](https://img.shields.io/badge/License%20(code)-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A collection of R-based geospatial tutorials demonstrating how to access and analyze marine biological and environmental data from EMODnet Biology and other EMODnet thematic portals using the `emodnet.wfs` and `emodnet.wcs` R packages.
 
 ## Overview
@@ -71,10 +74,10 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on the con
 
 This project uses a dual license:
 
--   **Tutorial content** (text, documentation): [CC-BY 4.0](LICENSE-CC-BY)
+-   **Tutorial content** (text, documentation): [CC-BY 4.0](LICENSE-CC-BY-4.0)
 -   **Code** (R scripts, functions): [MIT License](LICENSE-MIT)
 
-See individual LICENSE files for details.
+See [LICENSE](LICENSE) for an overview and individual license files for full legal text.
 
 ## Citation
 

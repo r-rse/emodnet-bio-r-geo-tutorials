@@ -1,0 +1,25 @@
+# License
+
+This project uses a dual licensing structure to appropriately cover different types of content:
+
+## Content License
+
+All tutorial content, documentation, text, and non-code materials in this repository are licensed under the **Creative Commons Attribution 4.0 International License (CC-BY 4.0)**.
+
+See [LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0) for full license text.
+
+## Code License
+
+All source code, including R scripts, functions, and software implementations in this repository are licensed under the **MIT License**.
+
+See [LICENSE-MIT](LICENSE-MIT) for full license text.
+
+## What This Means
+
+- **For tutorial content and documentation**: You are free to share and adapt the material for any purpose, even commercially, as long as you provide appropriate attribution.
+
+- **For code**: You are free to use, modify, and distribute the code, even for commercial purposes, with minimal restrictions.
+
+## Questions
+
+If you have questions about licensing or how to properly attribute this work, please open an issue in this repository.

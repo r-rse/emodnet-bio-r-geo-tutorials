@@ -42,23 +42,24 @@ To follow along with the tutorials, you'll need:
 
 Install the required packages to run the tutorial code:
 
+*Note:** EMODnet packages are not yet on CRAN, install from GitHub:
 ``` r
-# Install EMODnet packages
-install.packages("emodnet.wfs")
-install.packages("emodnet.wcs")
+# EMODnet packages are not on CRAN yet:
+install.packages("pak")
+# install emodnet.wfs
+# from ropensci r-universe
+install.packages("emodnet.wfs", repos = c("https://ropensci.r-universe.dev", "https://cloud.r-project.org"))
+# or dev version from GitHub
+pak::pak("EMODnet/emodnet.wfs")
+# install emodnet.wcs
+# dev version from GitHub
+pak::pak("EMODnet/emodnet.wcs")
 
-# Install supporting packages
-install.packages(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
+# Install required packages manually
+pak::pak(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
 
 # For Tutorial 4, also install:
-install.packages(c("CopernicusMarine", "worrms"))
-```
-
-**Note:** If packages are not yet on CRAN, install from GitHub:
-``` r
-install.packages("remotes")
-remotes::install_github("EMODnet/emodnet.wfs")
-remotes::install_github("EMODnet/emodnet.wcs")
+pak::pak(c("CopernicusMarine", "worrms"))
 ```
 
 ## Contributing

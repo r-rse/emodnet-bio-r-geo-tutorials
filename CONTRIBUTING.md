@@ -35,7 +35,13 @@ Open R or RStudio in the project directory and run:
 ```r
 # EMODnet packages are not on CRAN yet:
 install.packages("pak")
+# install emodnet.wfs
+# from ropensci r-universe
+install.packages("emodnet.wfs", repos = c("https://ropensci.r-universe.dev", "https://cloud.r-project.org"))
+# or dev version from GitHub
 pak::pak("EMODnet/emodnet.wfs")
+# install emodnet.wcs
+# dev version from GitHub
 pak::pak("EMODnet/emodnet.wcs")
 
 # Install required packages manually

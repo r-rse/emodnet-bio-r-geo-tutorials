@@ -1,5 +1,9 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "!CONTRIBUTING.md"
+    - "!README.md"
 
 website:
   title: "emodnet-bio-r-geo-tutorials"

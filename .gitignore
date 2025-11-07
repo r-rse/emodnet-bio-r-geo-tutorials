@@ -12,3 +12,5 @@ _site/
 
 # Cached data
 data-cache/
+
+/.quarto/

@@ -33,17 +33,16 @@ cd emodnet-bio-r-geo-tutorials
 Open R or RStudio in the project directory and run:
 
 ```r
+# EMODnet packages are not on CRAN yet:
+install.packages("pak")
+pak::pak("EMODnet/emodnet.wfs")
+pak::pak("EMODnet/emodnet.wcs")
+
 # Install required packages manually
-install.packages(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap",
-                   "emodnet.wfs", "emodnet.wcs"))
+pak::pak(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
 
 # For Tutorial 4, also install:
-install.packages(c("CopernicusMarine", "worrms"))
-
-# If EMODnet packages are not on CRAN yet:
-install.packages("remotes")
-remotes::install_github("EMODnet/emodnet.wfs")
-remotes::install_github("EMODnet/emodnet.wcs")
+pak::pak(c("CopernicusMarine", "worrms"))
 
 # Optional: Use renv for reproducible environment (when available)
 # renv::restore()
@@ -102,11 +101,7 @@ From the terminal in the project directory:
 quarto preview
 ```
 
-Or from within R:
 
-```r
-quarto::quarto_preview()
-```
 
 The website will open in your default browser with live reload enabled - changes to `.qmd` files will automatically rebuild the relevant pages.
 

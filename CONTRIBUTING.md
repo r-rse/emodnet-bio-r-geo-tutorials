@@ -95,13 +95,23 @@ For more details, see [Air documentation](https://posit-dev.github.io/air/).
 
 6. **Build and preview the website locally**
 
-From the terminal in the project directory:
+**From Positron or RStudio (Recommended):**
+
+```r
+quarto::quarto_preview()
+```
+
+This provides better integration with your IDE and allows you to interact with code chunks.
+
+**From the terminal:**
 
 ```bash
 quarto preview
 ```
 
+Use this if you're working in VS Code or another editor without R integration.
 
+**Note:** Don't run both methods simultaneously - they will conflict.
 
 The website will open in your default browser with live reload enabled - changes to `.qmd` files will automatically rebuild the relevant pages.
 

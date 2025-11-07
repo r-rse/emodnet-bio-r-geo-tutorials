@@ -28,21 +28,92 @@ git clone https://github.com/YOUR-USERNAME/emodnet-bio-r-geo-tutorials.git
 cd emodnet-bio-r-geo-tutorials
 ```
 
-2. **Install dependencies**
+2. **Install R dependencies**
 
-Follow the installation instructions in [README.md](README.md) to set up R, Quarto, and required packages.
+Open R or RStudio in the project directory and run:
 
-3. **Create a feature branch**
+```r
+# Install required packages manually
+install.packages(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap",
+                   "emodnet.wfs", "emodnet.wcs"))
+
+# For Tutorial 4, also install:
+install.packages(c("CopernicusMarine", "worrms"))
+
+# If EMODnet packages are not on CRAN yet:
+install.packages("remotes")
+remotes::install_github("EMODnet/emodnet.wfs")
+remotes::install_github("EMODnet/emodnet.wcs")
+
+# Optional: Use renv for reproducible environment (when available)
+# renv::restore()
+```
+
+3. **Install Quarto**
+
+Download and install Quarto from [quarto.org](https://quarto.org/docs/get-started/)
+
+Verify installation:
+```bash
+quarto --version
+```
+
+4. **Create a feature branch**
 
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
-4. **Test your changes locally**
+5. **Build and preview the website locally**
+
+From the terminal in the project directory:
 
 ```bash
 quarto preview
 ```
+
+Or from within R:
+
+```r
+quarto::quarto_preview()
+```
+
+The website will open in your default browser with live reload enabled - changes to `.qmd` files will automatically rebuild the relevant pages.
+
+To render the complete website without preview:
+
+```bash
+quarto render
+```
+
+Output will be in the `_site/` directory.
+
+### Repository Structure
+
+Understanding the repository organization will help you contribute effectively:
+
+```
+.
+├── _quarto.yml                      # Quarto website configuration
+├── index.qmd                        # Landing page
+├── about.qmd                        # About page
+├── styles.css                       # Custom CSS styles
+├── tutorials/                       # Tutorial .qmd files
+│   ├── tutorial-1-wfs-mpa-infrastructure.qmd
+│   ├── tutorial-2-wcs-zooplankton.qmd
+│   ├── tutorial-3-wfs-wcs-biodiversity.qmd
+│   └── tutorial-4-multi-source-aegean.qmd
+├── assets/                          # Images, logos, and static files
+├── data-cache/                      # Cached data for development (gitignored)
+├── _site/                           # Rendered website output (gitignored)
+├── .github/
+│   └── workflows/                   # CI/CD workflows
+├── CONTRIBUTING.md                  # This file
+├── README.md                        # User-facing documentation
+└── LICENSE-*                        # License files
+```
+
+**Path conventions:** Always use project-relative paths (e.g., `/assets/logo.png` or `assets/logo.png`) in tutorials and website files for consistency and maintainability. Avoid absolute paths.
 
 ## Code Style Guidelines
 

@@ -81,11 +81,17 @@ See [LICENSE](LICENSE) for an overview and individual license files for full leg
 
 ## Citation
 
-If you use these tutorials in your research or teaching, please cite:
+If you use these tutorials in your research or teaching, please cite them using the information provided in our [CITATION.cff](CITATION.cff) file.
 
-```         
-(Citation details to be added - see CITATION.cff)
+**On GitHub:** Click the "Cite this repository" button in the repository sidebar to get formatted citations in various styles (APA, BibTeX, etc.).
+
+**Manual citation format:**
 ```
+[Authors] (2025). EMODnet Biology R Geospatial Tutorials [Data set].
+https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+```
+
+_Note: A DOI will be added once the tutorials are archived on Zenodo._
 
 ## Links
 

@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+message: "If you use these tutorials in your research or teaching, please cite them as below."
+title: "EMODnet Biology R Geospatial Tutorials"
+type: dataset
+# TODO: Update authors list with actual contributors
+authors:
+  - family-names: "[AUTHOR LAST NAME]"
+    given-names: "[AUTHOR FIRST NAME]"
+    # affiliation: "[INSTITUTION]"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    # email: "[EMAIL]"
+# TODO: Add DOI once available from Zenodo or similar
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXX"
+#     description: "Zenodo DOI for this tutorial collection"
+repository-code: "https://github.com/r-rse/emodnet-bio-r-geo-tutorials"
+url: "https://github.com/r-rse/emodnet-bio-r-geo-tutorials"
+abstract: "A collection of R-based geospatial tutorials demonstrating how to access and analyze marine biological and environmental data from EMODnet Biology and other EMODnet thematic portals using the emodnet.wfs and emodnet.wcs R packages."
+keywords:
+  - EMODnet
+  - R
+  - geospatial
+  - marine biology
+  - tutorial
+  - WFS
+  - WCS
+  - marine data
+  - spatial analysis
+license: "CC-BY-4.0 AND MIT"
+# TODO: Add version and release date when ready
+# version: "1.0.0"
+# date-released: "2025-XX-XX"
+# TODO: Update with actual copyright holder/funder
+# copyright: "[COPYRIGHT HOLDER / PROJECT FUNDER]"
+references:
+  - type: software
+    title: "emodnet.wfs: Access EMODnet Web Feature Service data through R"
+    authors:
+      - name: "EMODnet"
+    repository-code: "https://github.com/EMODnet/emodnet.wfs"
+  - type: software
+    title: "emodnet.wcs: Access EMODnet Web Coverage Service data through R"
+    authors:
+      - name: "EMODnet"
+    repository-code: "https://github.com/EMODnet/emodnet.wcs"
+# TODO: Add funding information once available
+# funding:
+#   - name: "European Commission's Directorate-General for Maritime Affairs and Fisheries (DG MARE)"
+#     type: "grant"
+#     # award: "Grant number if available"

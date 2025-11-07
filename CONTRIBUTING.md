@@ -64,7 +64,37 @@ quarto --version
 git checkout -b feature/your-feature-name
 ```
 
-5. **Build and preview the website locally**
+5. **Set up Air R formatter (Recommended)**
+
+This project uses [Air](https://posit-dev.github.io/air/), an extremely fast R formatter written in Rust. Air configuration is already set up in the repository.
+
+**For Positron users:**
+- Air comes pre-bundled with Positron - no installation needed
+- Format on save is automatically enabled through the workspace settings
+
+**For VS Code users:**
+1. Install the "Air" extension by Posit from the VS Code Marketplace
+2. Format on save is automatically enabled through the workspace settings (`.vscode/settings.json`)
+
+**For RStudio users:**
+- See the [RStudio setup guide](https://posit-dev.github.io/air/editor-rstudio.html) for installation and configuration
+- Requires RStudio 2024.12.0 or later
+- Note: Air does not currently work with Quarto documents in RStudio
+
+**Manual formatting:**
+- Format current file: Use your editor's format command (e.g., `Shift+Alt+F` in VS Code)
+- Format entire workspace: Run command `Air: Format Workspace Folder` (VS Code/Positron)
+- Format selection: Use `Cmd+K Cmd+F` (Mac) or `Ctrl+K Ctrl+F` (Windows/Linux)
+
+**Configuration:**
+The project's Air settings are defined in `air.toml`:
+- Indent: 2 spaces
+- Line width: 80 characters
+- Follows tidyverse style guide conventions
+
+For more details, see [Air documentation](https://posit-dev.github.io/air/).
+
+6. **Build and preview the website locally**
 
 From the terminal in the project directory:
 

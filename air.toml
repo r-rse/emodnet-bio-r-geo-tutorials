@@ -1,0 +1,22 @@
+# Air R Formatter Configuration
+# Documentation: https://posit-dev.github.io/air/formatter.html
+
+# Indentation settings
+indent_style = "space"
+indent_width = 2
+
+# Maximum line width before wrapping
+line_width = 80
+
+# Functions to exclude from formatting
+# Add function names here if you want Air to skip formatting their contents
+# Example: skip = ["my_special_function"]
+skip = []
+
+# Functions to format as tables
+# Air will format these functions with aligned arguments in a table-like structure
+# Example: table = ["data.frame", "tibble"]
+table = []
+
+# Whether to format tibble::tribble() and data.table::fcase() calls as tables by default
+default_table = true

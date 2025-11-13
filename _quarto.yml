@@ -6,18 +6,72 @@ project:
     - "!README.md"
 
 website:
-  title: "emodnet-bio-r-geo-tutorials"
+  title: "EMODnet Biology R Tutorials"
+  description: "R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
+  site-url: https://r-rse.github.io/emodnet-bio-r-geo-tutorials
+  repo-url: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+  repo-actions: [edit, issue]
+  page-navigation: true
+  favicon: assets/favicons/favicon.ico
+  margin-header: |
+    [![](/assets/images/emodnet-logo.png)](https://emodnet.ec.europa.eu/)
   navbar:
+    pinned: true
+    logo: assets/images/eu-logo-inverted.png
+    logo-alt: "European Commission Logo"
     left:
       - href: index.qmd
         text: Home
+      - text: Tutorials
+        menu:
+          - text: "Tutorial 1: Protected Areas and Subsea Infrastructure"
+            href: tutorial-01.qmd
+          - text: "Tutorial 2: Zooplankton and Plaice Nurseries"
+            href: tutorial-02.qmd
+          - text: "Tutorial 3: Biodiversity Change and Depth"
+            href: tutorial-03.qmd
+          - text: "Tutorial 4: Functional Traits Across Habitats"
+            href: tutorial-04.qmd
       - about.qmd
+    right:
+      - icon: github
+        href: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+  sidebar:
+    style: "floating"
+    search: true
+  page-footer:
+    left: |
+      ![](assets/images/emodnet-logo.png){height=60px}
+    center: |
+      © 2025 [COPYRIGHT HOLDER / PROJECT FUNDER]
+    right: |
+      [EMODnet Portal](https://emodnet.ec.europa.eu/en) |
+      [Biology Data](https://emodnet.ec.europa.eu/en/biology)
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      - styles.scss
     toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: false
+    code-copy: true
+    link-external-newwindow: true
+    link-external-icon: true
+
+execute:
+  freeze: auto
+  cache: true
+  warning: false
+  message: false
+
+knitr:
+  opts_chunk:
+    comment: "#>"
+    collapse: true
+    fig.align: "center"
+    out.width: "100%"
 
 editor: visual
 

@@ -1,11 +1,49 @@
 ---
-title: "emodnet-bio-r-geo-tutorials"
+title: "EMODnet Biology R Tutorials"
 ---
 
-This is a Quarto website.
+## Welcome
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the [European Marine Observation and Data Network (EMODnet)](https://emodnet.ec.europa.eu/en/biology).
+
+## About EMODnet
+
+EMODnet Biology provides open access to marine biological data from European seas, supporting marine research, policy-making, and blue economy initiatives. The data portal offers standardized access to observations on marine species, their distribution, and abundance.
+
+## Tutorial Series
+
+This website hosts tutorials demonstrating practical marine spatial analysis workflows using EMODnet data:
+
+-   **Tutorial 1: Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea** - Accessing and analyzing EMODnet WFS vector layers using `emodnet.wfs`.
+-   **Tutorial 2: Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds** - Accessing and analyzing EMODnet WCS raster layers using `emodnet.wcs`.
+-   **Tutorial 3: Relating Marine Biodiversity Change to Depth in the North Sea** - Combining EMODnet WFS and WCS data by integrating vector and raster data.
+-   **Tutorial 4: Exploring Functional Traits Across Seabed Habitats in the Aegean Sea** - Integrating EMODnet WFS and WCS with Trait and Environmental Data Sources from Copernicus Marine Service and trait databases.
+
+## Prerequisites
+
+These tutorials assume familiarity with:
+
+-   Basic R programming
+-   Geospatial concepts
+-   Working with `sf` and `terra` packages
+
+## Getting Started
+
+Install the required EMODnet packages:
 
 ```{r}
-1 + 1
+#| eval: false
+#| code-fold: false
+
+# Install EMODnet packages
+pak::pak(c("emodnet/emodnet.wfs", "emodnet/emodnet.wcs"))
+
+# Install spatial data packages
+pak::pak(c("sf", "terra"))
 ```
+
+## Resources
+
+-   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology)
+-   [EMODnet Data Portal](https://emodnet.ec.europa.eu/en)
+-   [GitHub Repository](https://github.com/r-rse/emodnet-bio-r-geo-tutorials)

@@ -1,0 +1,64 @@
+/*-- scss:defaults --*/
+
+// EMODnet Biology Color Palette
+$emodnet-navy: #004594;
+$emodnet-blue: #0077be;
+$emodnet-light-blue: #4a9aca;
+
+// Apply EMODnet colors to Bootstrap theme variables
+$primary: $emodnet-navy;
+$link-color: $emodnet-blue;
+
+// Typography
+$font-family-sans-serif: Arial, "Helvetica Neue", Helvetica, sans-serif;
+$headings-font-weight: bold;
+
+/*-- scss:rules --*/
+
+// EMODnet Biology Custom Styling
+
+// Navbar Styling
+.navbar {
+  background-color: $emodnet-navy !important;
+  border-bottom: 3px solid $emodnet-blue;
+}
+
+// Footer Styling - inverse colors for dark background
+.nav-footer {
+  background-color: $emodnet-navy !important;
+  border-top: 3px solid $emodnet-blue;
+  color: white !important;
+
+  a {
+    color: white !important;
+    text-decoration: none;
+
+    &:hover {
+      color: $emodnet-light-blue !important;
+      text-decoration: underline;
+    }
+  }
+
+  // Style external link icons to be white
+  a.external:after {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>') !important;
+  }
+
+  .nav-footer-left,
+  .nav-footer-center,
+  .nav-footer-right {
+    color: white !important;
+  }
+
+  // Add white background to EMODnet logo in footer so it stands out
+  .nav-footer-left img {
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  // Hide any figcaption in footer
+  .nav-footer-left figcaption {
+    display: none;
+  }
+}

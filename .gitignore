@@ -9,6 +9,9 @@ claude.md
 # Quarto
 _site/
 .quarto/
+_freeze/
+*_cache/
+*_files/
 
 # Cached data
 data-cache/

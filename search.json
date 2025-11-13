@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "",
+    "text": "Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the European Marine Observation and Data Network (EMODnet)."
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "",
+    "text": "Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the European Marine Observation and Data Network (EMODnet)."
+  },
+  {
+    "objectID": "index.html#about-emodnet",
+    "href": "index.html#about-emodnet",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "About EMODnet",
+    "text": "About EMODnet\nEMODnet Biology provides open access to marine biological data from European seas, supporting marine research, policy-making, and blue economy initiatives. The data portal offers standardized access to observations on marine species, their distribution, and abundance."
+  },
+  {
+    "objectID": "index.html#tutorial-series",
+    "href": "index.html#tutorial-series",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "Tutorial Series",
+    "text": "Tutorial Series\nThis website hosts tutorials demonstrating practical marine spatial analysis workflows using EMODnet data:\n\nTutorial 1: Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea - Accessing and analyzing EMODnet WFS vector layers using emodnet.wfs.\nTutorial 2: Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds - Accessing and analyzing EMODnet WCS raster layers using emodnet.wcs.\nTutorial 3: Relating Marine Biodiversity Change to Depth in the North Sea - Combining EMODnet WFS and WCS data by integrating vector and raster data.\nTutorial 4: Exploring Functional Traits Across Seabed Habitats in the Aegean Sea - Integrating EMODnet WFS and WCS with Trait and Environmental Data Sources from Copernicus Marine Service and trait databases."
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nThese tutorials assume familiarity with:\n\nBasic R programming\nGeospatial concepts\nWorking with sf and terra packages"
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "Getting Started",
+    "text": "Getting Started\nInstall the required EMODnet packages:\n\n# Install EMODnet packages\npak::pak(c(\"emodnet/emodnet.wfs\", \"emodnet/emodnet.wcs\"))\n\n# Install spatial data packages\npak::pak(c(\"sf\", \"terra\"))"
+  },
+  {
+    "objectID": "index.html#resources",
+    "href": "index.html#resources",
+    "title": "EMODnet Biology R Tutorials",
+    "section": "Resources",
+    "text": "Resources\n\nEMODnet Biology Portal\nEMODnet Data Portal\nGitHub Repository"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n#&gt; [1] 2"
+  }
+]

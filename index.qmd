@@ -29,101 +29,54 @@ By the end of these tutorials, you'll be able to independently access, analyze, 
 
 ## Tutorial Series
 
-::: {.grid}
+```{r}
+#| echo: false
+#| output: asis
 
-::: {.g-col-12 .g-col-md-6}
-::: {.card .h-100 .mb-3}
-::: {.card-body}
-### [1]{.tutorial-number} Protected Areas and Subsea Infrastructure {.card-title}
+library(yaml)
 
-[*Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea*]{.tutorial-meta}
+# Get tutorial files in order
+tutorial_files <- list.files("tutorials", pattern = "^tutorial-\\d+\\.qmd$", full.names = TRUE)
+tutorial_files <- tutorial_files[order(tutorial_files)]
 
-[**Difficulty:** Beginner | **Time:** ~45 minutes | **Data:** WFS (vector)]{.tutorial-meta}
+# Start grid container
+cat('::: {.grid}\n\n')
 
-::: {.card-text}
+# Loop through tutorials and render cards
+for (tutorial_file in tutorial_files) {
+  # Read YAML frontmatter
+  yaml_content <- yaml::read_yaml(tutorial_file)
 
-Learn the fundamentals of accessing EMODnet WFS data by identifying marine protected areas that overlap with subsea infrastructure like pipelines and cables. This tutorial introduces spatial intersection operations and provides a foundation for marine spatial planning analyses.
+  # Extract tutorial number from title
+  tutorial_number <- sub(":.*", "", yaml_content$title)
+  short_title <- sub("^\\d+:\\s*", "", yaml_content$title)
 
-**You'll work with:** Marine protected area boundaries, pipeline locations, subsea cable networks, platform locations
-:::
-:::
+  # Prepare parameters for partial
+  params <- list(
+    number = tutorial_number,
+    short_title = short_title,
+    subtitle = yaml_content$subtitle,
+    difficulty = yaml_content$difficulty,
+    time = yaml_content$time,
+    data_type = yaml_content$`data-type`,
+    description = yaml_content$description,
+    datasets = yaml_content$datasets,
+    path = tutorial_file
+  )
 
-::: {.card-footer}
-[Start Tutorial 1](tutorials/tutorial-01.qmd){.btn .btn-primary .w-100}
-:::
-:::
-:::
+  # Render the partial
+  result <- knitr::knit_child(
+    input = "_tutorial-card.qmd",
+    envir = environment(),
+    quiet = TRUE
+  )
 
-::: {.g-col-12 .g-col-md-6}
-::: {.card .h-100 .mb-3}
-::: {.card-body}
-### [2]{.tutorial-number} Zooplankton and Plaice Nursery Grounds {.card-title}
+  cat(result, sep = '\n')
+}
 
-[*Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds*]{.tutorial-meta}
-
-[**Difficulty:** Beginner | **Time:** ~60 minutes | **Data:** WCS (raster)]{.tutorial-meta}
-
-::: {.card-text}
-
-Discover how to access and analyze gridded environmental data using EMODnet WCS services. Explore the spatial relationship between zooplankton abundance and fish nursery habitats in the Eastern English Channel using raster analysis techniques.
-
-**You'll work with:** Copepod abundance grids, fish habitat suitability models, multi-band raster data
-:::
-:::
-
-::: {.card-footer}
-[Start Tutorial 2](tutorials/tutorial-02.qmd){.btn .btn-primary .w-100}
-:::
-:::
-:::
-
-::: {.g-col-12 .g-col-md-6}
-::: {.card .h-100 .mb-3}
-::: {.card-body}
-### [3]{.tutorial-number} Biodiversity Change and Depth {.card-title}
-
-[*Relating Marine Biodiversity Change to Depth in the North Sea*]{.tutorial-meta}
-
-[**Difficulty:** Intermediate | **Time:** ~60 minutes | **Data:** WFS + WCS (vector + raster)]{.tutorial-meta}
-
-::: {.card-text}
-
-Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea.
-
-**You'll work with:** Biodiversity change metrics, bathymetric depth models, vector-raster integration
-:::
-:::
-
-::: {.card-footer}
-[Start Tutorial 3](tutorials/tutorial-03.qmd){.btn .btn-primary .w-100}
-:::
-:::
-:::
-
-::: {.g-col-12 .g-col-md-6}
-::: {.card .h-100 .mb-3}
-::: {.card-body}
-### [4]{.tutorial-number} Functional Traits Across Seabed Habitats {.card-title}
-
-[*Exploring Functional Traits Across Seabed Habitats in the Aegean Sea*]{.tutorial-meta}
-
-[**Difficulty:** Advanced | **Time:** ~90 minutes | **Data:** WFS + WCS + External sources]{.tutorial-meta}
-
-::: {.card-text}
-
-Integrate EMODnet data with external trait databases and Copernicus Marine Service environmental data. Investigate how benthic species body size varies across habitat types and environmental gradients in the Aegean Sea.
-
-**You'll work with:** Benthic species occurrences, seabed habitat maps, trait databases, temperature reanalysis data
-:::
-:::
-
-::: {.card-footer}
-[Start Tutorial 4](tutorials/tutorial-04.qmd){.btn .btn-primary .w-100}
-:::
-:::
-:::
-
-:::
+# Close grid container
+cat('\n:::\n')
+```
 
 ## Who These Tutorials Are For
 

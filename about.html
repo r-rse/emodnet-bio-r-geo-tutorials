@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – EMODnet Biology R Tutorials</title>
+<title>About – EMODnet Biology Geospatial R Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -75,7 +40,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5a63c128481e8f1a76d4b74e37169a31.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-aad255b13f57194280e6d4968a8fb73e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <img src="./assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">EMODnet Biology R Tutorials</span>
+    <span class="navbar-title">EMODnet Biology Geospatial R Tutorials</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -132,25 +97,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./concepts.html"> 
+<span class="menu-text">Geospatial Concepts</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Tutorials</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
         <li>
-    <a class="dropdown-item" href="./tutorial-01.qmd">
+    <a class="dropdown-item" href="./tutorials/tutorial-01.html">
  <span class="dropdown-text">Tutorial 1: Protected Areas and Subsea Infrastructure</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorial-02.qmd">
+    <a class="dropdown-item" href="./tutorials/tutorial-02.html">
  <span class="dropdown-text">Tutorial 2: Zooplankton and Plaice Nurseries</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorial-03.qmd">
+    <a class="dropdown-item" href="./tutorials/tutorial-03.html">
  <span class="dropdown-text">Tutorial 3: Biodiversity Change and Depth</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorial-04.qmd">
+    <a class="dropdown-item" href="./tutorials/tutorial-04.html">
  <span class="dropdown-text">Tutorial 4: Functional Traits Across Habitats</span></a>
   </li>  
     </ul>
@@ -201,7 +170,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
 <p><a href="https://emodnet.ec.europa.eu/"><img src="./assets/images/emodnet-logo.png" class="img-fluid"></a></p>
 </div></div>
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-emodnet-biology" id="toc-about-emodnet-biology" class="nav-link active" data-scroll-target="#about-emodnet-biology">About EMODnet Biology</a></li>
+  <li><a href="#about-this-tutorial-initiative" id="toc-about-this-tutorial-initiative" class="nav-link" data-scroll-target="#about-this-tutorial-initiative">About This Tutorial Initiative</a></li>
+  <li><a href="#emodnet-web-services" id="toc-emodnet-web-services" class="nav-link" data-scroll-target="#emodnet-web-services">EMODnet Web Services</a></li>
+  <li><a href="#the-r-packages" id="toc-the-r-packages" class="nav-link" data-scroll-target="#the-r-packages">The R Packages</a></li>
+  <li><a href="#acknowledgments-and-funding" id="toc-acknowledgments-and-funding" class="nav-link" data-scroll-target="#acknowledgments-and-funding">Acknowledgments and Funding</a></li>
+  <li><a href="#contributing" id="toc-contributing" class="nav-link" data-scroll-target="#contributing">Contributing</a></li>
+  <li><a href="#links-and-resources" id="toc-links-and-resources" class="nav-link" data-scroll-target="#links-and-resources">Links and Resources</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/about.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -225,13 +206,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>About this site</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="about-emodnet-biology" class="level2">
+<h2 class="anchored" data-anchor-id="about-emodnet-biology">About EMODnet Biology</h2>
+<p><a href="https://emodnet.ec.europa.eu/en/biology">EMODnet Biology</a> is the biological data portal of the <a href="https://emodnet.ec.europa.eu/">European Marine Observation and Data Network (EMODnet)</a>. EMODnet is a network of European organisations working together to assemble marine data, data products, and metadata from diverse sources in a standardized way.</p>
+<p>EMODnet Biology provides free and open access to marine biological observations, species distributions, and biodiversity data from European seas. The portal aggregates data from diverse sources including research institutions, monitoring programmes, and citizen science initiatives, making it easily accessible for marine research, policy-making, and conservation efforts.</p>
+</section>
+<section id="about-this-tutorial-initiative" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-tutorial-initiative">About This Tutorial Initiative</h2>
+<p>These <a href="./index.html#tutorial-series">tutorials</a> were developed as part of the <strong>EMODnet Biology</strong> initiative to demonstrate how researchers, students, and practitioners can access and analyze EMODnet data programmatically using R. By providing practical, reproducible workflows using real marine data, we aim to:</p>
+<ul>
+<li>Lower barriers to accessing and using EMODnet biological and environmental data</li>
+<li>Demonstrate the value of <a href="./concepts.html#web-services-for-spatial-data">web services</a> (WFS and WCS) for programmatic data access</li>
+<li>Showcase real-world applications relevant to marine conservation and spatial planning</li>
+<li>Build capacity in marine <a href="./concepts.html">spatial data science</a> across the research community</li>
+</ul>
+<p>The tutorials highlight how EMODnet data can be integrated with other European marine data infrastructures, such as Copernicus Marine Service, to support evidence-based marine management and research.</p>
+</section>
+<section id="emodnet-web-services" class="level2">
+<h2 class="anchored" data-anchor-id="emodnet-web-services">EMODnet Web Services</h2>
+<p>EMODnet provides standardized geospatial web services following Open Geospatial Consortium (OGC) specifications. These services are maintained by the EMODnet thematic portals (Biology, Bathymetry, Seabed Habitats, Human Activities, etc.), each operated by a consortium of European marine research institutions.</p>
+<p>Each thematic portal is responsible for:</p>
+<ul>
+<li>Aggregating data from multiple sources across Europe</li>
+<li>Standardizing and quality-controlling the data</li>
+<li>Hosting and maintaining the web service infrastructure</li>
+<li>Ensuring long-term data preservation and access</li>
+</ul>
+<p>This infrastructure enables researchers and practitioners to programmatically access marine data without needing to manage large file downloads or navigate multiple data repositories.</p>
+</section>
+<section id="the-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="the-r-packages">The R Packages</h2>
+<p>These tutorials demonstrate two R packages developed specifically for accessing EMODnet data services:</p>
+<p><a href="https://github.com/EMODnet/emodnet.wfs"><strong><code>emodnet.wfs</code></strong></a> provides programmatic access to EMODnet’s Web Feature Service (WFS) endpoints, enabling users to retrieve <a href="./concepts.html#vector-data">vector data</a> such as species occurrences, habitat boundaries, and infrastructure locations directly into R.</p>
+<p><a href="https://github.com/EMODnet/emodnet.wcs"><strong><code>emodnet.wcs</code></strong></a> enables access to EMODnet’s Web Coverage Service (WCS) endpoints, allowing users to download <a href="./concepts.html#raster-data">raster data</a> such as depth models, species distributions, and environmental variables.</p>
+<p>Both packages simplify data discovery, querying, and retrieval, making EMODnet’s extensive data holdings readily available for spatial analysis in R.</p>
+</section>
+<section id="acknowledgments-and-funding" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments-and-funding">Acknowledgments and Funding</h2>
+<p>These tutorials were developed as part of the EMODnet Biology initiative, funded by the European Commission’s Directorate-General for Maritime Affairs and Fisheries (DG MARE) under the European Maritime and Fisheries Fund (EMFF).</p>
+<p>The tutorial materials are made available under open licenses to support the broader marine science and data science communities.</p>
+</section>
+<section id="contributing" class="level2">
+<h2 class="anchored" data-anchor-id="contributing">Contributing</h2>
+<p>We welcome contributions, suggestions, and feedback! Please visit our <a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials">GitHub repository</a> to:</p>
+<ul>
+<li>Report issues or bugs</li>
+<li>Suggest improvements or new tutorial topics</li>
+<li>Submit pull requests with corrections or enhancements</li>
+</ul>
+<p>For detailed contribution guidelines, see <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+</section>
+<section id="links-and-resources" class="level2">
+<h2 class="anchored" data-anchor-id="links-and-resources">Links and Resources</h2>
+<ul>
+<li><a href="https://emodnet.ec.europa.eu/en/biology">EMODnet Biology Portal</a></li>
+<li><a href="https://emodnet.ec.europa.eu/en">EMODnet Main Portal</a></li>
+<li><a href="https://github.com/EMODnet/emodnet.wfs">emodnet.wfs Package</a></li>
+<li><a href="https://github.com/EMODnet/emodnet.wcs">emodnet.wcs Package</a></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -649,7 +684,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>   
     <div class="nav-footer-center">
 <p>© 2025 [COPYRIGHT HOLDER / PROJECT FUNDER]</p>
-<div class="toc-actions"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/about.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/about.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p><a href="https://emodnet.ec.europa.eu/en">EMODnet Portal</a> | <a href="https://emodnet.ec.europa.eu/en/biology">Biology Data</a></p>
 </div>

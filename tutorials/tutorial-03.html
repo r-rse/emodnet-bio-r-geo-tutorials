@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea.">
 
-<title>EMODnet Biology Geospatial R Tutorials</title>
+<title>3: Biodiversity Change and Depth – EMODnet Biology Geospatial R Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,62 +21,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./assets/favicons/favicon.ico" rel="icon">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-aad255b13f57194280e6d4968a8fb73e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicons/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-aad255b13f57194280e6d4968a8fb73e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,11 +80,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo light-content">
-    <img src="./assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo light-content">
+    <img src="../assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">EMODnet Biology Geospatial R Tutorials</span>
     </a>
   </div>
@@ -129,11 +95,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./concepts.html"> 
+    <a class="nav-link" href="../concepts.html"> 
 <span class="menu-text">Geospatial Concepts</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -142,25 +108,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
         <li>
-    <a class="dropdown-item" href="./tutorials/tutorial-01.html">
+    <a class="dropdown-item" href="../tutorials/tutorial-01.html">
  <span class="dropdown-text">Tutorial 1: Protected Areas and Subsea Infrastructure</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorials/tutorial-02.html">
+    <a class="dropdown-item" href="../tutorials/tutorial-02.html">
  <span class="dropdown-text">Tutorial 2: Zooplankton and Plaice Nurseries</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorials/tutorial-03.html">
+    <a class="dropdown-item" href="../tutorials/tutorial-03.html">
  <span class="dropdown-text">Tutorial 3: Biodiversity Change and Depth</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./tutorials/tutorial-04.html">
+    <a class="dropdown-item" href="../tutorials/tutorial-04.html">
  <span class="dropdown-text">Tutorial 4: Functional Traits Across Habitats</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -181,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">EMODnet Biology Geospatial R Tutorials</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">3: Biodiversity Change and Depth</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -203,40 +169,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
-<p><a href="https://emodnet.ec.europa.eu/"><img src="./assets/images/emodnet-logo.png" class="img-fluid"></a></p>
+<p><a href="https://emodnet.ec.europa.eu/"><img src="../assets/images/emodnet-logo.png" class="img-fluid"></a></p>
 </div></div>
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#tutorial-content" id="toc-tutorial-content" class="nav-link active" data-scroll-target="#tutorial-content">Tutorial Content</a>
+  <ul class="collapse">
   <li><a href="#what-youll-learn" id="toc-what-youll-learn" class="nav-link" data-scroll-target="#what-youll-learn">What You’ll Learn</a></li>
-  <li><a href="#tutorial-series" id="toc-tutorial-series" class="nav-link" data-scroll-target="#tutorial-series">Tutorial Series</a></li>
-  <li><a href="#who-these-tutorials-are-for" id="toc-who-these-tutorials-are-for" class="nav-link" data-scroll-target="#who-these-tutorials-are-for">Who These Tutorials Are For</a></li>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a>
-  <ul class="collapse">
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#quick-start" id="toc-quick-start" class="nav-link" data-scroll-target="#quick-start">Quick Start</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
+  <li><a href="#study-area" id="toc-study-area" class="nav-link" data-scroll-target="#study-area">Study Area</a></li>
   </ul></li>
-  <li><a href="#resources-and-links" id="toc-resources-and-links" class="nav-link" data-scroll-target="#resources-and-links">Resources and Links</a>
-  <ul class="collapse">
-  <li><a href="#emodnet-resources" id="toc-emodnet-resources" class="nav-link" data-scroll-target="#emodnet-resources">EMODnet Resources</a></li>
-  <li><a href="#r-package-documentation" id="toc-r-package-documentation" class="nav-link" data-scroll-target="#r-package-documentation">R Package Documentation</a></li>
-  <li><a href="#learning-resources" id="toc-learning-resources" class="nav-link" data-scroll-target="#learning-resources">Learning Resources</a></li>
-  </ul></li>
-  <li><a href="#about-this-project" id="toc-about-this-project" class="nav-link" data-scroll-target="#about-this-project">About This Project</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/tutorials/tutorial-03.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EMODnet Biology Geospatial R Tutorials</h1>
+<h1 class="title">3: Biodiversity Change and Depth</h1>
+<p class="subtitle lead">Relating Marine Biodiversity Change to Depth in the North Sea</p>
 </div>
 
+<div>
+  <div class="description">
+    Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -251,208 +212,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="welcome" class="level2">
-<h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
-<p>Learn how to access and analyze marine biological and environmental data from <a href="https://emodnet.ec.europa.eu/en/biology">EMODnet</a> using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.</p>
-<p>Whether you’re investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>New to geospatial analysis?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you’re unfamiliar with spatial data concepts, coordinate systems, or the difference between vector and raster data, start with our <a href="./concepts.html"><strong>Geospatial Concepts</strong></a> page.</p>
-</div>
-</div>
-</section>
-<section id="what-youll-learn" class="level2">
-<h2 class="anchored" data-anchor-id="what-youll-learn">What You’ll Learn</h2>
-<p>These tutorials demonstrate how to:</p>
+<section id="tutorial-content" class="level2">
+<h2 class="anchored" data-anchor-id="tutorial-content">Tutorial Content</h2>
+<p>This tutorial is currently under development.</p>
+<section id="what-youll-learn" class="level3">
+<h3 class="anchored" data-anchor-id="what-youll-learn">What You’ll Learn</h3>
 <ul>
-<li><strong>Access marine data programmatically</strong> using EMODnet’s web services (WFS and WCS)</li>
-<li><strong>Work with vector data</strong> representing species occurrences, habitat boundaries, and human activities</li>
-<li><strong>Analyze raster data</strong> including bathymetry, species distributions, and environmental variables</li>
-<li><strong>Integrate multiple data sources</strong> from EMODnet, Copernicus Marine Service, and trait databases</li>
-<li><strong>Apply spatial operations</strong> such as intersection, masking, and point extraction</li>
-<li><strong>Visualize spatial patterns</strong> relevant to marine conservation and management</li>
-</ul>
-<p>By the end of these tutorials, you’ll be able to independently access, analyze, and visualize EMODnet data for your own marine research questions.</p>
-</section>
-<section id="tutorial-series" class="level2">
-<h2 class="anchored" data-anchor-id="tutorial-series">Tutorial Series</h2>
-<div class="cell" data-layout-align="center">
-<div class="grid">
-<div class="g-col-12 g-col-md-6">
-<div class="card h-100 mb-3">
-<section id="protected-areas-and-subsea-infrastructure" class="level3 card-title card-body">
-<h3 class="card-title anchored" data-anchor-id="protected-areas-and-subsea-infrastructure"><span class="tutorial-number">1</span> Protected Areas and Subsea Infrastructure</h3>
-<p><span class="tutorial-meta"><em>Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea</em></span></p>
-<p><span class="tutorial-meta"><strong>Difficulty:</strong> Beginner | <strong>Time:</strong> ~45 minutes | <strong>Data:</strong> WFS (vector)</span></p>
-<div class="card-text">
-<p>Learn the fundamentals of accessing EMODnet WFS data by identifying marine protected areas that overlap with subsea infrastructure like pipelines and cables. This tutorial introduces spatial intersection operations and provides a foundation for marine spatial planning analyses.</p>
-<p><strong>You’ll work with:</strong> Marine protected area boundaries, pipeline locations, subsea cable networks, platform locations</p>
-</div>
-</section>
-<div class="card-footer">
-<p><a href="./tutorials/tutorial-01.html" class="btn btn-primary w-100">Start Tutorial 1</a></p>
-</div>
-</div>
-</div>
-<div class="g-col-12 g-col-md-6">
-<div class="card h-100 mb-3">
-<section id="zooplankton-and-plaice-nursery-grounds" class="level3 card-title card-body">
-<h3 class="card-title anchored" data-anchor-id="zooplankton-and-plaice-nursery-grounds"><span class="tutorial-number">2</span> Zooplankton and Plaice Nursery Grounds</h3>
-<p><span class="tutorial-meta"><em>Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds</em></span></p>
-<p><span class="tutorial-meta"><strong>Difficulty:</strong> Beginner | <strong>Time:</strong> ~60 minutes | <strong>Data:</strong> WCS (raster)</span></p>
-<div class="card-text">
-<p>Discover how to access and analyze gridded environmental data using EMODnet WCS services. Explore the spatial relationship between zooplankton abundance and fish nursery habitats in the Eastern English Channel using raster analysis techniques.</p>
-<p><strong>You’ll work with:</strong> Copepod abundance grids, fish habitat suitability models, multi-band raster data</p>
-</div>
-</section>
-<div class="card-footer">
-<p><a href="./tutorials/tutorial-02.html" class="btn btn-primary w-100">Start Tutorial 2</a></p>
-</div>
-</div>
-</div>
-<div class="g-col-12 g-col-md-6">
-<div class="card h-100 mb-3">
-<section id="biodiversity-change-and-depth" class="level3 card-title card-body">
-<h3 class="card-title anchored" data-anchor-id="biodiversity-change-and-depth"><span class="tutorial-number">3</span> Biodiversity Change and Depth</h3>
-<p><span class="tutorial-meta"><em>Relating Marine Biodiversity Change to Depth in the North Sea</em></span></p>
-<p><span class="tutorial-meta"><strong>Difficulty:</strong> Intermediate | <strong>Time:</strong> ~60 minutes | <strong>Data:</strong> WFS + WCS (vector + raster)</span></p>
-<div class="card-text">
-<p>Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea.</p>
-<p><strong>You’ll work with:</strong> Biodiversity change metrics, bathymetric depth models, vector-raster integration</p>
-</div>
-</section>
-<div class="card-footer">
-<p><a href="./tutorials/tutorial-03.html" class="btn btn-primary w-100">Start Tutorial 3</a></p>
-</div>
-</div>
-</div>
-<div class="g-col-12 g-col-md-6">
-<div class="card h-100 mb-3">
-<section id="functional-traits-across-seabed-habitats" class="level3 card-title card-body">
-<h3 class="card-title anchored" data-anchor-id="functional-traits-across-seabed-habitats"><span class="tutorial-number">4</span> Functional Traits Across Seabed Habitats</h3>
-<p><span class="tutorial-meta"><em>Exploring Functional Traits Across Seabed Habitats in the Aegean Sea</em></span></p>
-<p><span class="tutorial-meta"><strong>Difficulty:</strong> Advanced | <strong>Time:</strong> ~90 minutes | <strong>Data:</strong> WFS + WCS + External sources</span></p>
-<div class="card-text">
-<p>Integrate EMODnet data with external trait databases and Copernicus Marine Service environmental data. Investigate how benthic species body size varies across habitat types and environmental gradients in the Aegean Sea.</p>
-<p><strong>You’ll work with:</strong> Benthic species occurrences, seabed habitat maps, trait databases, temperature reanalysis data</p>
-</div>
-</section>
-<div class="card-footer">
-<p><a href="./tutorials/tutorial-04.html" class="btn btn-primary w-100">Start Tutorial 4</a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="who-these-tutorials-are-for" class="level2">
-<h2 class="anchored" data-anchor-id="who-these-tutorials-are-for">Who These Tutorials Are For</h2>
-<p>These tutorials are designed for:</p>
-<ul>
-<li><strong>Marine researchers</strong> working with spatial data on species distributions, habitats, or human activities</li>
-<li><strong>Conservation practitioners</strong> conducting marine spatial planning, MPA assessments, or environmental impact analyses</li>
-<li><strong>Data scientists</strong> interested in applying geospatial methods to marine applications</li>
-<li><strong>Graduate students</strong> learning marine ecology, spatial analysis, or data science</li>
-<li><strong>Policy analysts</strong> requiring evidence-based spatial information for marine management</li>
+<li>Using <code>emdn_get_features()</code> to access spatiotemporal diversity metrics from EMODnet Biology (WFS)</li>
+<li>Using <code>emdn_get_coverage()</code> to retrieve raster bathymetry from EMODnet Bathymetry (WCS)</li>
+<li>Performing spatial joins and point-based extraction from raster datasets</li>
+<li>Visualising and summarising patterns of species gain/loss across depth gradients</li>
 </ul>
 </section>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<p>To get the most from these tutorials, you should have:</p>
-<p><strong>R Programming:</strong></p>
-<ul>
-<li>Basic to intermediate R skills (working with data frames, installing packages, running functions)</li>
-<li>Familiarity with the tidyverse is helpful but not required</li>
-<li>Experience with RStudio or similar R development environment</li>
-</ul>
-<p><strong>Geospatial Background:</strong></p>
-<ul>
-<li>Understanding of basic spatial concepts (coordinates, projections, spatial data types)</li>
-<li>Awareness of vector vs.&nbsp;raster data</li>
-<li>Familiarity with common spatial operations</li>
-</ul>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you’re new to geospatial analysis, visit our <a href="./concepts.html"><strong>Geospatial Concepts</strong></a> page for an introduction to key concepts before starting the tutorials.</p>
-</div>
-</div>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">Data Sources</h3>
+<p><strong>WFS (vector):</strong> - <strong>Layer ID:</strong> <code>all_diversity_measures</code> - <strong>Source:</strong> EMODnet Biology - <strong>Key variables:</strong> Species loss, species gain, β-diversity, time periods</p>
+<p><strong>WCS (raster):</strong> - <strong>Layer ID:</strong> <code>emodnet__mean_2020</code> - <strong>Source:</strong> EMODnet Bathymetry - <strong>Description:</strong> Mean depth (m), regularly gridded</p>
 </section>
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
-<section id="installation" class="level3">
-<h3 class="anchored" data-anchor-id="installation">Installation</h3>
-<p>Install the required packages using the following code:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install EMODnet data access packages</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="fu">c</span>(<span class="st">"emodnet/emodnet.wfs"</span>, <span class="st">"emodnet/emodnet.wcs"</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install spatial data packages</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="fu">c</span>(<span class="st">"sf"</span>, <span class="st">"terra"</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Install data manipulation and visualization packages</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="quick-start" class="level3">
-<h3 class="anchored" data-anchor-id="quick-start">Quick Start</h3>
-<ol type="1">
-<li><strong>New to geospatial analysis?</strong> → Start with <a href="./concepts.html">Geospatial Concepts</a></li>
-<li><strong>Ready to dive in?</strong> → Begin with <a href="./tutorials/tutorial-01.html">Tutorial 1</a> to learn WFS basics</li>
-<li><strong>Interested in raster analysis?</strong> → Jump to <a href="./tutorials/tutorial-02.html">Tutorial 2</a> for WCS workflows</li>
-<li><strong>Want to combine data sources?</strong> → Try <a href="./tutorials/tutorial-03.html">Tutorial 3</a> or <a href="./tutorials/tutorial-04.html">Tutorial 4</a></li>
-</ol>
-</section>
-</section>
-<section id="resources-and-links" class="level2">
-<h2 class="anchored" data-anchor-id="resources-and-links">Resources and Links</h2>
-<section id="emodnet-resources" class="level3">
-<h3 class="anchored" data-anchor-id="emodnet-resources">EMODnet Resources</h3>
-<ul>
-<li><a href="https://emodnet.ec.europa.eu/en/biology">EMODnet Biology Portal</a> - Access marine biological data</li>
-<li><a href="https://emodnet.ec.europa.eu/en/seabed-habitats">EMODnet Seabed Habitats</a> - Habitat maps and classifications</li>
-<li><a href="https://emodnet.ec.europa.eu/en/bathymetry">EMODnet Bathymetry</a> - Depth data and terrain models</li>
-<li><a href="https://emodnet.ec.europa.eu/en/human-activities">EMODnet Human Activities</a> - Infrastructure and activity data</li>
-</ul>
-</section>
-<section id="r-package-documentation" class="level3">
-<h3 class="anchored" data-anchor-id="r-package-documentation">R Package Documentation</h3>
-<ul>
-<li><a href="https://github.com/EMODnet/emodnet.wfs">emodnet.wfs on GitHub</a> - Access WFS vector data</li>
-<li><a href="https://github.com/EMODnet/emodnet.wcs">emodnet.wcs on GitHub</a> - Access WCS raster data</li>
-<li><a href="https://r-spatial.github.io/sf/">sf package</a> - Spatial vector data in R</li>
-<li><a href="https://rspatial.github.io/terra/">terra package</a> - Spatial raster data in R</li>
-</ul>
-</section>
-<section id="learning-resources" class="level3">
-<h3 class="anchored" data-anchor-id="learning-resources">Learning Resources</h3>
-<ul>
-<li><a href="https://r.geocompx.org/">Geocomputation with R</a> - Comprehensive guide to spatial analysis in R</li>
-<li><a href="https://r-spatial.org/book/">Spatial Data Science</a> - Spatial data methods and applications</li>
-<li><a href="https://r-spatial.github.io/sf/articles/">sf package vignettes</a> - Detailed sf documentation</li>
-</ul>
-</section>
-</section>
-<section id="about-this-project" class="level2">
-<h2 class="anchored" data-anchor-id="about-this-project">About This Project</h2>
-<p>These tutorials are part of the <a href="https://emodnet.ec.europa.eu/en/biology">EMODnet Biology</a> initiative. Learn more about the project, contributors, and funding on the <a href="./about.html">About</a> page.</p>
+<section id="study-area" class="level3">
+<h3 class="anchored" data-anchor-id="study-area">Study Area</h3>
+<p>North Sea</p>
+<p><strong>Bounding box (WGS84):</strong> xmin = 1.5, ymin = 53, xmax = 6.5, ymax = 58</p>
+<p>Check back soon for the complete tutorial!</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -871,7 +655,7 @@ Note
 </div>   
     <div class="nav-footer-center">
 <p>© 2025 [COPYRIGHT HOLDER / PROJECT FUNDER]</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/tutorials/tutorial-03.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p><a href="https://emodnet.ec.europa.eu/en">EMODnet Portal</a> | <a href="https://emodnet.ec.europa.eu/en/biology">Biology Data</a></p>
 </div>

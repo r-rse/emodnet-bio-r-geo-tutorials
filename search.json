@@ -1,58 +1,254 @@
 [
   {
+    "objectID": "tutorials/tutorial-04.html",
+    "href": "tutorials/tutorial-04.html",
+    "title": "4: Functional Traits Across Seabed Habitats",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nDemonstrating combined use of emodnet.wfs, emodnet.wcs, and CopernicusMarine packages\nRetrieving and visualising body size traits for benthic species using trait databases\nExploring trait–environment relationships across habitat types\nPractical geospatial workflows including raster extraction and spatial joins\n\n\n\n\n\nEMODnet WFS:\n\neb185_benthos_full_matched: Benthic species records in the Aegean\neu_seabed_habitats_2019: Seabed habitat polygons\n\nEMODnet WCS:\n\nemodnet__mean_2020: Bathymetry raster (mean depth of seafloor)\n\nCopernicus Marine Service:\n\nGLOBAL_MULTIYEAR_PHY_001_030: Bottom temperature and/or salinity reanalysis data\n\nExternal Resources:\n\nMOBS (Marine Organism Body Size) database: github.com/crmcclain/MOBS_OPEN\n\n\n\n\n\nAegean Sea\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-04.html#tutorial-content",
+    "href": "tutorials/tutorial-04.html#tutorial-content",
+    "title": "4: Functional Traits Across Seabed Habitats",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nDemonstrating combined use of emodnet.wfs, emodnet.wcs, and CopernicusMarine packages\nRetrieving and visualising body size traits for benthic species using trait databases\nExploring trait–environment relationships across habitat types\nPractical geospatial workflows including raster extraction and spatial joins\n\n\n\n\n\nEMODnet WFS:\n\neb185_benthos_full_matched: Benthic species records in the Aegean\neu_seabed_habitats_2019: Seabed habitat polygons\n\nEMODnet WCS:\n\nemodnet__mean_2020: Bathymetry raster (mean depth of seafloor)\n\nCopernicus Marine Service:\n\nGLOBAL_MULTIYEAR_PHY_001_030: Bottom temperature and/or salinity reanalysis data\n\nExternal Resources:\n\nMOBS (Marine Organism Body Size) database: github.com/crmcclain/MOBS_OPEN\n\n\n\n\n\nAegean Sea\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-02.html",
+    "href": "tutorials/tutorial-02.html",
+    "title": "2: Zooplankton and Plaice Nursery Grounds",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nUnderstanding how to identify and retrieve relevant raster layers using describe_coverages()\nUsing emdn_get_coverage() to download WCS data for a specific area and time\nApplying raster alignment, masking, and standardisation for comparative analysis\nInterpreting spatial patterns in relative abundance and their ecological relevance\n\n\n\n\n\nEMODnet Biology WCS: Copepod relative abundance layers (Acartia spp., Temora longicornis, Calanus finmarchicus)\nEMODnet Seabed Habitats WCS: Plaice Essential Fish Habitat (nursery grounds) predictions (GRAY_INDEX band)\n\n\n\n\nEastern English Channel\nBounding box: xmin = 0.0, ymin = 49.5, xmax = 2.5, ymax = 51.0\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-02.html#tutorial-content",
+    "href": "tutorials/tutorial-02.html#tutorial-content",
+    "title": "2: Zooplankton and Plaice Nursery Grounds",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nUnderstanding how to identify and retrieve relevant raster layers using describe_coverages()\nUsing emdn_get_coverage() to download WCS data for a specific area and time\nApplying raster alignment, masking, and standardisation for comparative analysis\nInterpreting spatial patterns in relative abundance and their ecological relevance\n\n\n\n\n\nEMODnet Biology WCS: Copepod relative abundance layers (Acartia spp., Temora longicornis, Calanus finmarchicus)\nEMODnet Seabed Habitats WCS: Plaice Essential Fish Habitat (nursery grounds) predictions (GRAY_INDEX band)\n\n\n\n\nEastern English Channel\nBounding box: xmin = 0.0, ymin = 49.5, xmax = 2.5, ymax = 51.0\nCheck back soon for the complete tutorial!"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "EMODnet Biology R Tutorials",
+    "title": "EMODnet Biology Geospatial R Tutorials",
     "section": "",
-    "text": "Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the European Marine Observation and Data Network (EMODnet)."
+    "text": "Learn how to access and analyze marine biological and environmental data from EMODnet using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.\nWhether you’re investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.\n\n\n\n\n\n\nTipNew to geospatial analysis?\n\n\n\nIf you’re unfamiliar with spatial data concepts, coordinate systems, or the difference between vector and raster data, start with our Geospatial Concepts page."
   },
   {
     "objectID": "index.html#welcome",
     "href": "index.html#welcome",
-    "title": "EMODnet Biology R Tutorials",
+    "title": "EMODnet Biology Geospatial R Tutorials",
     "section": "",
-    "text": "Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the European Marine Observation and Data Network (EMODnet)."
+    "text": "Learn how to access and analyze marine biological and environmental data from EMODnet using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.\nWhether you’re investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.\n\n\n\n\n\n\nTipNew to geospatial analysis?\n\n\n\nIf you’re unfamiliar with spatial data concepts, coordinate systems, or the difference between vector and raster data, start with our Geospatial Concepts page."
   },
   {
-    "objectID": "index.html#about-emodnet",
-    "href": "index.html#about-emodnet",
-    "title": "EMODnet Biology R Tutorials",
-    "section": "About EMODnet",
-    "text": "About EMODnet\nEMODnet Biology provides open access to marine biological data from European seas, supporting marine research, policy-making, and blue economy initiatives. The data portal offers standardized access to observations on marine species, their distribution, and abundance."
+    "objectID": "index.html#what-youll-learn",
+    "href": "index.html#what-youll-learn",
+    "title": "EMODnet Biology Geospatial R Tutorials",
+    "section": "What You’ll Learn",
+    "text": "What You’ll Learn\nThese tutorials demonstrate how to:\n\nAccess marine data programmatically using EMODnet’s web services (WFS and WCS)\nWork with vector data representing species occurrences, habitat boundaries, and human activities\nAnalyze raster data including bathymetry, species distributions, and environmental variables\nIntegrate multiple data sources from EMODnet, Copernicus Marine Service, and trait databases\nApply spatial operations such as intersection, masking, and point extraction\nVisualize spatial patterns relevant to marine conservation and management\n\nBy the end of these tutorials, you’ll be able to independently access, analyze, and visualize EMODnet data for your own marine research questions."
   },
   {
     "objectID": "index.html#tutorial-series",
     "href": "index.html#tutorial-series",
-    "title": "EMODnet Biology R Tutorials",
+    "title": "EMODnet Biology Geospatial R Tutorials",
     "section": "Tutorial Series",
-    "text": "Tutorial Series\nThis website hosts tutorials demonstrating practical marine spatial analysis workflows using EMODnet data:\n\nTutorial 1: Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea - Accessing and analyzing EMODnet WFS vector layers using emodnet.wfs.\nTutorial 2: Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds - Accessing and analyzing EMODnet WCS raster layers using emodnet.wcs.\nTutorial 3: Relating Marine Biodiversity Change to Depth in the North Sea - Combining EMODnet WFS and WCS data by integrating vector and raster data.\nTutorial 4: Exploring Functional Traits Across Seabed Habitats in the Aegean Sea - Integrating EMODnet WFS and WCS with Trait and Environmental Data Sources from Copernicus Marine Service and trait databases."
+    "text": "Tutorial Series\n\n\n\n\n\n1 Protected Areas and Subsea Infrastructure\nIdentifying Protected Areas Affected by Subsea Infrastructure in the North Sea\nDifficulty: Beginner | Time: ~45 minutes | Data: WFS (vector)\n\nLearn the fundamentals of accessing EMODnet WFS data by identifying marine protected areas that overlap with subsea infrastructure like pipelines and cables. This tutorial introduces spatial intersection operations and provides a foundation for marine spatial planning analyses.\nYou’ll work with: Marine protected area boundaries, pipeline locations, subsea cable networks, platform locations\n\n\n\nStart Tutorial 1\n\n\n\n\n\n\n2 Zooplankton and Plaice Nursery Grounds\nExploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds\nDifficulty: Beginner | Time: ~60 minutes | Data: WCS (raster)\n\nDiscover how to access and analyze gridded environmental data using EMODnet WCS services. Explore the spatial relationship between zooplankton abundance and fish nursery habitats in the Eastern English Channel using raster analysis techniques.\nYou’ll work with: Copepod abundance grids, fish habitat suitability models, multi-band raster data\n\n\n\nStart Tutorial 2\n\n\n\n\n\n\n3 Biodiversity Change and Depth\nRelating Marine Biodiversity Change to Depth in the North Sea\nDifficulty: Intermediate | Time: ~60 minutes | Data: WFS + WCS (vector + raster)\n\nCombine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea.\nYou’ll work with: Biodiversity change metrics, bathymetric depth models, vector-raster integration\n\n\n\nStart Tutorial 3\n\n\n\n\n\n\n4 Functional Traits Across Seabed Habitats\nExploring Functional Traits Across Seabed Habitats in the Aegean Sea\nDifficulty: Advanced | Time: ~90 minutes | Data: WFS + WCS + External sources\n\nIntegrate EMODnet data with external trait databases and Copernicus Marine Service environmental data. Investigate how benthic species body size varies across habitat types and environmental gradients in the Aegean Sea.\nYou’ll work with: Benthic species occurrences, seabed habitat maps, trait databases, temperature reanalysis data\n\n\n\nStart Tutorial 4"
+  },
+  {
+    "objectID": "index.html#who-these-tutorials-are-for",
+    "href": "index.html#who-these-tutorials-are-for",
+    "title": "EMODnet Biology Geospatial R Tutorials",
+    "section": "Who These Tutorials Are For",
+    "text": "Who These Tutorials Are For\nThese tutorials are designed for:\n\nMarine researchers working with spatial data on species distributions, habitats, or human activities\nConservation practitioners conducting marine spatial planning, MPA assessments, or environmental impact analyses\nData scientists interested in applying geospatial methods to marine applications\nGraduate students learning marine ecology, spatial analysis, or data science\nPolicy analysts requiring evidence-based spatial information for marine management"
   },
   {
     "objectID": "index.html#prerequisites",
     "href": "index.html#prerequisites",
-    "title": "EMODnet Biology R Tutorials",
+    "title": "EMODnet Biology Geospatial R Tutorials",
     "section": "Prerequisites",
-    "text": "Prerequisites\nThese tutorials assume familiarity with:\n\nBasic R programming\nGeospatial concepts\nWorking with sf and terra packages"
+    "text": "Prerequisites\nTo get the most from these tutorials, you should have:\nR Programming:\n\nBasic to intermediate R skills (working with data frames, installing packages, running functions)\nFamiliarity with the tidyverse is helpful but not required\nExperience with RStudio or similar R development environment\n\nGeospatial Background:\n\nUnderstanding of basic spatial concepts (coordinates, projections, spatial data types)\nAwareness of vector vs. raster data\nFamiliarity with common spatial operations\n\n\n\n\n\n\n\nNote\n\n\n\nIf you’re new to geospatial analysis, visit our Geospatial Concepts page for an introduction to key concepts before starting the tutorials."
   },
   {
     "objectID": "index.html#getting-started",
     "href": "index.html#getting-started",
-    "title": "EMODnet Biology R Tutorials",
+    "title": "EMODnet Biology Geospatial R Tutorials",
     "section": "Getting Started",
-    "text": "Getting Started\nInstall the required EMODnet packages:\n\n# Install EMODnet packages\npak::pak(c(\"emodnet/emodnet.wfs\", \"emodnet/emodnet.wcs\"))\n\n# Install spatial data packages\npak::pak(c(\"sf\", \"terra\"))"
+    "text": "Getting Started\n\nInstallation\nInstall the required packages using the following code:\n\n# Install EMODnet data access packages\npak::pak(c(\"emodnet/emodnet.wfs\", \"emodnet/emodnet.wcs\"))\n\n# Install spatial data packages\npak::pak(c(\"sf\", \"terra\"))\n\n# Install data manipulation and visualization packages\npak::pak(c(\"dplyr\", \"ggplot2\"))\n\n\n\nQuick Start\n\nNew to geospatial analysis? → Start with Geospatial Concepts\nReady to dive in? → Begin with Tutorial 1 to learn WFS basics\nInterested in raster analysis? → Jump to Tutorial 2 for WCS workflows\nWant to combine data sources? → Try Tutorial 3 or Tutorial 4"
   },
   {
-    "objectID": "index.html#resources",
-    "href": "index.html#resources",
-    "title": "EMODnet Biology R Tutorials",
-    "section": "Resources",
-    "text": "Resources\n\nEMODnet Biology Portal\nEMODnet Data Portal\nGitHub Repository"
+    "objectID": "index.html#resources-and-links",
+    "href": "index.html#resources-and-links",
+    "title": "EMODnet Biology Geospatial R Tutorials",
+    "section": "Resources and Links",
+    "text": "Resources and Links\n\nEMODnet Resources\n\nEMODnet Biology Portal - Access marine biological data\nEMODnet Seabed Habitats - Habitat maps and classifications\nEMODnet Bathymetry - Depth data and terrain models\nEMODnet Human Activities - Infrastructure and activity data\n\n\n\nR Package Documentation\n\nemodnet.wfs on GitHub - Access WFS vector data\nemodnet.wcs on GitHub - Access WCS raster data\nsf package - Spatial vector data in R\nterra package - Spatial raster data in R\n\n\n\nLearning Resources\n\nGeocomputation with R - Comprehensive guide to spatial analysis in R\nSpatial Data Science - Spatial data methods and applications\nsf package vignettes - Detailed sf documentation"
+  },
+  {
+    "objectID": "index.html#about-this-project",
+    "href": "index.html#about-this-project",
+    "title": "EMODnet Biology Geospatial R Tutorials",
+    "section": "About This Project",
+    "text": "About This Project\nThese tutorials are part of the EMODnet Biology initiative. Learn more about the project, contributors, and funding on the About page."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site\n\n1 + 1\n#&gt; [1] 2"
+    "text": "EMODnet Biology is the biological data portal of the European Marine Observation and Data Network (EMODnet). EMODnet is a network of European organisations working together to assemble marine data, data products, and metadata from diverse sources in a standardized way.\nEMODnet Biology provides free and open access to marine biological observations, species distributions, and biodiversity data from European seas. The portal aggregates data from diverse sources including research institutions, monitoring programmes, and citizen science initiatives, making it easily accessible for marine research, policy-making, and conservation efforts."
+  },
+  {
+    "objectID": "about.html#about-emodnet-biology",
+    "href": "about.html#about-emodnet-biology",
+    "title": "About",
+    "section": "",
+    "text": "EMODnet Biology is the biological data portal of the European Marine Observation and Data Network (EMODnet). EMODnet is a network of European organisations working together to assemble marine data, data products, and metadata from diverse sources in a standardized way.\nEMODnet Biology provides free and open access to marine biological observations, species distributions, and biodiversity data from European seas. The portal aggregates data from diverse sources including research institutions, monitoring programmes, and citizen science initiatives, making it easily accessible for marine research, policy-making, and conservation efforts."
+  },
+  {
+    "objectID": "about.html#about-this-tutorial-initiative",
+    "href": "about.html#about-this-tutorial-initiative",
+    "title": "About",
+    "section": "About This Tutorial Initiative",
+    "text": "About This Tutorial Initiative\nThese tutorials were developed as part of the EMODnet Biology initiative to demonstrate how researchers, students, and practitioners can access and analyze EMODnet data programmatically using R. By providing practical, reproducible workflows using real marine data, we aim to:\n\nLower barriers to accessing and using EMODnet biological and environmental data\nDemonstrate the value of web services (WFS and WCS) for programmatic data access\nShowcase real-world applications relevant to marine conservation and spatial planning\nBuild capacity in marine spatial data science across the research community\n\nThe tutorials highlight how EMODnet data can be integrated with other European marine data infrastructures, such as Copernicus Marine Service, to support evidence-based marine management and research."
+  },
+  {
+    "objectID": "about.html#emodnet-web-services",
+    "href": "about.html#emodnet-web-services",
+    "title": "About",
+    "section": "EMODnet Web Services",
+    "text": "EMODnet Web Services\nEMODnet provides standardized geospatial web services following Open Geospatial Consortium (OGC) specifications. These services are maintained by the EMODnet thematic portals (Biology, Bathymetry, Seabed Habitats, Human Activities, etc.), each operated by a consortium of European marine research institutions.\nEach thematic portal is responsible for:\n\nAggregating data from multiple sources across Europe\nStandardizing and quality-controlling the data\nHosting and maintaining the web service infrastructure\nEnsuring long-term data preservation and access\n\nThis infrastructure enables researchers and practitioners to programmatically access marine data without needing to manage large file downloads or navigate multiple data repositories."
+  },
+  {
+    "objectID": "about.html#the-r-packages",
+    "href": "about.html#the-r-packages",
+    "title": "About",
+    "section": "The R Packages",
+    "text": "The R Packages\nThese tutorials demonstrate two R packages developed specifically for accessing EMODnet data services:\nemodnet.wfs provides programmatic access to EMODnet’s Web Feature Service (WFS) endpoints, enabling users to retrieve vector data such as species occurrences, habitat boundaries, and infrastructure locations directly into R.\nemodnet.wcs enables access to EMODnet’s Web Coverage Service (WCS) endpoints, allowing users to download raster data such as depth models, species distributions, and environmental variables.\nBoth packages simplify data discovery, querying, and retrieval, making EMODnet’s extensive data holdings readily available for spatial analysis in R."
+  },
+  {
+    "objectID": "about.html#acknowledgments-and-funding",
+    "href": "about.html#acknowledgments-and-funding",
+    "title": "About",
+    "section": "Acknowledgments and Funding",
+    "text": "Acknowledgments and Funding\nThese tutorials were developed as part of the EMODnet Biology initiative, funded by the European Commission’s Directorate-General for Maritime Affairs and Fisheries (DG MARE) under the European Maritime and Fisheries Fund (EMFF).\nThe tutorial materials are made available under open licenses to support the broader marine science and data science communities."
+  },
+  {
+    "objectID": "about.html#contributing",
+    "href": "about.html#contributing",
+    "title": "About",
+    "section": "Contributing",
+    "text": "Contributing\nWe welcome contributions, suggestions, and feedback! Please visit our GitHub repository to:\n\nReport issues or bugs\nSuggest improvements or new tutorial topics\nSubmit pull requests with corrections or enhancements\n\nFor detailed contribution guidelines, see CONTRIBUTING.md."
+  },
+  {
+    "objectID": "about.html#links-and-resources",
+    "href": "about.html#links-and-resources",
+    "title": "About",
+    "section": "Links and Resources",
+    "text": "Links and Resources\n\nEMODnet Biology Portal\nEMODnet Main Portal\nemodnet.wfs Package\nemodnet.wcs Package"
+  },
+  {
+    "objectID": "concepts.html",
+    "href": "concepts.html",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "",
+    "text": "This page provides foundational knowledge for working with geospatial marine data. If you’re new to spatial analysis or need a refresher, start here before diving into the tutorials."
+  },
+  {
+    "objectID": "concepts.html#introduction",
+    "href": "concepts.html#introduction",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "",
+    "text": "This page provides foundational knowledge for working with geospatial marine data. If you’re new to spatial analysis or need a refresher, start here before diving into the tutorials."
+  },
+  {
+    "objectID": "concepts.html#spatial-data-types",
+    "href": "concepts.html#spatial-data-types",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Spatial Data Types",
+    "text": "Spatial Data Types\nGeospatial data comes in two fundamental forms: vector and raster (Figure 1). Understanding the difference is crucial for choosing the right analysis methods.\n\n\n\n\n\n\n\n\nFigure 1: Comparison of vector (left) and raster (right) representations of the same geographic area\n\n\n\n\n\n\nVector Data\nVector data represents discrete geographic features as points, lines, or polygons. Each feature has a precise location and can carry associated attributes (metadata).\nCommon vector data types:\n\nPoints - Specific locations (e.g., species observation sites, sampling stations, platform locations)\nLines - Linear features (e.g., ship tracks, transects, pipelines)\nPolygons - Enclosed areas (e.g., marine protected areas, habitat boundaries, survey regions)\n\nExamples in EMODnet:\n\nMarine protected area boundaries\nSpecies occurrence records\nSubsea infrastructure (pipelines, cables)\nHabitat classification polygons\nSurvey locations\n\nVector data is ideal when you need exact boundaries, discrete locations, or want to perform operations like counting features or measuring precise distances.\n\n\nRaster Data\nRaster data represents continuous spatial phenomena as a grid of cells (pixels), where each cell contains a value representing a measurement or category.\nCommon raster characteristics:\n\nOrganized as rows and columns of cells\nEach cell has a specific resolution (size)\nValues can be continuous (e.g., depth, temperature) or categorical (e.g., habitat types)\nOften used for environmental variables\n\nExamples in EMODnet:\n\nBathymetric depth models\nSpecies abundance grids\nHabitat suitability indices\nEnvironmental variables (temperature, salinity)\nDerived biodiversity metrics\n\nRaster data excels at representing continuous surfaces, enabling analyses like extracting values at points, calculating zonal statistics, or modeling spatial patterns."
+  },
+  {
+    "objectID": "concepts.html#web-services-for-spatial-data",
+    "href": "concepts.html#web-services-for-spatial-data",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Web Services for Spatial Data",
+    "text": "Web Services for Spatial Data\n\nWhat is a Web Service?\nA web service is a standardized protocol that allows software applications to communicate with databases over the internet. In the context of spatial data, web services provide programmatic access to spatial databases - you send a request (e.g., “give me species observations in this bounding box”) and the service queries its database and returns the data.\nEssentially, web services are spatial databases + standardized communication protocols that let you query and retrieve data through HTTP requests instead of needing direct database access.\nKey benefits:\n\nProgrammatic access - Query data directly from R without manual downloads\nSelective retrieval - Request only specific regions, time periods, or attributes\nAlways current - Access the latest data without managing file versions\nReproducible - Your code documents exactly what data was retrieved\nEfficient - Download only what you need, reducing bandwidth and storage\n\n\n\nHow Web Services Work\nFigure 2 illustrates the typical workflow when accessing EMODnet data through web services.\n\n\n\n\n\n\nflowchart LR\n    A[Your R Script] --&gt;|HTTP Request&lt;br/&gt;bbox, layer, filters| B[EMODnet WFS/WCS Server]\n    B --&gt;|Query| C[(Spatial Database)]\n    C --&gt;|Matching Data| B\n    B --&gt;|Response&lt;br/&gt;GeoJSON/GeoTIFF| A\n    A --&gt;|Load into| D[R Object&lt;br/&gt;sf or terra]\n\n    style A fill:#e1f5ff\n    style B fill:#fff4e1\n    style C fill:#f0f0f0\n    style D fill:#e1f5ff\n\n\n\n\nFigure 2: Web service request flow from R to EMODnet data services\n\n\n\n\n\n\n\nOGC Standards and Spatial Data Types\nThe Open Geospatial Consortium (OGC) has developed different standard protocols optimized for different types of spatial data. The protocols, underlying database technologies, and data formats all differ based on whether you’re working with vector or raster data.\nEMODnet provides two primary types of OGC-compliant geospatial web services, each designed for a specific spatial data type:\n\n\nWFS (Web Feature Service)\nWFS delivers vector data - discrete geographic features with attributes.\nKey characteristics:\n\nReturns features in formats like GeoJSON or GML\nSupports spatial and attribute filtering\nAllows querying specific areas or feature properties\nIdeal for points, lines, and polygons\n\nIn R: Use the emodnet.wfs package to access WFS services. The package simplifies discovering available layers, filtering by extent or attributes, and retrieving data as sf objects.\nExample WFS data from EMODnet:\n\nSpecies occurrences and distributions\nMarine protected area boundaries\nInfrastructure features\nHabitat polygons\n\n\n\nWCS (Web Coverage Service)\nWCS delivers raster data - gridded coverage representing continuous variables.\nKey characteristics:\n\nReturns coverage in formats like GeoTIFF\nSupports spatial and temporal subsetting\nCan extract specific bands from multi-band datasets\nIdeal for environmental layers and modeled surfaces\n\nIn R: Use the emodnet.wcs package to access WCS services. The package handles coverage discovery, spatial/temporal subsetting, and returns data as terra raster objects.\nExample WCS data from EMODnet:\n\nBathymetric depth models\nSpecies abundance and diversity grids\nHabitat suitability models\nGridded biodiversity metrics\n\n\n\nAdvantages of Web Services\nCompared to direct file downloads, web services offer:\n\nOn-demand access - Get only the data you need, when you need it\nSpatial filtering - Request data for specific regions using bounding boxes\nTemporal subsetting - Extract data for particular time periods\nAlways current - Access the latest data without managing downloads\nReproducibility - Script your data access for transparent, repeatable workflows"
+  },
+  {
+    "objectID": "concepts.html#coordinate-reference-systems-crs",
+    "href": "concepts.html#coordinate-reference-systems-crs",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Coordinate Reference Systems (CRS)",
+    "text": "Coordinate Reference Systems (CRS)\nA Coordinate Reference System defines how coordinates relate to locations on Earth’s surface. Understanding CRS is essential for accurate spatial analysis.\n\nThe Challenge: From 3D Earth to 2D Maps\nEarth is a three-dimensional sphere, but maps and computer screens are two-dimensional. Think of trying to peel an orange and flatten the peel completely - you can’t do it without distorting, stretching, tearing, or overlapping parts of it. This is the fundamental challenge of cartography.\nProjections are different methods of “peeling and flattening” Earth’s surface. Just as there are many ways you could cut and flatten an orange peel (peel it in strips, cut it into wedges, try to keep it in one piece), there are many different projection methods, each making different choices about:\n\nWhere to cut (what regions to split)\nWhat to stretch (which areas get distorted)\nWhat to preserve (angles, areas, distances, or shapes)\n\nThere is no perfect solution - every projection sacrifices something. This is why dozens of projections exist: each is optimized for different purposes and geographic regions.\n\n\n\n\n\n\nNoteEPSG Codes\n\n\n\nThroughout this page, you’ll see CRS referenced by EPSG codes (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil & Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide an unambiguous way to specify which CRS you’re using.\n\n\n\n\nGeographic vs Projected CRS\nGeographic Coordinate Systems (Unprojected)\nGeographic CRS don’t actually “flatten” Earth - they describe locations on the 3D spheroid surface using angles (latitude and longitude in degrees). Think of this as leaving the orange intact and describing locations by their angular position from the center.\n\nExample: WGS84 (EPSG:4326) (Figure 3 (a)) - Most common for global marine data and default for EMODnet services\nUnits in degrees, not meters\nGood for storing and sharing data globally\nNot suitable for measurements - a degree of longitude represents different distances at different latitudes (degrees get closer together near the poles)\n\nProjected Coordinate Systems\nProjected CRS actually perform the “flattening” using mathematical transformations. Each projection is a different flattening method with different trade-offs:\n\nWeb Mercator (EPSG:3857) (Figure 3 (b)) - “Peels the orange” by stretching areas increasingly toward the poles. Preserves angles (conformal projection), which historically made it invaluable for maritime navigation - sailors could plot a straight line between two points and maintain a constant compass bearing throughout their journey. However, this comes at the cost of severely distorting areas at high latitudes. Used by most web maps because it makes the whole world fit in a square.\nUTM zones (e.g., EPSG:32631 for UTM 31N) - “Cuts the orange” into 60 vertical strips (zones), each 6° of longitude wide. Each strip is flattened with minimal distortion within that zone. Excellent for regional analysis.\nLambert Azimuthal Equal Area (EPSG:3035) (Figure 3 (c)) - “Flattens the orange” while preserving area relationships. A 100 km² habitat appears as 100 km² on the map, regardless of location. Essential for statistical analyses involving area.\nLocal projections - Optimized flattening methods for specific countries or regions, minimizing distortion in areas of interest.\n\nFigure 3 compares these three coordinate reference systems using Europe and Greenland to illustrate the dramatic differences in how projections distort geographic features.\n\n\n\n\n\n\n\n\n\n\n\n\n(a) WGS84 (EPSG:4326) - Unprojected geographic CRS\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n(b) Web Mercator (EPSG:3857) - Projected CRS with severe distortion at high latitudes\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n(c) Lambert Azimuthal Equal Area (EPSG:3035) - Projected CRS preserving area\n\n\n\n\n\n\n\n\nFigure 3: Comparison of Europe and Greenland in three different coordinate reference systems. Notice how Greenland’s size changes dramatically across projections - Mercator makes it appear huge through vertical stretching, while LAEA shows its true relative size.\n\n\n\n\n\nWhy This Matters for Marine Spatial Analysis\n\nMeasurements require projected CRS - You can’t accurately calculate distances or areas in degrees (geographic CRS). You need a projection that converts to meters.\nChoose projections for your region - A projection optimized for Europe will distort tropical regions. Use UTM zones for your study area or regional equal-area projections.\nMatch your analysis goal - Use equal-area projections for habitat area calculations, equidistant projections for dispersal distance analyses, or conformal projections for angular relationships.\nAlignment is critical - All datasets in an analysis must use the same CRS, or features won’t align correctly.\n\n\n\nWorking with CRS in R\nBoth major R spatial packages provide CRS transformation functions:\n\nVector data (sf) - Use st_transform() to convert between coordinate systems\nRaster data (terra) - Use project() to reproject raster layers\n\nThe tutorials demonstrate when and how to transform between CRS for different types of spatial analyses."
+  },
+  {
+    "objectID": "concepts.html#key-r-packages",
+    "href": "concepts.html#key-r-packages",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Key R Packages",
+    "text": "Key R Packages\n\nsf - Simple Features for R\nThe sf package is the modern standard for vector spatial data in R.\nKey features:\n\nRepresents spatial data as data frames with geometry columns\nIntegrates with tidyverse workflows\nProvides spatial operations (intersections, buffers, joins, etc.)\nHandles CRS transformations\nReads/writes common spatial formats\n\nWhen to use: Working with points, lines, polygons, or any vector data.\n\n\nterra - Spatial Data Analysis\nThe terra package is the modern replacement for raster, designed for raster spatial data.\nKey features:\n\nHandles single and multi-layer rasters\nPerforms raster algebra and focal operations\nExtracts values at points or within polygons\nManages large datasets efficiently\nSupports raster-vector operations\n\nWhen to use: Working with gridded data, environmental layers, or continuous surfaces."
+  },
+  {
+    "objectID": "concepts.html#common-spatial-operations",
+    "href": "concepts.html#common-spatial-operations",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Common Spatial Operations",
+    "text": "Common Spatial Operations\n\nVector Operations (sf)\n\nSpatial intersection - Identifies features that overlap spatially, returning the geometric intersection and combined attributes from both input layers. Useful for finding which features from different datasets occupy the same locations (e.g., protected areas intersecting with infrastructure).\nBuffering - Creates zones of specified distance around features, generating polygons that represent areas within a given radius. Essential for proximity analyses, such as identifying areas within a certain distance of sampling stations or evaluating buffer zones around sensitive habitats.\nSpatial joins - Combines features from two layers based on their spatial relationship (e.g., contains, intersects, within). Allows you to transfer attributes from one layer to another based on location, such as assigning habitat types to species occurrence points or aggregating observations within management zones.\nDistance calculations - Measures distances between features, either point-to-point or between features and geometries. Critical for analyses involving dispersal distances, connectivity assessments, or identifying nearest neighbors.\nArea and length measurements - Calculates geometric properties of features, providing area measurements for polygons and length measurements for lines. Required for quantifying habitat extent, assessing patch sizes, or measuring transect lengths.\n\n\n\nRaster Operations (terra)\n\nExtraction - Retrieves raster cell values at specified point locations or within polygon boundaries. Commonly used to extract environmental variables (depth, temperature, salinity) at species occurrence locations or calculate zonal statistics within habitat polygons.\nMasking - Restricts raster data to areas defined by a polygon or another raster, setting values outside the mask to NA. Useful for limiting analyses to specific regions such as marine protected areas, exclusive economic zones, or specific depth ranges.\nRaster algebra - Performs mathematical operations on raster layers, either within a single layer (e.g., unit conversions, transformations) or across multiple layers (e.g., calculating change between time periods, combining variables). Enables creation of derived metrics like biodiversity change or habitat suitability indices.\nAggregation and resampling - Changes raster resolution by combining or subdividing cells. Aggregation reduces resolution for computational efficiency or matching other datasets, while resampling adjusts resolution or aligns grids from different sources.\nFocal operations - Applies functions to neighborhoods of cells, such as calculating moving window statistics (mean, standard deviation) or smoothing. Used for identifying spatial patterns, creating terrain derivatives, or reducing noise in environmental data."
+  },
+  {
+    "objectID": "concepts.html#data-formats",
+    "href": "concepts.html#data-formats",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Data Formats",
+    "text": "Data Formats\nUnderstanding spatial data formats is important when working with web services, even through R packages. While the emodnet.wfs and emodnet.wcs packages handle data retrieval and automatically load results as R objects (sf for vector, terra for raster), the underlying format requested from the service can have significant practical implications:\nDownload speed and data size - Different formats have different compression and encoding schemes, affecting transfer time and bandwidth usage.\nGeometry types and plotting compatibility - Format choice affects what feature geometries are returned. For example, WFS services may return complex geometry types like MULTISURFACE in GML format, which cannot be easily plotted and require conversion to standard POLYGONs. Requesting GeoJSON format instead often returns simpler geometry types that integrate directly with plotting workflows.\nSaving data locally - After retrieving data from EMODnet, you may want to save it for archival, sharing with collaborators, or use in other software. Understanding format characteristics helps you choose the best option for your needs.\nThe tutorials demonstrate when and how to specify output formats to optimize your workflow.\n\nVector Formats\nGeoJSON (.geojson)\n\nText-based, human-readable\nWidely supported across platforms\nGood for web applications and data sharing\nDefault output from many WFS services\n\nShapefiles (.shp + supporting files)\n\nTraditional GIS format\nRequires multiple files (.shp, .shx, .dbf, .prj)\nWell-supported but has limitations (field name length, size limits)\n\nGeoPackage (.gpkg)\n\nModern, single-file format\nSupports multiple layers\nNo size limits\nRecommended for new projects\n\n\n\nRaster Formats\nGeoTIFF (.tif)\n\nIndustry standard for raster data\nEmbeds spatial reference information\nSupports multiple bands\nEfficient for large datasets\nDefault output from many WCS services\n\nNetCDF (.nc)\n\nMulti-dimensional arrays\nCommon for oceanographic and climate data\nHandles time series and multiple variables\nUsed by Copernicus Marine Service"
+  },
+  {
+    "objectID": "concepts.html#bounding-boxes-and-spatial-queries",
+    "href": "concepts.html#bounding-boxes-and-spatial-queries",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Bounding Boxes and Spatial Queries",
+    "text": "Bounding Boxes and Spatial Queries\nA bounding box defines a rectangular area of interest using minimum and maximum coordinates (xmin, ymin, xmax, ymax). Bounding boxes are fundamental to spatial queries, allowing you to request only the data you need from web services rather than downloading entire datasets. Figure 4 shows a bounding box for the North Sea region.\n\n\n\n\n\n\n\n\nFigure 4: Example bounding box for the North Sea region. The blue rectangle shows the spatial extent that would be requested from a web service.\n\n\n\n\n\n\nWhy Use Bounding Boxes?\nBounding boxes enable efficient spatial data retrieval by:\n\nReducing data transfer - Download only features or coverage within your study area\nImproving performance - Smaller data volumes mean faster processing and lower memory requirements\nFocusing analyses - Limit results to relevant geographic regions from the start\nReproducible workflows - Explicit spatial extent definitions make analyses transparent and repeatable\n\n\n\nBounding Boxes in EMODnet Services\nBoth WFS (vector) and WCS (raster) services accept bounding box parameters to spatially filter results. When querying EMODnet data through the emodnet.wfs and emodnet.wcs packages, you specify bounding boxes as numeric vectors with minimum and maximum coordinates in the appropriate coordinate reference system (typically WGS84 lon/lat for EMODnet services).\nThe tutorials demonstrate practical bounding box usage for retrieving EMODnet data in specific regions, from local study sites to broader management areas."
+  },
+  {
+    "objectID": "concepts.html#glossary-of-common-terms",
+    "href": "concepts.html#glossary-of-common-terms",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "Glossary of Common Terms",
+    "text": "Glossary of Common Terms\n\n\n\n\nTable 1\n\n\n\n\n\n\nTerm\nDefinition\n\n\n\n\nBathymetry\nThe measurement of ocean depth; underwater topography.\n\n\nBenthic\nRelating to organisms living on or in the seafloor.\n\n\nBiodiversity metrics\nQuantitative measures of biological diversity (e.g., species richness, evenness, β-diversity).\n\n\nβ-diversity (Beta diversity)\nTurnover in species composition between locations or time periods.\n\n\nBounding box\nA rectangular area defined by minimum and maximum coordinates, used to specify a region of interest.\n\n\nBuffer\nAn area of specified distance around a geographic feature.\n\n\nCRS (Coordinate Reference System)\nDefines how coordinates correspond to locations on Earth.\n\n\nEPSG code\nA unique numeric identifier for a coordinate reference system from the EPSG registry (e.g., EPSG:4326 for WGS84). Named after the European Petroleum Survey Group, now maintained by the International Association of Oil & Gas Producers.\n\n\nExtent\nThe geographic area covered by a spatial dataset.\n\n\nFeature\nA discrete geographic entity in vector data (point, line, or polygon) with associated attributes.\n\n\nGeometry\nThe spatial component of a feature (its shape and location).\n\n\nGridded data\nRaster data organized as a regular grid of cells.\n\n\nIntersection\nThe spatial overlap between geographic features.\n\n\nLayer\nA collection of geographic features or a raster dataset representing a theme.\n\n\nMasking\nRestricting raster data to areas defined by a polygon.\n\n\nMPA (Marine Protected Area)\nDesignated ocean area where human activities are restricted for conservation.\n\n\nProjection\nA mathematical transformation converting Earth's curved surface to a flat map.\n\n\nRaster\nGridded spatial data where each cell contains a value.\n\n\nResolution\nThe size of raster cells (e.g., 100m × 100m); smaller cells = finer detail.\n\n\nSpatial join\nCombining features from different layers based on spatial relationships.\n\n\nVector\nSpatial data representing discrete features as points, lines, or polygons.\n\n\nWCS (Web Coverage Service)\nA standard protocol for serving raster data.\n\n\nWFS (Web Feature Service)\nA standard protocol for serving vector data."
+  },
+  {
+    "objectID": "concepts.html#external-resources",
+    "href": "concepts.html#external-resources",
+    "title": "Geospatial Concepts & Glossary",
+    "section": "External Resources",
+    "text": "External Resources\n\nBooks and Guides\n\nGeocomputation with R - Comprehensive guide to spatial analysis in R by Robin Lovelace, Jakub Nowosad, and Jannes Muenchow\nSpatial Data Science - Modern approaches to spatial data analysis with R\nterra Documentation - Official terra package manual and tutorials\n\n\n\nPackage Documentation\n\nsf Package Vignettes - Detailed guides for working with vector data\nterra Package Reference - Complete function reference for raster operations\nemodnet.wfs Documentation - Guide to accessing EMODnet WFS services\nemodnet.wcs Documentation - Guide to accessing EMODnet WCS services\n\n\n\nAdditional Resources\n\nrspatial.org Tutorials - Free tutorials on spatial analysis with R\nCRAN Spatial Task View - Comprehensive overview of spatial packages in R\n\n\nReady to get started? Head to the tutorials to apply these concepts with real EMODnet data!"
+  },
+  {
+    "objectID": "tutorials/tutorial-01.html",
+    "href": "tutorials/tutorial-01.html",
+    "title": "1: Protected Areas and Subsea Infrastructure",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nHow to access and retrieve multiple WFS layers using the emodnet.wfs R package\nLoading and combining spatial datasets representing MPAs and subsea infrastructure\nHarmonising coordinate reference systems and preparing geometries for analysis\nApplying sf::st_intersects() to detect spatial overlaps\nSummarising and visualising the extent of intersection between protected areas and human activities\n\n\n\n\nProtected Areas (Seabed Habitats): - cddaareas - natura2000areas - marineprotectedareas\nSubsea Infrastructure (Human Activities): - platforms - pipelines - pcablesbshcontis - pcablesshom - pcablesrijks - pcablesnve\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-01.html#tutorial-content",
+    "href": "tutorials/tutorial-01.html#tutorial-content",
+    "title": "1: Protected Areas and Subsea Infrastructure",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nHow to access and retrieve multiple WFS layers using the emodnet.wfs R package\nLoading and combining spatial datasets representing MPAs and subsea infrastructure\nHarmonising coordinate reference systems and preparing geometries for analysis\nApplying sf::st_intersects() to detect spatial overlaps\nSummarising and visualising the extent of intersection between protected areas and human activities\n\n\n\n\nProtected Areas (Seabed Habitats): - cddaareas - natura2000areas - marineprotectedareas\nSubsea Infrastructure (Human Activities): - platforms - pipelines - pcablesbshcontis - pcablesshom - pcablesrijks - pcablesnve\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-03.html",
+    "href": "tutorials/tutorial-03.html",
+    "title": "3: Biodiversity Change and Depth",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nUsing emdn_get_features() to access spatiotemporal diversity metrics from EMODnet Biology (WFS)\nUsing emdn_get_coverage() to retrieve raster bathymetry from EMODnet Bathymetry (WCS)\nPerforming spatial joins and point-based extraction from raster datasets\nVisualising and summarising patterns of species gain/loss across depth gradients\n\n\n\n\nWFS (vector): - Layer ID: all_diversity_measures - Source: EMODnet Biology - Key variables: Species loss, species gain, β-diversity, time periods\nWCS (raster): - Layer ID: emodnet__mean_2020 - Source: EMODnet Bathymetry - Description: Mean depth (m), regularly gridded\n\n\n\nNorth Sea\nBounding box (WGS84): xmin = 1.5, ymin = 53, xmax = 6.5, ymax = 58\nCheck back soon for the complete tutorial!"
+  },
+  {
+    "objectID": "tutorials/tutorial-03.html#tutorial-content",
+    "href": "tutorials/tutorial-03.html#tutorial-content",
+    "title": "3: Biodiversity Change and Depth",
+    "section": "",
+    "text": "This tutorial is currently under development.\n\n\n\nUsing emdn_get_features() to access spatiotemporal diversity metrics from EMODnet Biology (WFS)\nUsing emdn_get_coverage() to retrieve raster bathymetry from EMODnet Bathymetry (WCS)\nPerforming spatial joins and point-based extraction from raster datasets\nVisualising and summarising patterns of species gain/loss across depth gradients\n\n\n\n\nWFS (vector): - Layer ID: all_diversity_measures - Source: EMODnet Biology - Key variables: Species loss, species gain, β-diversity, time periods\nWCS (raster): - Layer ID: emodnet__mean_2020 - Source: EMODnet Bathymetry - Description: Mean depth (m), regularly gridded\n\n\n\nNorth Sea\nBounding box (WGS84): xmin = 1.5, ymin = 53, xmax = 6.5, ymax = 58\nCheck back soon for the complete tutorial!"
   }
 ]

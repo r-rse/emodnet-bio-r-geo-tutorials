@@ -19,6 +19,19 @@ These tutorials were developed as part of the **EMODnet Biology** initiative to 
 
 The tutorials highlight how EMODnet data can be integrated with other European marine data infrastructures, such as Copernicus Marine Service, to support evidence-based marine management and research.
 
+## EMODnet Web Services
+
+EMODnet provides standardized geospatial web services following Open Geospatial Consortium (OGC) specifications. These services are maintained by the EMODnet thematic portals (Biology, Bathymetry, Seabed Habitats, Human Activities, etc.), each operated by a consortium of European marine research institutions.
+
+Each thematic portal is responsible for:
+
+- Aggregating data from multiple sources across Europe
+- Standardizing and quality-controlling the data
+- Hosting and maintaining the web service infrastructure
+- Ensuring long-term data preservation and access
+
+This infrastructure enables researchers and practitioners to programmatically access marine data without needing to manage large file downloads or navigate multiple data repositories.
+
 ## The R Packages
 
 These tutorials demonstrate two R packages developed specifically for accessing EMODnet data services:

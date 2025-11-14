@@ -22,6 +22,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: concepts.qmd
+        text: Geospatial Concepts
       - text: Tutorials
         menu:
           - text: "Tutorial 1: Protected Areas and Subsea Infrastructure"

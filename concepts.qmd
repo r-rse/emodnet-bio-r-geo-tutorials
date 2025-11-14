@@ -188,7 +188,7 @@ flowchart LR
 
 The **Open Geospatial Consortium (OGC)** has developed different standard protocols optimized for different types of spatial data. The protocols, underlying database technologies, and data formats all differ based on whether you're working with vector or raster data.
 
-EMODnet provides two primary types of OGC-compliant geospatial web services, each designed for a specific spatial data type:
+[EMODnet](about.qmd#emodnet-web-services) provides two primary types of OGC-compliant geospatial web services, each designed for a specific spatial data type:
 
 ### WFS (Web Feature Service)
 

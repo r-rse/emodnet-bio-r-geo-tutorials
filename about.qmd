@@ -10,12 +10,12 @@ EMODnet Biology provides free and open access to marine biological observations,
 
 ## About This Tutorial Initiative
 
-These tutorials were developed as part of the **EMODnet Biology** initiative to demonstrate how researchers, students, and practitioners can access and analyze EMODnet data programmatically using R. By providing practical, reproducible workflows using real marine data, we aim to:
+These [tutorials](index.qmd#tutorial-series) were developed as part of the **EMODnet Biology** initiative to demonstrate how researchers, students, and practitioners can access and analyze EMODnet data programmatically using R. By providing practical, reproducible workflows using real marine data, we aim to:
 
 -   Lower barriers to accessing and using EMODnet biological and environmental data
--   Demonstrate the value of web services (WFS and WCS) for programmatic data access
+-   Demonstrate the value of [web services](concepts.qmd#web-services-for-spatial-data) (WFS and WCS) for programmatic data access
 -   Showcase real-world applications relevant to marine conservation and spatial planning
--   Build capacity in marine spatial data science across the research community
+-   Build capacity in marine [spatial data science](concepts.qmd) across the research community
 
 The tutorials highlight how EMODnet data can be integrated with other European marine data infrastructures, such as Copernicus Marine Service, to support evidence-based marine management and research.
 
@@ -36,9 +36,9 @@ This infrastructure enables researchers and practitioners to programmatically ac
 
 These tutorials demonstrate two R packages developed specifically for accessing EMODnet data services:
 
-[**`emodnet.wfs`**](https://github.com/EMODnet/emodnet.wfs) provides programmatic access to EMODnet's Web Feature Service (WFS) endpoints, enabling users to retrieve vector data such as species occurrences, habitat boundaries, and infrastructure locations directly into R.
+[**`emodnet.wfs`**](https://github.com/EMODnet/emodnet.wfs) provides programmatic access to EMODnet's Web Feature Service (WFS) endpoints, enabling users to retrieve [vector data](concepts.qmd#vector-data) such as species occurrences, habitat boundaries, and infrastructure locations directly into R.
 
-[**`emodnet.wcs`**](https://github.com/EMODnet/emodnet.wcs) enables access to EMODnet's Web Coverage Service (WCS) endpoints, allowing users to download raster data such as depth models, species distributions, and environmental variables.
+[**`emodnet.wcs`**](https://github.com/EMODnet/emodnet.wcs) enables access to EMODnet's Web Coverage Service (WCS) endpoints, allowing users to download [raster data](concepts.qmd#raster-data) such as depth models, species distributions, and environmental variables.
 
 Both packages simplify data discovery, querying, and retrieval, making EMODnet's extensive data holdings readily available for spatial analysis in R.
 

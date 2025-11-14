@@ -33,7 +33,7 @@ By the end of these tutorials, you'll be able to independently access, analyze, 
 #| echo: false
 #| output: asis
 
-library(yaml)
+library(rmarkdown)
 
 # Get tutorial files in order
 tutorial_files <- list.files("tutorials", pattern = "^tutorial-\\d+\\.qmd$", full.names = TRUE)
@@ -45,7 +45,7 @@ cat('::: {.grid}\n\n')
 # Loop through tutorials and render cards
 for (tutorial_file in tutorial_files) {
   # Read YAML frontmatter
-  yaml_content <- yaml::read_yaml(tutorial_file)
+  yaml_content <- rmarkdown::yaml_front_matter(tutorial_file)
 
   # Extract tutorial number from title
   tutorial_number <- sub(":.*", "", yaml_content$title)

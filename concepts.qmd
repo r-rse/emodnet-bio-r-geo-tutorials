@@ -18,6 +18,10 @@ Geospatial data comes in two fundamental forms: **vector** and **raster** (@fig-
 #| fig-height: 5
 #| fig-cap: "Comparison of vector (left) and raster (right) representations of the same geographic area"
 
+# Load packages
+library(ggplot2)
+library(patchwork)
+
 # Create dummy vector data
 set.seed(123)
 points <- sf::st_as_sf(
@@ -158,11 +162,11 @@ Essentially, web services are **spatial databases + standardized communication p
 
 **Key benefits:**
 
-- **Programmatic access** - Query data directly from R without manual downloads
-- **Selective retrieval** - Request only specific regions, time periods, or attributes
-- **Always current** - Access the latest data without managing file versions
-- **Reproducible** - Your code documents exactly what data was retrieved
-- **Efficient** - Download only what you need, reducing bandwidth and storage
+-   **Programmatic access** - Query data directly from R without manual downloads
+-   **Selective retrieval** - Request only specific regions, time periods, or attributes
+-   **Always current** - Access the latest data without managing file versions
+-   **Reproducible** - Your code documents exactly what data was retrieved
+-   **Efficient** - Download only what you need, reducing bandwidth and storage
 
 ### How Web Services Work
 
@@ -250,13 +254,13 @@ Earth is a three-dimensional sphere, but maps and computer screens are two-dimen
 
 **Projections are different methods of "peeling and flattening" Earth's surface.** Just as there are many ways you could cut and flatten an orange peel (peel it in strips, cut it into wedges, try to keep it in one piece), there are many different projection methods, each making different choices about:
 
-- Where to cut (what regions to split)
-- What to stretch (which areas get distorted)
-- What to preserve (angles, areas, distances, or shapes)
+-   Where to cut (what regions to split)
+-   What to stretch (which areas get distorted)
+-   What to preserve (angles, areas, distances, or shapes)
 
 **There is no perfect solution** - every projection sacrifices something. This is why dozens of projections exist: each is optimized for different purposes and geographic regions.
 
-::: {.callout-note}
+::: callout-note
 ## EPSG Codes
 
 Throughout this page, you'll see CRS referenced by **EPSG codes** (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil & Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide an unambiguous way to specify which CRS you're using.
@@ -268,22 +272,22 @@ Throughout this page, you'll see CRS referenced by **EPSG codes** (e.g., EPSG:43
 
 Geographic CRS don't actually "flatten" Earth - they describe locations on the 3D spheroid surface using angles (latitude and longitude in degrees). Think of this as leaving the orange intact and describing locations by their angular position from the center.
 
-- **Example: WGS84 (EPSG:4326)** (@fig-crs-wgs84) - Most common for global marine data and default for EMODnet services
-- Units in degrees, not meters
-- Good for storing and sharing data globally
-- **Not suitable for measurements** - a degree of longitude represents different distances at different latitudes (degrees get closer together near the poles)
+-   **Example: WGS84 (EPSG:4326)** (@fig-crs-wgs84) - Most common for global marine data and default for EMODnet services
+-   Units in degrees, not meters
+-   Good for storing and sharing data globally
+-   **Not suitable for measurements** - a degree of longitude represents different distances at different latitudes (degrees get closer together near the poles)
 
 **Projected Coordinate Systems**
 
 Projected CRS actually perform the "flattening" using mathematical transformations. Each projection is a different flattening method with different trade-offs:
 
-- **Web Mercator (EPSG:3857)** (@fig-crs-mercator) - "Peels the orange" by stretching areas increasingly toward the poles. Preserves angles (conformal projection), which historically made it invaluable for maritime navigation - sailors could plot a straight line between two points and maintain a constant compass bearing throughout their journey. However, this comes at the cost of severely distorting areas at high latitudes. Used by most web maps because it makes the whole world fit in a square.
+-   **Web Mercator (EPSG:3857)** (@fig-crs-mercator) - "Peels the orange" by stretching areas increasingly toward the poles. Preserves angles (conformal projection), which historically made it invaluable for maritime navigation - sailors could plot a straight line between two points and maintain a constant compass bearing throughout their journey. However, this comes at the cost of severely distorting areas at high latitudes. Used by most web maps because it makes the whole world fit in a square.
 
-- **UTM zones (e.g., EPSG:32631 for UTM 31N)** - "Cuts the orange" into 60 vertical strips (zones), each 6° of longitude wide. Each strip is flattened with minimal distortion within that zone. Excellent for regional analysis.
+-   **UTM zones (e.g., EPSG:32631 for UTM 31N)** - "Cuts the orange" into 60 vertical strips (zones), each 6° of longitude wide. Each strip is flattened with minimal distortion within that zone. Excellent for regional analysis.
 
-- **Lambert Azimuthal Equal Area (EPSG:3035)** (@fig-crs-laea) - "Flattens the orange" while preserving area relationships. A 100 km² habitat appears as 100 km² on the map, regardless of location. Essential for statistical analyses involving area.
+-   **Lambert Azimuthal Equal Area (EPSG:3035)** (@fig-crs-laea) - "Flattens the orange" while preserving area relationships. A 100 km² habitat appears as 100 km² on the map, regardless of location. Essential for statistical analyses involving area.
 
-- **Local projections** - Optimized flattening methods for specific countries or regions, minimizing distortion in areas of interest.
+-   **Local projections** - Optimized flattening methods for specific countries or regions, minimizing distortion in areas of interest.
 
 @fig-crs compares these three coordinate reference systems using Europe and Greenland to illustrate the dramatic differences in how projections distort geographic features.
 
@@ -313,8 +317,7 @@ europe_greenland <- sf::st_crop(
 sf::sf_use_s2(TRUE)
 ```
 
-::: {#fig-crs layout-ncol=1}
-
+::: {#fig-crs layout-ncol="1"}
 ```{r}
 #| label: fig-crs-wgs84
 #| echo: false
@@ -391,20 +394,20 @@ Comparison of Europe and Greenland in three different coordinate reference syste
 
 ### Why This Matters for Marine Spatial Analysis
 
-- **Measurements require projected CRS** - You can't accurately calculate distances or areas in degrees (geographic CRS). You need a projection that converts to meters.
+-   **Measurements require projected CRS** - You can't accurately calculate distances or areas in degrees (geographic CRS). You need a projection that converts to meters.
 
-- **Choose projections for your region** - A projection optimized for Europe will distort tropical regions. Use UTM zones for your study area or regional equal-area projections.
+-   **Choose projections for your region** - A projection optimized for Europe will distort tropical regions. Use UTM zones for your study area or regional equal-area projections.
 
-- **Match your analysis goal** - Use equal-area projections for habitat area calculations, equidistant projections for dispersal distance analyses, or conformal projections for angular relationships.
+-   **Match your analysis goal** - Use equal-area projections for habitat area calculations, equidistant projections for dispersal distance analyses, or conformal projections for angular relationships.
 
-- **Alignment is critical** - All datasets in an analysis must use the same CRS, or features won't align correctly.
+-   **Alignment is critical** - All datasets in an analysis must use the same CRS, or features won't align correctly.
 
 ### Working with CRS in R
 
 Both major R spatial packages provide CRS transformation functions:
 
-- **Vector data (sf)** - Use `st_transform()` to convert between coordinate systems
-- **Raster data (terra)** - Use `project()` to reproject raster layers
+-   **Vector data (sf)** - Use `st_transform()` to convert between coordinate systems
+-   **Raster data (terra)** - Use `project()` to reproject raster layers
 
 The tutorials demonstrate when and how to transform between CRS for different types of spatial analyses.
 
@@ -442,27 +445,27 @@ The [`terra` package](https://rspatial.github.io/terra/) is the modern replaceme
 
 ### Vector Operations (sf)
 
-- **Spatial intersection** - Identifies features that overlap spatially, returning the geometric intersection and combined attributes from both input layers. Useful for finding which features from different datasets occupy the same locations (e.g., protected areas intersecting with infrastructure).
+-   **Spatial intersection** - Identifies features that overlap spatially, returning the geometric intersection and combined attributes from both input layers. Useful for finding which features from different datasets occupy the same locations (e.g., protected areas intersecting with infrastructure).
 
-- **Buffering** - Creates zones of specified distance around features, generating polygons that represent areas within a given radius. Essential for proximity analyses, such as identifying areas within a certain distance of sampling stations or evaluating buffer zones around sensitive habitats.
+-   **Buffering** - Creates zones of specified distance around features, generating polygons that represent areas within a given radius. Essential for proximity analyses, such as identifying areas within a certain distance of sampling stations or evaluating buffer zones around sensitive habitats.
 
-- **Spatial joins** - Combines features from two layers based on their spatial relationship (e.g., contains, intersects, within). Allows you to transfer attributes from one layer to another based on location, such as assigning habitat types to species occurrence points or aggregating observations within management zones.
+-   **Spatial joins** - Combines features from two layers based on their spatial relationship (e.g., contains, intersects, within). Allows you to transfer attributes from one layer to another based on location, such as assigning habitat types to species occurrence points or aggregating observations within management zones.
 
-- **Distance calculations** - Measures distances between features, either point-to-point or between features and geometries. Critical for analyses involving dispersal distances, connectivity assessments, or identifying nearest neighbors.
+-   **Distance calculations** - Measures distances between features, either point-to-point or between features and geometries. Critical for analyses involving dispersal distances, connectivity assessments, or identifying nearest neighbors.
 
-- **Area and length measurements** - Calculates geometric properties of features, providing area measurements for polygons and length measurements for lines. Required for quantifying habitat extent, assessing patch sizes, or measuring transect lengths.
+-   **Area and length measurements** - Calculates geometric properties of features, providing area measurements for polygons and length measurements for lines. Required for quantifying habitat extent, assessing patch sizes, or measuring transect lengths.
 
 ### Raster Operations (terra)
 
-- **Extraction** - Retrieves raster cell values at specified point locations or within polygon boundaries. Commonly used to extract environmental variables (depth, temperature, salinity) at species occurrence locations or calculate zonal statistics within habitat polygons.
+-   **Extraction** - Retrieves raster cell values at specified point locations or within polygon boundaries. Commonly used to extract environmental variables (depth, temperature, salinity) at species occurrence locations or calculate zonal statistics within habitat polygons.
 
-- **Masking** - Restricts raster data to areas defined by a polygon or another raster, setting values outside the mask to NA. Useful for limiting analyses to specific regions such as marine protected areas, exclusive economic zones, or specific depth ranges.
+-   **Masking** - Restricts raster data to areas defined by a polygon or another raster, setting values outside the mask to NA. Useful for limiting analyses to specific regions such as marine protected areas, exclusive economic zones, or specific depth ranges.
 
-- **Raster algebra** - Performs mathematical operations on raster layers, either within a single layer (e.g., unit conversions, transformations) or across multiple layers (e.g., calculating change between time periods, combining variables). Enables creation of derived metrics like biodiversity change or habitat suitability indices.
+-   **Raster algebra** - Performs mathematical operations on raster layers, either within a single layer (e.g., unit conversions, transformations) or across multiple layers (e.g., calculating change between time periods, combining variables). Enables creation of derived metrics like biodiversity change or habitat suitability indices.
 
-- **Aggregation and resampling** - Changes raster resolution by combining or subdividing cells. Aggregation reduces resolution for computational efficiency or matching other datasets, while resampling adjusts resolution or aligns grids from different sources.
+-   **Aggregation and resampling** - Changes raster resolution by combining or subdividing cells. Aggregation reduces resolution for computational efficiency or matching other datasets, while resampling adjusts resolution or aligns grids from different sources.
 
-- **Focal operations** - Applies functions to neighborhoods of cells, such as calculating moving window statistics (mean, standard deviation) or smoothing. Used for identifying spatial patterns, creating terrain derivatives, or reducing noise in environmental data.
+-   **Focal operations** - Applies functions to neighborhoods of cells, such as calculating moving window statistics (mean, standard deviation) or smoothing. Used for identifying spatial patterns, creating terrain derivatives, or reducing noise in environmental data.
 
 ## Data Formats
 
@@ -614,30 +617,30 @@ The tutorials demonstrate practical bounding box usage for retrieving EMODnet da
 #| message: false
 
 glossary <- tibble::tribble(
-  ~Term, ~Definition,
-  "Bathymetry", "The measurement of ocean depth; underwater topography.",
-  "Benthic", "Relating to organisms living on or in the seafloor.",
-  "Biodiversity metrics", "Quantitative measures of biological diversity (e.g., species richness, evenness, β-diversity).",
-  "β-diversity (Beta diversity)", "Turnover in species composition between locations or time periods.",
-  "Bounding box", "A rectangular area defined by minimum and maximum coordinates, used to specify a region of interest.",
-  "Buffer", "An area of specified distance around a geographic feature.",
-  "CRS (Coordinate Reference System)", "Defines how coordinates correspond to locations on Earth.",
-  "EPSG code", "A unique numeric identifier for a coordinate reference system from the EPSG registry (e.g., EPSG:4326 for WGS84). Named after the European Petroleum Survey Group, now maintained by the International Association of Oil & Gas Producers.",
-  "Extent", "The geographic area covered by a spatial dataset.",
-  "Feature", "A discrete geographic entity in vector data (point, line, or polygon) with associated attributes.",
-  "Geometry", "The spatial component of a feature (its shape and location).",
-  "Gridded data", "Raster data organized as a regular grid of cells.",
-  "Intersection", "The spatial overlap between geographic features.",
-  "Layer", "A collection of geographic features or a raster dataset representing a theme.",
-  "Masking", "Restricting raster data to areas defined by a polygon.",
-  "MPA (Marine Protected Area)", "Designated ocean area where human activities are restricted for conservation.",
-  "Projection", "A mathematical transformation converting Earth's curved surface to a flat map.",
-  "Raster", "Gridded spatial data where each cell contains a value.",
-  "Resolution", "The size of raster cells (e.g., 100m × 100m); smaller cells = finer detail.",
-  "Spatial join", "Combining features from different layers based on spatial relationships.",
-  "Vector", "Spatial data representing discrete features as points, lines, or polygons.",
-  "WCS (Web Coverage Service)", "A standard protocol for serving raster data.",
-  "WFS (Web Feature Service)", "A standard protocol for serving vector data."
+  ~Term                               , ~Definition                                                                                                                                                                                                                                  ,
+  "Bathymetry"                        , "The measurement of ocean depth; underwater topography."                                                                                                                                                                                     ,
+  "Benthic"                           , "Relating to organisms living on or in the seafloor."                                                                                                                                                                                        ,
+  "Biodiversity metrics"              , "Quantitative measures of biological diversity (e.g., species richness, evenness, β-diversity)."                                                                                                                                            ,
+  "β-diversity (Beta diversity)"     , "Turnover in species composition between locations or time periods."                                                                                                                                                                         ,
+  "Bounding box"                      , "A rectangular area defined by minimum and maximum coordinates, used to specify a region of interest."                                                                                                                                       ,
+  "Buffer"                            , "An area of specified distance around a geographic feature."                                                                                                                                                                                 ,
+  "CRS (Coordinate Reference System)" , "Defines how coordinates correspond to locations on Earth."                                                                                                                                                                                  ,
+  "EPSG code"                         , "A unique numeric identifier for a coordinate reference system from the EPSG registry (e.g., EPSG:4326 for WGS84). Named after the European Petroleum Survey Group, now maintained by the International Association of Oil & Gas Producers." ,
+  "Extent"                            , "The geographic area covered by a spatial dataset."                                                                                                                                                                                          ,
+  "Feature"                           , "A discrete geographic entity in vector data (point, line, or polygon) with associated attributes."                                                                                                                                          ,
+  "Geometry"                          , "The spatial component of a feature (its shape and location)."                                                                                                                                                                               ,
+  "Gridded data"                      , "Raster data organized as a regular grid of cells."                                                                                                                                                                                          ,
+  "Intersection"                      , "The spatial overlap between geographic features."                                                                                                                                                                                           ,
+  "Layer"                             , "A collection of geographic features or a raster dataset representing a theme."                                                                                                                                                              ,
+  "Masking"                           , "Restricting raster data to areas defined by a polygon."                                                                                                                                                                                     ,
+  "MPA (Marine Protected Area)"       , "Designated ocean area where human activities are restricted for conservation."                                                                                                                                                              ,
+  "Projection"                        , "A mathematical transformation converting Earth's curved surface to a flat map."                                                                                                                                                             ,
+  "Raster"                            , "Gridded spatial data where each cell contains a value."                                                                                                                                                                                     ,
+  "Resolution"                        , "The size of raster cells (e.g., 100m × 100m); smaller cells = finer detail."                                                                                                                                                               ,
+  "Spatial join"                      , "Combining features from different layers based on spatial relationships."                                                                                                                                                                   ,
+  "Vector"                            , "Spatial data representing discrete features as points, lines, or polygons."                                                                                                                                                                 ,
+  "WCS (Web Coverage Service)"        , "A standard protocol for serving raster data."                                                                                                                                                                                               ,
+  "WFS (Web Feature Service)"         , "A standard protocol for serving vector data."
 )
 
 knitr::kable(glossary, col.names = c("Term", "Definition")) |>

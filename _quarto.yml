@@ -6,8 +6,8 @@ project:
     - "!README.md"
 
 website:
-  title: "EMODnet Biology R Tutorials"
-  description: "R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
+  title: "EMODnet Biology Geospatial R Tutorials"
+  description: "Geospatial R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
   site-url: https://r-rse.github.io/emodnet-bio-r-geo-tutorials
   repo-url: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
   repo-actions: [edit, issue]

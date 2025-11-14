@@ -6,8 +6,8 @@ project:
     - "!README.md"
 
 website:
-  title: "EMODnet Biology R Tutorials"
-  description: "R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
+  title: "EMODnet Biology Geospatial R Tutorials"
+  description: "Geospatial R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
   site-url: https://r-rse.github.io/emodnet-bio-r-geo-tutorials
   repo-url: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
   repo-actions: [edit, issue]
@@ -22,16 +22,18 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: concepts.qmd
+        text: Geospatial Concepts
       - text: Tutorials
         menu:
           - text: "Tutorial 1: Protected Areas and Subsea Infrastructure"
-            href: tutorial-01.qmd
+            href: tutorials/tutorial-01.qmd
           - text: "Tutorial 2: Zooplankton and Plaice Nurseries"
-            href: tutorial-02.qmd
+            href: tutorials/tutorial-02.qmd
           - text: "Tutorial 3: Biodiversity Change and Depth"
-            href: tutorial-03.qmd
+            href: tutorials/tutorial-03.qmd
           - text: "Tutorial 4: Functional Traits Across Habitats"
-            href: tutorial-04.qmd
+            href: tutorials/tutorial-04.qmd
       - about.qmd
     right:
       - icon: github

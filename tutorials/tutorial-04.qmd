@@ -1,0 +1,38 @@
+---
+title: "4: Functional Traits Across Seabed Habitats"
+subtitle: "Exploring Functional Traits Across Seabed Habitats in the Aegean Sea"
+difficulty: "Advanced"
+time: "~90 minutes"
+data-type: "WFS + WCS + External sources"
+description: "Integrate EMODnet data with external trait databases and Copernicus Marine Service environmental data. Investigate how benthic species body size varies across habitat types and environmental gradients in the Aegean Sea."
+datasets: "Benthic species occurrences, seabed habitat maps, trait databases, temperature reanalysis data"
+---
+
+## Tutorial Content
+
+This tutorial is currently under development.
+
+### What You'll Learn
+
+- Demonstrating combined use of emodnet.wfs, emodnet.wcs, and CopernicusMarine packages
+- Retrieving and visualising body size traits for benthic species using trait databases
+- Exploring trait–environment relationships across habitat types
+- Practical geospatial workflows including raster extraction and spatial joins
+
+### Data Sources
+
+- **EMODnet WFS:**
+  - `eb185_benthos_full_matched`: Benthic species records in the Aegean
+  - `eu_seabed_habitats_2019`: Seabed habitat polygons
+- **EMODnet WCS:**
+  - `emodnet__mean_2020`: Bathymetry raster (mean depth of seafloor)
+- **Copernicus Marine Service:**
+  - `GLOBAL_MULTIYEAR_PHY_001_030`: Bottom temperature and/or salinity reanalysis data
+- **External Resources:**
+  - **MOBS (Marine Organism Body Size) database**: [github.com/crmcclain/MOBS_OPEN](https://github.com/crmcclain/MOBS_OPEN)
+
+### Study Area
+
+Aegean Sea
+
+Check back soon for the complete tutorial!

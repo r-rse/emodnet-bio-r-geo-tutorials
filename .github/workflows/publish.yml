@@ -29,10 +29,8 @@ jobs:
       - name: Install R Dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          packages: |
-            any::knitr
-            any::rmarkdown
-            any::jsonlite
+          extra-packages: any::jsonlite
+          needs: website
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2

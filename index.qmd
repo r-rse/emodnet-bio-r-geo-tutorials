@@ -1,49 +1,166 @@
 ---
-title: "EMODnet Biology R Tutorials"
+title: "EMODnet Biology Geospatial R Tutorials"
 ---
 
 ## Welcome
 
-Welcome to the EMODnet Biology R tutorials for geospatial data access and analysis. These tutorials demonstrate how to access and analyze marine biological data from the [European Marine Observation and Data Network (EMODnet)](https://emodnet.ec.europa.eu/en/biology).
+Learn how to access and analyze marine biological and environmental data from [EMODnet](https://emodnet.ec.europa.eu/en/biology) using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.
 
-## About EMODnet
+Whether you're investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.
 
-EMODnet Biology provides open access to marine biological data from European seas, supporting marine research, policy-making, and blue economy initiatives. The data portal offers standardized access to observations on marine species, their distribution, and abundance.
+::: {.callout-tip}
+## New to geospatial analysis?
+
+If you're unfamiliar with spatial data concepts, coordinate systems, or the difference between vector and raster data, start with our [**Geospatial Concepts**](concepts.qmd) page.
+:::
+
+## What You'll Learn
+
+These tutorials demonstrate how to:
+
+-   **Access marine data programmatically** using EMODnet's web services (WFS and WCS)
+-   **Work with vector data** representing species occurrences, habitat boundaries, and human activities
+-   **Analyze raster data** including bathymetry, species distributions, and environmental variables
+-   **Integrate multiple data sources** from EMODnet, Copernicus Marine Service, and trait databases
+-   **Apply spatial operations** such as intersection, masking, and point extraction
+-   **Visualize spatial patterns** relevant to marine conservation and management
+
+By the end of these tutorials, you'll be able to independently access, analyze, and visualize EMODnet data for your own marine research questions.
 
 ## Tutorial Series
 
-This website hosts tutorials demonstrating practical marine spatial analysis workflows using EMODnet data:
+```{r}
+#| echo: false
+#| output: asis
 
--   **Tutorial 1: Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea** - Accessing and analyzing EMODnet WFS vector layers using `emodnet.wfs`.
--   **Tutorial 2: Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds** - Accessing and analyzing EMODnet WCS raster layers using `emodnet.wcs`.
--   **Tutorial 3: Relating Marine Biodiversity Change to Depth in the North Sea** - Combining EMODnet WFS and WCS data by integrating vector and raster data.
--   **Tutorial 4: Exploring Functional Traits Across Seabed Habitats in the Aegean Sea** - Integrating EMODnet WFS and WCS with Trait and Environmental Data Sources from Copernicus Marine Service and trait databases.
+library(rmarkdown)
+
+# Get tutorial files in order
+tutorial_files <- list.files(
+  "tutorials",
+  pattern = "^tutorial-\\d+\\.qmd$",
+  full.names = TRUE
+)
+tutorial_files <- tutorial_files[order(tutorial_files)]
+
+# Start grid container
+cat('::: {.grid}\n\n')
+
+# Loop through tutorials and render cards
+for (tutorial_file in tutorial_files) {
+  # Read YAML frontmatter
+  yaml_content <- rmarkdown::yaml_front_matter(tutorial_file)
+
+  # Extract tutorial number from title
+  tutorial_number <- sub(":.*", "", yaml_content$title)
+  short_title <- sub("^\\d+:\\s*", "", yaml_content$title)
+
+  # Prepare parameters for partial
+  params <- list(
+    number = tutorial_number,
+    short_title = short_title,
+    subtitle = yaml_content$subtitle,
+    difficulty = yaml_content$difficulty,
+    time = yaml_content$time,
+    data_type = yaml_content$`data-type`,
+    description = yaml_content$description,
+    datasets = yaml_content$datasets,
+    path = tutorial_file
+  )
+
+  # Render the partial
+  result <- knitr::knit_child(
+    input = "_tutorial-card.qmd",
+    envir = environment(),
+    quiet = TRUE
+  )
+
+  cat(result, sep = '\n')
+}
+
+# Close grid container
+cat('\n:::\n')
+```
+
+## Who These Tutorials Are For
+
+These tutorials are designed for:
+
+-   **Marine researchers** working with spatial data on species distributions, habitats, or human activities
+-   **Conservation practitioners** conducting marine spatial planning, MPA assessments, or environmental impact analyses
+-   **Data scientists** interested in applying geospatial methods to marine applications
+-   **Graduate students** learning marine ecology, spatial analysis, or data science
+-   **Policy analysts** requiring evidence-based spatial information for marine management
 
 ## Prerequisites
 
-These tutorials assume familiarity with:
+To get the most from these tutorials, you should have:
 
--   Basic R programming
--   Geospatial concepts
--   Working with `sf` and `terra` packages
+**R Programming:**
+
+-   Basic to intermediate R skills (working with data frames, installing packages, running functions)
+-   Familiarity with the tidyverse is helpful but not required
+-   Experience with RStudio or similar R development environment
+
+**Geospatial Background:**
+
+-   Understanding of basic spatial concepts (coordinates, projections, spatial data types)
+-   Awareness of vector vs. raster data
+-   Familiarity with common spatial operations
+
+::: {.callout-note}
+If you're new to geospatial analysis, visit our [**Geospatial Concepts**](concepts.qmd) page for an introduction to key concepts before starting the tutorials.
+:::
 
 ## Getting Started
 
-Install the required EMODnet packages:
+### Installation
+
+Install the required packages using the following code:
 
 ```{r}
 #| eval: false
 #| code-fold: false
 
-# Install EMODnet packages
+# Install EMODnet data access packages
 pak::pak(c("emodnet/emodnet.wfs", "emodnet/emodnet.wcs"))
 
 # Install spatial data packages
 pak::pak(c("sf", "terra"))
+
+# Install data manipulation and visualization packages
+pak::pak(c("dplyr", "ggplot2"))
 ```
 
-## Resources
+### Quick Start
 
--   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology)
--   [EMODnet Data Portal](https://emodnet.ec.europa.eu/en)
--   [GitHub Repository](https://github.com/r-rse/emodnet-bio-r-geo-tutorials)
+1.  **New to geospatial analysis?** → Start with [Geospatial Concepts](concepts.qmd)
+2.  **Ready to dive in?** → Begin with [Tutorial 1](tutorials/tutorial-01.qmd) to learn WFS basics
+3.  **Interested in raster analysis?** → Jump to [Tutorial 2](tutorials/tutorial-02.qmd) for WCS workflows
+4.  **Want to combine data sources?** → Try [Tutorial 3](tutorials/tutorial-03.qmd) or [Tutorial 4](tutorials/tutorial-04.qmd)
+
+## Resources and Links
+
+### EMODnet Resources
+
+-   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology) - Access marine biological data
+-   [EMODnet Seabed Habitats](https://emodnet.ec.europa.eu/en/seabed-habitats) - Habitat maps and classifications
+-   [EMODnet Bathymetry](https://emodnet.ec.europa.eu/en/bathymetry) - Depth data and terrain models
+-   [EMODnet Human Activities](https://emodnet.ec.europa.eu/en/human-activities) - Infrastructure and activity data
+
+### R Package Documentation
+
+-   [emodnet.wfs on GitHub](https://github.com/EMODnet/emodnet.wfs) - Access WFS vector data
+-   [emodnet.wcs on GitHub](https://github.com/EMODnet/emodnet.wcs) - Access WCS raster data
+-   [sf package](https://r-spatial.github.io/sf/) - Spatial vector data in R
+-   [terra package](https://rspatial.github.io/terra/) - Spatial raster data in R
+
+### Learning Resources
+
+-   [Geocomputation with R](https://r.geocompx.org/) - Comprehensive guide to spatial analysis in R
+-   [Spatial Data Science](https://r-spatial.org/book/) - Spatial data methods and applications
+-   [sf package vignettes](https://r-spatial.github.io/sf/articles/) - Detailed sf documentation
+
+## About This Project
+
+These tutorials are part of the [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) initiative. Learn more about the project, contributors, and funding on the [About](about.qmd) page.

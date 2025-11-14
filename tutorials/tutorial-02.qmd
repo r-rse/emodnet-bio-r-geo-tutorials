@@ -1,0 +1,33 @@
+---
+title: "2: Zooplankton and Plaice Nursery Grounds"
+subtitle: "Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds"
+difficulty: "Beginner"
+time: "~60 minutes"
+data-type: "WCS (raster)"
+description: "Discover how to access and analyze gridded environmental data using EMODnet WCS services. Explore the spatial relationship between zooplankton abundance and fish nursery habitats in the Eastern English Channel using raster analysis techniques."
+datasets: "Copepod abundance grids, fish habitat suitability models, multi-band raster data"
+---
+
+## Tutorial Content
+
+This tutorial is currently under development.
+
+### What You'll Learn
+
+- Understanding how to identify and retrieve relevant raster layers using `describe_coverages()`
+- Using `emdn_get_coverage()` to download WCS data for a specific area and time
+- Applying raster alignment, masking, and standardisation for comparative analysis
+- Interpreting spatial patterns in relative abundance and their ecological relevance
+
+### Data Sources
+
+- **EMODnet Biology WCS:** Copepod relative abundance layers (*Acartia* spp., *Temora longicornis*, *Calanus finmarchicus*)
+- **EMODnet Seabed Habitats WCS:** Plaice Essential Fish Habitat (nursery grounds) predictions (GRAY_INDEX band)
+
+### Study Area
+
+Eastern English Channel
+
+**Bounding box:** xmin = 0.0, ymin = 49.5, xmax = 2.5, ymax = 51.0
+
+Check back soon for the complete tutorial!

@@ -1,0 +1,37 @@
+Package: emodnet.bio.r.geo.tutorials
+Title: EMODnet Biology Geospatial R Tutorials
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Anna", "Krystalli", , "annakrystalli@googlemail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-2378-4915")),
+    person("EMODnet Biology", role = c("cph", "fnd")),
+    person("European Commission DG MARE", role = "fnd")
+    )
+Description: A collection of R-based geospatial tutorials demonstrating how to
+    access and analyze marine biological and environmental data from EMODnet
+    Biology and other EMODnet thematic portals. These tutorials provide
+    practical, reproducible workflows for working with EMODnet's Web Feature
+    Service (WFS) and Web Coverage Service (WCS) data through the emodnet.wfs
+    and emodnet.wcs R packages.
+License: file LICENSE
+Encoding: UTF-8
+URL: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+BugReports: https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues
+Imports:
+    emodnet.wfs,
+    emodnet.wcs,
+    sf,
+    terra,
+    dplyr,
+    ggplot2
+Remotes:
+    EMODnet/emodnet.wfs,
+    EMODnet/emodnet.wcs
+Config/Needs/website:
+    knitr,
+    rmarkdown,
+    tibble,
+    kableExtra,
+    rnaturalearth,
+    rnaturalearthdata,
+    patchwork

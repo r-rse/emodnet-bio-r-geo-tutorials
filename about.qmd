@@ -2,8 +2,65 @@
 title: "About"
 ---
 
-About this site
+## About EMODnet Biology
 
-```{r}
-1 + 1
-```
+[EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) is the biological data portal of the [European Marine Observation and Data Network (EMODnet)](https://emodnet.ec.europa.eu/). EMODnet is a network of European organisations working together to assemble marine data, data products, and metadata from diverse sources in a standardized way.
+
+EMODnet Biology provides free and open access to marine biological observations, species distributions, and biodiversity data from European seas. The portal aggregates data from diverse sources including research institutions, monitoring programmes, and citizen science initiatives, making it easily accessible for marine research, policy-making, and conservation efforts.
+
+## About This Tutorial Initiative
+
+These [tutorials](index.qmd#tutorial-series) were developed as part of the **EMODnet Biology** initiative to demonstrate how researchers, students, and practitioners can access and analyze EMODnet data programmatically using R. By providing practical, reproducible workflows using real marine data, we aim to:
+
+-   Lower barriers to accessing and using EMODnet biological and environmental data
+-   Demonstrate the value of [web services](concepts.qmd#web-services-for-spatial-data) (WFS and WCS) for programmatic data access
+-   Showcase real-world applications relevant to marine conservation and spatial planning
+-   Build capacity in marine [spatial data science](concepts.qmd) across the research community
+
+The tutorials highlight how EMODnet data can be integrated with other European marine data infrastructures, such as Copernicus Marine Service, to support evidence-based marine management and research.
+
+## EMODnet Web Services
+
+EMODnet provides standardized geospatial web services following Open Geospatial Consortium (OGC) specifications. These services are maintained by the EMODnet thematic portals (Biology, Bathymetry, Seabed Habitats, Human Activities, etc.), each operated by a consortium of European marine research institutions.
+
+Each thematic portal is responsible for:
+
+- Aggregating data from multiple sources across Europe
+- Standardizing and quality-controlling the data
+- Hosting and maintaining the web service infrastructure
+- Ensuring long-term data preservation and access
+
+This infrastructure enables researchers and practitioners to programmatically access marine data without needing to manage large file downloads or navigate multiple data repositories.
+
+## The R Packages
+
+These tutorials demonstrate two R packages developed specifically for accessing EMODnet data services:
+
+[**`emodnet.wfs`**](https://github.com/EMODnet/emodnet.wfs) provides programmatic access to EMODnet's Web Feature Service (WFS) endpoints, enabling users to retrieve [vector data](concepts.qmd#vector-data) such as species occurrences, habitat boundaries, and infrastructure locations directly into R.
+
+[**`emodnet.wcs`**](https://github.com/EMODnet/emodnet.wcs) enables access to EMODnet's Web Coverage Service (WCS) endpoints, allowing users to download [raster data](concepts.qmd#raster-data) such as depth models, species distributions, and environmental variables.
+
+Both packages simplify data discovery, querying, and retrieval, making EMODnet's extensive data holdings readily available for spatial analysis in R.
+
+## Acknowledgments and Funding
+
+These tutorials were developed as part of the EMODnet Biology initiative, funded by the European Commission's Directorate-General for Maritime Affairs and Fisheries (DG MARE) under the European Maritime and Fisheries Fund (EMFF).
+
+The tutorial materials are made available under open licenses to support the broader marine science and data science communities.
+
+## Contributing
+
+We welcome contributions, suggestions, and feedback! Please visit our [GitHub repository](https://github.com/r-rse/emodnet-bio-r-geo-tutorials) to:
+
+-   Report issues or bugs
+-   Suggest improvements or new tutorial topics
+-   Submit pull requests with corrections or enhancements
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Links and Resources
+
+-   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology)
+-   [EMODnet Main Portal](https://emodnet.ec.europa.eu/en)
+-   [emodnet.wfs Package](https://github.com/EMODnet/emodnet.wfs)
+-   [emodnet.wcs Package](https://github.com/EMODnet/emodnet.wcs)

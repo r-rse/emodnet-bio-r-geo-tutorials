@@ -1,0 +1,22 @@
+::: {.g-col-12 .g-col-md-6}
+::: {.card .h-100 .mb-3}
+::: {.card-body}
+### [`r params$number`]{.tutorial-number} `r params$short_title` {.card-title}
+
+[*`r params$subtitle`*]{.tutorial-meta}
+
+[**Difficulty:** `r params$difficulty` | **Time:** `r params$time` | **Data:** `r params$data_type`]{.tutorial-meta}
+
+::: {.card-text}
+
+`r params$description`
+
+**You'll work with:** `r params$datasets`
+:::
+:::
+
+::: {.card-footer}
+[Start Tutorial `r params$number`](`r params$path`){.btn .btn-primary .w-100}
+:::
+:::
+:::

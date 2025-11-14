@@ -1,0 +1,38 @@
+---
+title: "1: Protected Areas and Subsea Infrastructure"
+subtitle: "Identifying Protected Areas Affected by Subsea Infrastructure in the North Sea"
+difficulty: "Beginner"
+time: "~45 minutes"
+data-type: "WFS (vector)"
+description: "Learn the fundamentals of accessing EMODnet WFS data by identifying marine protected areas that overlap with subsea infrastructure like pipelines and cables. This tutorial introduces spatial intersection operations and provides a foundation for marine spatial planning analyses."
+datasets: "Marine protected area boundaries, pipeline locations, subsea cable networks, platform locations"
+---
+
+## Tutorial Content
+
+This tutorial is currently under development.
+
+### What You'll Learn
+
+- How to access and retrieve multiple WFS layers using the emodnet.wfs R package
+- Loading and combining spatial datasets representing MPAs and subsea infrastructure
+- Harmonising coordinate reference systems and preparing geometries for analysis
+- Applying `sf::st_intersects()` to detect spatial overlaps
+- Summarising and visualising the extent of intersection between protected areas and human activities
+
+### Data Sources
+
+**Protected Areas (Seabed Habitats):**
+- `cddaareas`
+- `natura2000areas`
+- `marineprotectedareas`
+
+**Subsea Infrastructure (Human Activities):**
+- `platforms`
+- `pipelines`
+- `pcablesbshcontis`
+- `pcablesshom`
+- `pcablesrijks`
+- `pcablesnve`
+
+Check back soon for the complete tutorial!

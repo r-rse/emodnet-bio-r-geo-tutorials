@@ -49,7 +49,7 @@ Learn the fundamentals of accessing EMODnet WFS data by identifying marine prote
 :::
 
 ::: {.card-footer}
-[Start Tutorial 1](tutorial-01.qmd){.btn .btn-primary .w-100}
+[Start Tutorial 1](tutorials/tutorial-01.qmd){.btn .btn-primary .w-100}
 :::
 :::
 :::
@@ -72,7 +72,7 @@ Discover how to access and analyze gridded environmental data using EMODnet WCS 
 :::
 
 ::: {.card-footer}
-[Start Tutorial 2](tutorial-02.qmd){.btn .btn-primary .w-100}
+[Start Tutorial 2](tutorials/tutorial-02.qmd){.btn .btn-primary .w-100}
 :::
 :::
 :::
@@ -95,7 +95,7 @@ Combine vector and raster data to investigate environmental drivers of biodivers
 :::
 
 ::: {.card-footer}
-[Start Tutorial 3](tutorial-03.qmd){.btn .btn-primary .w-100}
+[Start Tutorial 3](tutorials/tutorial-03.qmd){.btn .btn-primary .w-100}
 :::
 :::
 :::
@@ -118,7 +118,7 @@ Integrate EMODnet data with external trait databases and Copernicus Marine Servi
 :::
 
 ::: {.card-footer}
-[Start Tutorial 4](tutorial-04.qmd){.btn .btn-primary .w-100}
+[Start Tutorial 4](tutorials/tutorial-04.qmd){.btn .btn-primary .w-100}
 :::
 :::
 :::

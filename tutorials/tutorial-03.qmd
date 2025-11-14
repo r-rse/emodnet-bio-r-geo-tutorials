@@ -1,0 +1,40 @@
+---
+title: "3: Biodiversity Change and Depth"
+subtitle: "Relating Marine Biodiversity Change to Depth in the North Sea"
+difficulty: "Intermediate"
+time: "~60 minutes"
+data-type: "WFS + WCS (vector + raster)"
+description: "Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea."
+datasets: "Biodiversity change metrics, bathymetric depth models, vector-raster integration"
+---
+
+## Tutorial Content
+
+This tutorial is currently under development.
+
+### What You'll Learn
+
+- Using `emdn_get_features()` to access spatiotemporal diversity metrics from EMODnet Biology (WFS)
+- Using `emdn_get_coverage()` to retrieve raster bathymetry from EMODnet Bathymetry (WCS)
+- Performing spatial joins and point-based extraction from raster datasets
+- Visualising and summarising patterns of species gain/loss across depth gradients
+
+### Data Sources
+
+**WFS (vector):**
+- **Layer ID:** `all_diversity_measures`
+- **Source:** EMODnet Biology
+- **Key variables:** Species loss, species gain, β-diversity, time periods
+
+**WCS (raster):**
+- **Layer ID:** `emodnet__mean_2020`
+- **Source:** EMODnet Bathymetry
+- **Description:** Mean depth (m), regularly gridded
+
+### Study Area
+
+North Sea
+
+**Bounding box (WGS84):** xmin = 1.5, ymin = 53, xmax = 6.5, ymax = 58
+
+Check back soon for the complete tutorial!

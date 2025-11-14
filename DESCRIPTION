@@ -33,4 +33,5 @@ Config/Needs/website:
     tibble,
     kableExtra,
     rnaturalearth,
+    rnaturalearthdata,
     patchwork

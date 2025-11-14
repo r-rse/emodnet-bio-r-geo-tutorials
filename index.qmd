@@ -36,7 +36,11 @@ By the end of these tutorials, you'll be able to independently access, analyze, 
 library(rmarkdown)
 
 # Get tutorial files in order
-tutorial_files <- list.files("tutorials", pattern = "^tutorial-\\d+\\.qmd$", full.names = TRUE)
+tutorial_files <- list.files(
+  "tutorials",
+  pattern = "^tutorial-\\d+\\.qmd$",
+  full.names = TRUE
+)
 tutorial_files <- tutorial_files[order(tutorial_files)]
 
 # Start grid container
@@ -131,9 +135,9 @@ pak::pak(c("dplyr", "ggplot2"))
 ### Quick Start
 
 1.  **New to geospatial analysis?** → Start with [Geospatial Concepts](concepts.qmd)
-2.  **Ready to dive in?** → Begin with [Tutorial 1](tutorial-01.qmd) to learn WFS basics
-3.  **Interested in raster analysis?** → Jump to [Tutorial 2](tutorial-02.qmd) for WCS workflows
-4.  **Want to combine data sources?** → Try [Tutorial 3](tutorial-03.qmd) or [Tutorial 4](tutorial-04.qmd)
+2.  **Ready to dive in?** → Begin with [Tutorial 1](tutorials/tutorial-01.qmd) to learn WFS basics
+3.  **Interested in raster analysis?** → Jump to [Tutorial 2](tutorials/tutorial-02.qmd) for WCS workflows
+4.  **Want to combine data sources?** → Try [Tutorial 3](tutorials/tutorial-03.qmd) or [Tutorial 4](tutorials/tutorial-04.qmd)
 
 ## Resources and Links
 

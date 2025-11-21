@@ -196,7 +196,7 @@ The **Open Geospatial Consortium (OGC)** has developed different standard protoc
 
 ### WFS (Web Feature Service)
 
-WFS delivers **vector data** - discrete geographic features with attributes.
+WFS delivers **vector data**: discrete geographic features with attributes.
 
 **Key characteristics:**
 
@@ -207,16 +207,20 @@ WFS delivers **vector data** - discrete geographic features with attributes.
 
 **In R:** Use the [`emodnet.wfs`](https://github.com/EMODnet/emodnet.wfs) package to access WFS services. The package simplifies discovering available layers, filtering by extent or attributes, and retrieving data as `sf` objects.
 
+**What information can you access?**
+
+Before downloading data, WFS services let you discover which feature types (layers) exist and what attributes each layer contains. Once you retrieve data, you receive discrete geographic features (points, lines, polygons) with associated attributes describing those features (e.g., species observations with taxonomic details, protected area boundaries with designation information, infrastructure with operational attributes).
+
 **Example WFS data from EMODnet:**
 
 -   Species occurrences and distributions
 -   Marine protected area boundaries
--   Infrastructure features
+-   Infrastructure features (platforms, pipelines, cables)
 -   Habitat polygons
 
 ### WCS (Web Coverage Service)
 
-WCS delivers **raster data** - gridded coverage representing continuous variables.
+WCS delivers **raster data**: gridded coverage representing continuous variables.
 
 **Key characteristics:**
 
@@ -226,6 +230,10 @@ WCS delivers **raster data** - gridded coverage representing continuous variable
 -   Ideal for environmental layers and modeled surfaces
 
 **In R:** Use the [`emodnet.wcs`](https://github.com/EMODnet/emodnet.wcs) package to access WCS services. The package handles coverage discovery, spatial/temporal subsetting, and returns data as `terra` raster objects.
+
+**What information can you access?**
+
+Before downloading data, WCS services provide metadata about available coverages: which datasets exist, their spatial and temporal extent, resolution, coordinate reference systems, and what bands/variables each coverage contains. When you retrieve data, you receive gridded rasters where each cell contains measurements or modeled values for continuous variables (e.g., bathymetric depth, species abundance predictions, habitat suitability indices, environmental measurements).
 
 **Example WCS data from EMODnet:**
 
@@ -411,113 +419,6 @@ Both major R spatial packages provide CRS transformation functions:
 
 The tutorials demonstrate when and how to transform between CRS for different types of spatial analyses.
 
-## Key R Packages
-
-### sf - Simple Features for R
-
-The [`sf` package](https://r-spatial.github.io/sf/) is the modern standard for **vector spatial data** in R.
-
-**Key features:**
-
--   Represents spatial data as data frames with geometry columns
--   Integrates with tidyverse workflows
--   Provides spatial operations (intersections, buffers, joins, etc.)
--   Handles CRS transformations
--   Reads/writes common spatial formats
-
-**When to use:** Working with points, lines, polygons, or any vector data.
-
-### terra - Spatial Data Analysis
-
-The [`terra` package](https://rspatial.github.io/terra/) is the modern replacement for `raster`, designed for **raster spatial data**.
-
-**Key features:**
-
--   Handles single and multi-layer rasters
--   Performs raster algebra and focal operations
--   Extracts values at points or within polygons
--   Manages large datasets efficiently
--   Supports raster-vector operations
-
-**When to use:** Working with gridded data, environmental layers, or continuous surfaces.
-
-## Common Spatial Operations
-
-### Vector Operations (sf)
-
--   **Spatial intersection** - Identifies features that overlap spatially, returning the geometric intersection and combined attributes from both input layers. Useful for finding which features from different datasets occupy the same locations (e.g., protected areas intersecting with infrastructure).
-
--   **Buffering** - Creates zones of specified distance around features, generating polygons that represent areas within a given radius. Essential for proximity analyses, such as identifying areas within a certain distance of sampling stations or evaluating buffer zones around sensitive habitats.
-
--   **Spatial joins** - Combines features from two layers based on their spatial relationship (e.g., contains, intersects, within). Allows you to transfer attributes from one layer to another based on location, such as assigning habitat types to species occurrence points or aggregating observations within management zones.
-
--   **Distance calculations** - Measures distances between features, either point-to-point or between features and geometries. Critical for analyses involving dispersal distances, connectivity assessments, or identifying nearest neighbors.
-
--   **Area and length measurements** - Calculates geometric properties of features, providing area measurements for polygons and length measurements for lines. Required for quantifying habitat extent, assessing patch sizes, or measuring transect lengths.
-
-### Raster Operations (terra)
-
--   **Extraction** - Retrieves raster cell values at specified point locations or within polygon boundaries. Commonly used to extract environmental variables (depth, temperature, salinity) at species occurrence locations or calculate zonal statistics within habitat polygons.
-
--   **Masking** - Restricts raster data to areas defined by a polygon or another raster, setting values outside the mask to NA. Useful for limiting analyses to specific regions such as marine protected areas, exclusive economic zones, or specific depth ranges.
-
--   **Raster algebra** - Performs mathematical operations on raster layers, either within a single layer (e.g., unit conversions, transformations) or across multiple layers (e.g., calculating change between time periods, combining variables). Enables creation of derived metrics like biodiversity change or habitat suitability indices.
-
--   **Aggregation and resampling** - Changes raster resolution by combining or subdividing cells. Aggregation reduces resolution for computational efficiency or matching other datasets, while resampling adjusts resolution or aligns grids from different sources.
-
--   **Focal operations** - Applies functions to neighborhoods of cells, such as calculating moving window statistics (mean, standard deviation) or smoothing. Used for identifying spatial patterns, creating terrain derivatives, or reducing noise in environmental data.
-
-## Data Formats
-
-Understanding spatial data formats is important when working with web services, even through R packages. While the `emodnet.wfs` and `emodnet.wcs` packages handle data retrieval and automatically load results as R objects (`sf` for vector, `terra` for raster), the underlying format requested from the service can have significant practical implications:
-
-**Download speed and data size** - Different formats have different compression and encoding schemes, affecting transfer time and bandwidth usage.
-
-**Geometry types and plotting compatibility** - Format choice affects what feature geometries are returned. For example, WFS services may return complex geometry types like MULTISURFACE in GML format, which cannot be easily plotted and require conversion to standard POLYGONs. Requesting GeoJSON format instead often returns simpler geometry types that integrate directly with plotting workflows.
-
-**Saving data locally** - After retrieving data from EMODnet, you may want to save it for archival, sharing with collaborators, or use in other software. Understanding format characteristics helps you choose the best option for your needs.
-
-The tutorials demonstrate when and how to specify output formats to optimize your workflow.
-
-### Vector Formats
-
-**GeoJSON** (.geojson)
-
--   Text-based, human-readable
--   Widely supported across platforms
--   Good for web applications and data sharing
--   Default output from many WFS services
-
-**Shapefiles** (.shp + supporting files)
-
--   Traditional GIS format
--   Requires multiple files (.shp, .shx, .dbf, .prj)
--   Well-supported but has limitations (field name length, size limits)
-
-**GeoPackage** (.gpkg)
-
--   Modern, single-file format
--   Supports multiple layers
--   No size limits
--   Recommended for new projects
-
-### Raster Formats
-
-**GeoTIFF** (.tif)
-
--   Industry standard for raster data
--   Embeds spatial reference information
--   Supports multiple bands
--   Efficient for large datasets
--   Default output from many WCS services
-
-**NetCDF** (.nc)
-
--   Multi-dimensional arrays
--   Common for oceanographic and climate data
--   Handles time series and multiple variables
--   Used by Copernicus Marine Service
-
 ## Bounding Boxes and Spatial Queries
 
 A **bounding box** defines a rectangular area of interest using minimum and maximum coordinates (xmin, ymin, xmax, ymax). Bounding boxes are fundamental to spatial queries, allowing you to request only the data you need from web services rather than downloading entire datasets. @fig-bbox-example shows a bounding box for the North Sea region.
@@ -597,16 +498,221 @@ ggplot2::ggplot() +
 
 Bounding boxes enable efficient spatial data retrieval by:
 
--   **Reducing data transfer** - Download only features or coverage within your study area
--   **Improving performance** - Smaller data volumes mean faster processing and lower memory requirements
--   **Focusing analyses** - Limit results to relevant geographic regions from the start
--   **Reproducible workflows** - Explicit spatial extent definitions make analyses transparent and repeatable
+-   **Reducing data transfer**: Download only features or coverage within your study area
+-   **Improving performance**: Smaller data volumes mean faster processing and lower memory requirements
+-   **Focusing analyses**: Limit results to relevant geographic regions from the start
+-   **Reproducible workflows**: Explicit spatial extent definitions make analyses transparent and repeatable
 
 ### Bounding Boxes in EMODnet Services
 
-Both WFS (vector) and WCS (raster) services accept bounding box parameters to spatially filter results. When querying EMODnet data through the `emodnet.wfs` and `emodnet.wcs` packages, you specify bounding boxes as numeric vectors with minimum and maximum coordinates in the appropriate coordinate reference system (typically WGS84 lon/lat for EMODnet services).
+Both WFS (vector) and WCS (raster) services accept bounding box parameters to spatially filter results. When querying EMODnet data through the `emodnet.wfs` and `emodnet.wcs` packages, you specify bounding boxes as numeric vectors with minimum and maximum coordinates. The coordinate reference system for bounding boxes should match the CRS of the data you're requesting, which varies by layer.
 
 The tutorials demonstrate practical bounding box usage for retrieving EMODnet data in specific regions, from local study sites to broader management areas.
+
+## Key R Packages
+
+### sf - Simple Features for R
+
+The [`sf` package](https://r-spatial.github.io/sf/) is the modern standard for **vector spatial data** in R.
+
+**Key features:**
+
+-   Represents spatial data as data frames with geometry columns
+-   Integrates with tidyverse workflows
+-   Provides spatial operations (intersections, buffers, joins, etc.)
+-   Handles CRS transformations
+-   Reads/writes common spatial formats
+
+**When to use:** Working with points, lines, polygons, or any vector data.
+
+### terra - Spatial Data Analysis
+
+The [`terra` package](https://rspatial.github.io/terra/) is the modern replacement for `raster`, designed for **raster spatial data**.
+
+**Key features:**
+
+-   Handles single and multi-layer rasters
+-   Performs raster algebra and focal operations
+-   Extracts values at points or within polygons
+-   Manages large datasets efficiently
+-   Supports raster-vector operations
+
+**When to use:** Working with gridded data, environmental layers, or continuous surfaces.
+
+## Understanding Spatial Data Objects in R
+
+Understanding how R represents spatial data internally helps you work more effectively with these packages and troubleshoot issues when they arise.
+
+### Structure of sf Objects
+
+An `sf` object is fundamentally a **data frame with a special geometry column**. This elegant design means you can use familiar data manipulation tools (like dplyr) while preserving spatial information.
+
+Each row in an sf data frame represents one **feature**: a discrete geographic entity (point, line, or polygon) with associated descriptive information. Each feature consists of:
+
+-   **Geometry**: The spatial component stored in a special list-column (typically named `geometry`)
+-   **Attributes**: Regular data frame columns containing information about that feature
+
+**The key concept**: attributes describe the entire spatial object defined in the geometry column. For a point, attributes describe that location. For a polygon, attributes describe the entire enclosed area. For a line, attributes describe the entire linear feature.
+
+**Example with point features (species observations):**
+
+``` r
+# sf object with benthic species observations
+#   scientificname      datecollected  depth_m              geometry
+# 1 Abra alba           2018-05-12        35   POINT (4.2 52.1)
+# 2 Nephtys hombergii   2018-05-12        35   POINT (4.2 52.1)
+# 3 Lanice conchilega   2018-05-15        42   POINT (4.5 52.3)
+```
+
+Each feature is one species observation. The attributes (`scientificname`, `datecollected`, `depth_m`) describe what was observed **at that specific point location**. Row 1 tells us *Abra alba* was found at coordinates (4.2, 52.1) on 2018-05-12 at 35m depth.
+
+**Example with polygon features (protected areas):**
+
+``` r
+# sf object with marine protected areas
+#   area_name          designation  year_designated  area_km2   geometry
+# 1 Dogger Bank SAC    Natura 2000       2010         12,331   POLYGON (...)
+# 2 Klaverbank         OSPAR MPA          2016          2,576   POLYGON (...)
+# 3 Cleaver Bank       OSPAR MPA          2016          2,362   POLYGON (...)
+```
+
+Each feature is one marine protected area. The attributes describe characteristics of **the entire polygon area**. The Dogger Bank SAC attributes (Natura 2000 designation, 2010 designation year, 12,331 km² area) apply to every point within that polygon boundary.
+
+**Types of attributes you'll encounter:**
+
+-   **Identifiers**: Names, codes, or IDs (`site_code`, `scientificname`, `area_name`)
+-   **Categorical variables**: Classifications or types (`habitat_type`, `designation`, `infrastructure_type`)
+-   **Continuous variables**: Measured quantities (`sp_lost_beta_repl`, `sp_gained_beta_repl`, `beta_total`, `area_km2`)
+-   **Temporal information**: Dates or time periods (`datecollected`, `year_designated`, `period`)
+
+When retrieving vector data from WFS services using the `emodnet.wfs` package, you get both geometries and attributes. You can filter and analyze attributes like any data frame while spatial operations work on geometries.
+
+### Structure of terra Objects
+
+A `terra` raster object (SpatRaster) represents **gridded spatial data** organized as a rectangular array of cells, like a spatial spreadsheet where each cell has a location and one or more values.
+
+**Core components:**
+
+-   **Dimensions**: Number of rows (nrow), columns (ncol), and total cells (ncell). Rasters may also include a temporal dimension when data represents time series or seasonal measurements.
+-   **Extent**: The geographic area covered (xmin, xmax, ymin, ymax)
+-   **Resolution**: The size of each cell (usually in meters or degrees)
+-   **Coordinate Reference System**: Defines the spatial reference
+-   **Bands**: One or more data layers, each containing values for every cell
+-   **Cell values**: The actual measurements or categories stored in the raster
+
+**What are Bands?**
+
+**Bands** (also called layers) are individual data grids within a raster dataset. Each band covers the same geographic extent with the same grid structure but contains different information. Rasters can be:
+
+-   **Single-band**: One variable per raster (e.g., bathymetric depth)
+-   **Multi-band**: Multiple related variables in one dataset (e.g., abundances for different species, habitat suitability for different life stages, measurements across time periods)
+
+Multi-band rasters are common in marine datasets. EMODnet Biology WCS services may provide copepod abundance grids where each band represents a different species or time period. EMODnet Seabed Habitats provides Essential Fish Habitat models where bands represent spawning grounds, nursery areas, and feeding habitats.
+
+**Example: Single-band raster (bathymetry)**
+
+``` r
+# class       : SpatRaster
+# dimensions  : 500, 750, 1  (nrow, ncol, nlyr)
+# resolution  : 250, 250  (x, y)
+# extent      : 200000, 387500, 5650000, 5775000  (xmin, xmax, ymin, ymax)
+# crs         : EPSG:3857
+# source      : emodnet_bathymetry.tif
+# name        : depth_m
+```
+
+This raster has **one band** (`nlyr = 1`) containing bathymetric depth measurements for the North Sea. Each of the 375,000 cells (500 rows × 750 columns) holds a depth value in meters.
+
+**Example: Multi-band raster (copepod relative abundances)**
+
+``` r
+# class       : SpatRaster
+# dimensions  : 200, 300, 3  (nrow, ncol, nlyr)
+# resolution  : 0.1, 0.1  (x, y)
+# extent      : 0.0, 30.0, 49.0, 69.0  (xmin, xmax, ymin, ymax)
+# crs         : EPSG:4326
+# source      : copepod_abundances.tif
+# names       : Acartia_spp, Temora_longicornis, Calanus_finmarchicus
+```
+
+This raster has **three bands** (`nlyr = 3`), each representing relative abundance of a different copepod species. All bands share the same extent and resolution but contain different values for each cell. When working with multi-band WCS data, you can extract individual bands, compare patterns across bands, or perform calculations combining multiple bands.
+
+## Common Spatial Operations
+
+### Vector Operations (sf)
+
+-   **Spatial intersection** - Identifies features that overlap spatially, returning the geometric intersection and combined attributes from both input layers. Useful for finding which features from different datasets occupy the same locations (e.g., protected areas intersecting with infrastructure).
+
+-   **Buffering** - Creates zones of specified distance around features, generating polygons that represent areas within a given radius. Essential for proximity analyses, such as identifying areas within a certain distance of sampling stations or evaluating buffer zones around sensitive habitats.
+
+-   **Spatial joins** - Combines features from two layers based on their spatial relationship (e.g., contains, intersects, within). Allows you to transfer attributes from one layer to another based on location, such as assigning habitat types to species occurrence points or aggregating observations within management zones.
+
+-   **Distance calculations** - Measures distances between features, either point-to-point or between features and geometries. Critical for analyses involving dispersal distances, connectivity assessments, or identifying nearest neighbors.
+
+-   **Area and length measurements** - Calculates geometric properties of features, providing area measurements for polygons and length measurements for lines. Required for quantifying habitat extent, assessing patch sizes, or measuring transect lengths.
+
+### Raster Operations (terra)
+
+-   **Extraction** - Retrieves raster cell values at specified point locations or within polygon boundaries. Commonly used to extract environmental variables (depth, temperature, salinity) at species occurrence locations or calculate zonal statistics within habitat polygons.
+
+-   **Masking** - Restricts raster data to areas defined by a polygon or another raster, setting values outside the mask to NA. Useful for limiting analyses to specific regions such as marine protected areas, exclusive economic zones, or specific depth ranges.
+
+-   **Raster algebra** - Performs mathematical operations on raster layers, either within a single layer (e.g., unit conversions, transformations) or across multiple layers (e.g., calculating change between time periods, combining variables). Enables creation of derived metrics like biodiversity change or habitat suitability indices.
+
+-   **Aggregation and resampling** - Changes raster resolution by combining or subdividing cells. Aggregation reduces resolution for computational efficiency or matching other datasets, while resampling adjusts resolution or aligns grids from different sources.
+
+-   **Focal operations** - Applies functions to neighborhoods of cells, such as calculating moving window statistics (mean, standard deviation) or smoothing. Used for identifying spatial patterns, creating terrain derivatives, or reducing noise in environmental data.
+
+## Data Formats
+
+Understanding spatial data formats is important when working with web services, even through R packages. While the `emodnet.wfs` and `emodnet.wcs` packages handle data retrieval and automatically load results as R objects (`sf` for vector, `terra` for raster), the underlying format requested from the service can have significant practical implications:
+
+**Download speed and data size** - Different formats have different compression and encoding schemes, affecting transfer time and bandwidth usage.
+
+**Geometry types and plotting compatibility** - Format choice affects what feature geometries are returned. For example, WFS services may return complex geometry types like MULTISURFACE in GML format, which cannot be easily plotted and require conversion to standard POLYGONs. Requesting GeoJSON format instead often returns simpler geometry types that integrate directly with plotting workflows.
+
+**Saving data locally** - After retrieving data from EMODnet, you may want to save it for archival, sharing with collaborators, or use in other software. Understanding format characteristics helps you choose the best option for your needs.
+
+The tutorials demonstrate when and how to specify output formats to optimize your workflow.
+
+### Vector Formats
+
+**GeoJSON** (.geojson)
+
+-   Text-based, human-readable
+-   Widely supported across platforms
+-   Good for web applications and data sharing
+-   Default output from many WFS services
+
+**Shapefiles** (.shp + supporting files)
+
+-   Traditional GIS format
+-   Requires multiple files (.shp, .shx, .dbf, .prj)
+-   Well-supported but has limitations (field name length, size limits)
+
+**GeoPackage** (.gpkg)
+
+-   Modern, single-file format
+-   Supports multiple layers
+-   No size limits
+-   Recommended for new projects
+
+### Raster Formats
+
+**GeoTIFF** (.tif)
+
+-   Industry standard for raster data
+-   Embeds spatial reference information
+-   Supports multiple bands
+-   Efficient for large datasets
+-   Default output from many WCS services
+
+**NetCDF** (.nc)
+
+-   Multi-dimensional arrays
+-   Common for oceanographic and climate data
+-   Handles time series and multiple variables
+-   Used by Copernicus Marine Service
 
 ## Glossary of Common Terms
 
@@ -618,12 +724,15 @@ The tutorials demonstrate practical bounding box usage for retrieving EMODnet da
 
 glossary <- tibble::tribble(
   ~Term                               , ~Definition                                                                                                                                                                                                                                  ,
+  "Attribute"                         , "Non-spatial data associated with a feature, stored in data frame columns. Attributes describe characteristics of the entire spatial object (e.g., species name, designation type, measurement values)."                                      ,
+  "Band"                              , "An individual data layer within a raster dataset. Single-band rasters contain one variable; multi-band rasters contain multiple related variables (e.g., different species, time periods, or measurements) sharing the same grid structure." ,
   "Bathymetry"                        , "The measurement of ocean depth; underwater topography."                                                                                                                                                                                     ,
   "Benthic"                           , "Relating to organisms living on or in the seafloor."                                                                                                                                                                                        ,
   "Biodiversity metrics"              , "Quantitative measures of biological diversity (e.g., species richness, evenness, β-diversity)."                                                                                                                                            ,
   "β-diversity (Beta diversity)"     , "Turnover in species composition between locations or time periods."                                                                                                                                                                         ,
   "Bounding box"                      , "A rectangular area defined by minimum and maximum coordinates, used to specify a region of interest."                                                                                                                                       ,
   "Buffer"                            , "An area of specified distance around a geographic feature."                                                                                                                                                                                 ,
+  "Coverage"                          , "A raster dataset served by WCS, representing spatial data as a grid of cells with associated values. Term used in WCS terminology for what is more generally called a raster or gridded dataset."                                          ,
   "CRS (Coordinate Reference System)" , "Defines how coordinates correspond to locations on Earth."                                                                                                                                                                                  ,
   "EPSG code"                         , "A unique numeric identifier for a coordinate reference system from the EPSG registry (e.g., EPSG:4326 for WGS84). Named after the European Petroleum Survey Group, now maintained by the International Association of Oil & Gas Producers." ,
   "Extent"                            , "The geographic area covered by a spatial dataset."                                                                                                                                                                                          ,

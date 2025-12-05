@@ -1,5 +1,11 @@
 on:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish to production (uncheck for a dry run)"
+        type: boolean
+        required: false
+        default: true
   push:
     branches: main
   pull_request:
@@ -10,10 +16,19 @@ name: Quarto Publish
 permissions:
   contents: write
   pages: write
+  pull-requests: write
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    # Only restrict concurrency for non-PR jobs
+    concurrency:
+      group: quarto-publish-${{ github.event_name != 'pull_request' || github.run_id }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      PUBLISH: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -35,10 +50,23 @@ jobs:
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
 
-      - name: Publish to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Publish to GitHub Pages (Production)
+        if: contains(env.PUBLISH, 'true')
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy PR preview to Netlify
+        if: contains(env.PUBLISH, 'false')
+        uses: nwtgck/actions-netlify@v3.0.0
+        with:
+          publish-dir: './_site'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-commit-comment: false
+          enable-commit-status: false
+          enable-github-deployment: false
+          fails-without-credentials: true
+        timeout-minutes: 1

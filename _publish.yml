@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: a7aca748-a8ec-4079-b090-5ccdc4246205
+      url: 'https://emodnet-bio-r-geo-tutorials-preview.netlify.app'

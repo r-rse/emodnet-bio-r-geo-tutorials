@@ -1,5 +1,6 @@
 # EMODnet Biology R Geospatial Tutorials
 
+[![Quarto Publish](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
 [![License: CC BY 4.0](https://img.shields.io/badge/License%20(content)-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![License: MIT](https://img.shields.io/badge/License%20(code)-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -23,7 +24,15 @@ These tutorials provide practical, reproducible workflows for working with EMODn
 
 ### Online Access
 
-The tutorials are available as an interactive website at: *(URL to be added once deployed)*
+<!--
+TODO: When moving to EMODnet GitHub organization, update:
+- This URL
+- _quarto.yml (website.site-url and website.repo-url)
+- Workflow badges above
+- NETLIFY_SITE_ID if keeping PR previews
+-->
+
+The tutorials are available as an interactive website at: **https://r-rse.github.io/emodnet-bio-r-geo-tutorials/**
 
 ### Prerequisites
 
@@ -62,6 +71,88 @@ pak::pak(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
 pak::pak(c("CopernicusMarine", "worrms"))
 ```
 
+## Working With the Tutorials
+
+### For Learners: Running Tutorials Interactively
+
+If you want to work through the tutorials in your own R environment:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/r-rse/emodnet-bio-r-geo-tutorials.git
+   cd emodnet-bio-r-geo-tutorials
+   ```
+
+2. **Install required packages** (see [R Package Installation](#r-package-installation) above)
+
+3. **Open tutorial files:**
+   - Tutorial files are in the `tutorials/` directory (`.qmd` files)
+   - Open them in RStudio or your preferred editor
+   - Run code chunks interactively (`Ctrl/Cmd + Enter`)
+
+4. **Work through at your own pace:**
+   - Code chunks can be run independently
+   - Modify code to explore different scenarios
+   - Create your own variations based on the examples
+
+### For Contributors: Building the Website Locally
+
+If you want to preview the full website or contribute changes:
+
+1. **Install Quarto** (≥ 1.5): [Download here](https://quarto.org/docs/get-started/)
+
+2. **Clone and setup:**
+   ```bash
+   git clone https://github.com/r-rse/emodnet-bio-r-geo-tutorials.git
+   cd emodnet-bio-r-geo-tutorials
+   ```
+
+3. **Install R packages** (see [R Package Installation](#r-package-installation))
+
+4. **Preview the site:**
+   ```bash
+   quarto preview
+   ```
+   - Opens browser with live-reloading preview
+   - Changes auto-refresh as you edit
+
+5. **Build the site:**
+   ```bash
+   quarto render
+   ```
+   - Generates site in `_site/` directory
+   - Check `_site/index.html` to verify build
+
+### Troubleshooting Workflow Failures
+
+If the [CI/CD workflow](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml) fails:
+
+**1. Check the workflow run:**
+   - Click the badge: [![Quarto Publish](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
+   - Review error messages in failed steps
+
+**2. Common issues:**
+   - **R package errors**: Package versions may have changed - update `DESCRIPTION`
+   - **EMODnet service issues**: WFS/WCS endpoints may be temporarily down - check [EMODnet status](https://emodnet.ec.europa.eu/)
+   - **Broken links**: Check the "Check links with Lychee" step job summary
+   - **Render errors**: Test locally with `quarto render` to reproduce
+
+**3. Broken links (scheduled runs):**
+   - Weekly checks create [issues with label `scheduled-check`](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/labels/scheduled-check)
+   - Review and fix broken external links or update exclusions
+   - Internal links usually indicate missing files or incorrect paths
+
+**4. Test locally first:**
+   ```bash
+   # Reproduce the CI environment
+   quarto render
+   # If successful locally but fails in CI, check package versions
+   ```
+
+**5. Need help?**
+   - [Open an issue](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues)
+   - Tag maintainers if urgent
+
 ## Contributing
 
 We welcome contributions! Whether you want to:
@@ -99,7 +190,7 @@ _Note: A DOI will be added once the tutorials are archived on Zenodo._
 -   **EMODnet Portal:** [emodnet.eu](https://emodnet.eu)
 -   **emodnet.wfs Package:** [github.com/EMODnet/emodnet.wfs](https://github.com/EMODnet/emodnet.wfs)
 -   **emodnet.wcs Package:** [github.com/EMODnet/emodnet.wcs](https://github.com/EMODnet/emodnet.wcs)
--   **Tutorial Website:** (URL to be added once deployed)
+-   **Tutorial Website:** [r-rse.github.io/emodnet-bio-r-geo-tutorials](https://r-rse.github.io/emodnet-bio-r-geo-tutorials/)
 
 ## Contact & Support
 

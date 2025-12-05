@@ -10,6 +10,9 @@ on:
     branches: main
   pull_request:
     branches: main
+  schedule:
+    # Run every Monday at 9am UTC to catch broken links/service issues
+    - cron: '0 9 * * 1'
 
 name: Quarto Publish
 
@@ -49,6 +52,18 @@ jobs:
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
+
+      - name: Check links with Lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress --exclude-mail './_site/**/*.html'
+          fail: true
+          jobSummary: true
+          # Only create issues on scheduled runs
+          issueTitle: ${{ github.event_name == 'schedule' && 'Broken links detected (scheduled check)' || '' }}
+          issueLabels: ${{ github.event_name == 'schedule' && 'bug,documentation,scheduled-check' || '' }}
+        # Don't block deployment for PR/push, but do block for scheduled runs
+        continue-on-error: ${{ github.event_name != 'schedule' }}
 
       - name: Publish to GitHub Pages (Production)
         if: contains(env.PUBLISH, 'true')

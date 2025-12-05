@@ -56,12 +56,9 @@ jobs:
       - name: Check links with Lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --verbose --no-progress --exclude-mail './_site/**/*.html'
+          args: --verbose --no-progress './_site/**/*.html'
           fail: true
           jobSummary: true
-          # Only create issues on scheduled runs
-          issueTitle: ${{ github.event_name == 'schedule' && 'Broken links detected (scheduled check)' || '' }}
-          issueLabels: ${{ github.event_name == 'schedule' && 'bug,documentation,scheduled-check' || '' }}
         # Don't block deployment for PR/push, but do block for scheduled runs
         continue-on-error: ${{ github.event_name != 'schedule' }}
 

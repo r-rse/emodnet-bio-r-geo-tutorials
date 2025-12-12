@@ -36,12 +36,14 @@ Config/Needs/website:
     DT,
     knitr,
     pkgload,
+    purrr,
     rmarkdown,
     tibble,
     kableExtra,
     rnaturalearth,
     rnaturalearthdata,
     patchwork,
+    skimr,
     tmap
 RoxygenNote: 7.3.2
 Depends: 

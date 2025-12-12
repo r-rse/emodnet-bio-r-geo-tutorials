@@ -511,7 +511,7 @@ The tutorials demonstrate practical bounding box usage for retrieving EMODnet da
 
 ## The Geospatial Software Stack
 
-Before diving into R packages, it helps to understand the foundational libraries that power geospatial computing. These open-source C/C++ libraries do the heavy lifting—R packages like `sf` and `terra` are interfaces that make them accessible from R.
+Before diving into R packages, it helps to understand the foundational libraries that power geospatial computing. These open-source C/C++ libraries do the heavy lifting. R packages like `sf` and `terra` are interfaces that make them accessible from R.
 
 ### Core Libraries
 
@@ -529,7 +529,7 @@ PROJ handles coordinate transformations and projections. When you convert data f
 
 **GEOS (Geometry Engine - Open Source)**
 
-GEOS performs geometric operations on vector data: intersections, buffers, unions, validity checks, and more. It works with **planar coordinates**—it treats geometries as flat 2D shapes and uses Euclidean geometry. This is fast and works well with projected coordinate systems.
+GEOS performs geometric operations on vector data: intersections, buffers, unions, validity checks, and more. It works with **planar coordinates**, treating geometries as flat 2D shapes and using Euclidean geometry. This is fast and works well with projected coordinate systems.
 
 - Website: [libgeos.org](https://libgeos.org/)
 

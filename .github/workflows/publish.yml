@@ -52,6 +52,16 @@ jobs:
           extra-packages: any::jsonlite, local::.
           needs: website
 
+      - name: Cache knitr chunks
+        uses: actions/cache@v4
+        with:
+          path: |
+            *_cache/
+            tutorials/*_cache/
+          key: knitr-${{ runner.os }}-${{ hashFiles('**/*.qmd') }}
+          restore-keys: |
+            knitr-${{ runner.os }}-
+
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
 

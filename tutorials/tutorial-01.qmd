@@ -14,13 +14,13 @@ format:
 
 ## Introduction
 
-The North Sea is one of Europe's most heavily industrialised marine regions. Beneath its waters lies a dense network of energy infrastructure—oil and gas platforms, pipelines, and offshore wind installations—alongside a growing network of marine protected areas (MPAs) established under EU directives such as the [Marine Strategy Framework Directive](https://environment.ec.europa.eu/topics/marine-environment/marine-strategy-framework-directive_en) and the [Habitats Directive](https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive_en).
+The North Sea is one of Europe's most heavily industrialised marine regions. Beneath its waters lies a dense network of energy infrastructure, including oil and gas platforms, pipelines, and offshore wind installations, alongside a growing network of marine protected areas (MPAs) established under EU directives such as the [Marine Strategy Framework Directive](https://environment.ec.europa.eu/topics/marine-environment/marine-strategy-framework-directive_en) and the [Habitats Directive](https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive_en).
 
 Understanding where these features intersect is crucial for:
 
-- **Marine spatial planning** — balancing conservation with economic activities
-- **Environmental impact assessments** — evaluating potential effects of infrastructure on protected habitats
-- **Policy compliance** — ensuring activities align with conservation objectives
+- **Marine spatial planning**: balancing conservation with economic activities
+- **Environmental impact assessments**: evaluating potential effects of infrastructure on protected habitats
+- **Policy compliance**: ensuring activities align with conservation objectives
 
 In this tutorial, we'll focus on the **energy sector's footprint** on marine protected areas, using open-access EMODnet data to identify and quantify overlaps between protected areas and energy infrastructure. This demonstrates how the `emodnet.wfs` package enables data-driven environmental analysis entirely within R.
 
@@ -42,16 +42,16 @@ All data comes from the **EMODnet Human Activities** portal:
 
 | Layer | Description |
 |-------|-------------|
-| `cddaareas` | CDDA (Common Database on Designated Areas) — European inventory of nationally designated protected areas including nature reserves, national parks, and other site types |
-| `natura2000areas` | Natura 2000 network — EU-wide network of protected areas established under the Birds and Habitats Directives to protect Europe's most valuable species and habitats |
-| `marineprotectedareas` | Other marine protected areas — sites designated under regional sea conventions (OSPAR, HELCOM, Barcelona Convention) and other international frameworks |
+| `cddaareas` | CDDA (Common Database on Designated Areas), the European inventory of nationally designated protected areas including nature reserves, national parks, and other site types |
+| `natura2000areas` | Natura 2000 network, the EU-wide network of protected areas established under the Birds and Habitats Directives to protect Europe's most valuable species and habitats |
+| `marineprotectedareas` | Other marine protected areas, sites designated under regional sea conventions (OSPAR, HELCOM, Barcelona Convention) and other international frameworks |
 
 **Energy Infrastructure:**
 
 | Layer | Description |
 |-------|-------------|
-| `platforms` | Offshore platforms — oil, gas, and wind energy installations including production platforms, substations, and support structures |
-| `pipelines` | Subsea pipelines — oil, gas, and chemical transport pipelines on the seabed |
+| `platforms` | Offshore platforms, including oil, gas, and wind energy installations such as production platforms, substations, and support structures |
+| `pipelines` | Subsea pipelines for oil, gas, and chemical transport on the seabed |
 | `pcablesbshcontis` | Power cables from BSH (German Federal Maritime and Hydrographic Agency) and CONTIS database |
 | `pcablesshom` | Power cables from SHOM (French Naval Hydrographic and Oceanographic Service) |
 | `pcablesrijks` | Power cables from Rijkswaterstaat (Dutch Directorate-General for Public Works and Water Management) |
@@ -113,7 +113,7 @@ bbox_polygon <- sf::st_as_sfc(sf::st_bbox(north_sea_bbox, crs = 4326))
 bbox_3035 <- sf::st_transform(bbox_polygon, 3035)
 ```
 
-We'll use [EPSG:3035](../concepts.qmd#coordinate-reference-systems-crs) (ETRS89-LAEA) as our working CRS—a projected coordinate system with metric units that's well-suited for European marine analysis.
+We'll use [EPSG:3035](../concepts.qmd#coordinate-reference-systems-crs) (ETRS89-LAEA) as our working CRS, a projected coordinate system with metric units that's well-suited for European marine analysis.
 
 ```{r}
 #| label: fig-study-area
@@ -139,7 +139,7 @@ ggplot() +
 
 ## Exploring EMODnet WFS Services
 
-Before downloading data, it's good practice to explore what's available. The `emodnet.wfs` package provides several functions to discover services, layers, and their attributes—helping you understand the data before committing to a download.
+Before downloading data, it's good practice to explore what's available. The `emodnet.wfs` package provides several functions to discover services, layers, and their attributes, helping you understand the data before committing to a download.
 
 ### Discovering Available Services
 
@@ -218,9 +218,9 @@ available_layers |>
 
 We'll use three complementary datasets to get comprehensive coverage of marine protected areas:
 
-- **`cddaareas`** — the CDDA database captures nationally designated sites, giving us country-level protected areas
-- **`natura2000areas`** — the EU's flagship conservation network, essential for any European marine analysis
-- **`marineprotectedareas`** — includes sites designated under regional conventions (OSPAR, HELCOM) that may not appear in the other datasets
+- **`cddaareas`**: the CDDA database captures nationally designated sites, giving us country-level protected areas
+- **`natura2000areas`**: the EU's flagship conservation network, essential for any European marine analysis
+- **`marineprotectedareas`**: includes sites designated under regional conventions (OSPAR, HELCOM) that may not appear in the other datasets
 
 ```{r}
 #| label: define-protected-area-layers
@@ -244,9 +244,9 @@ available_layers |>
 
 For our energy sector focus, we'll use:
 
-- **`platforms`** — offshore installations (oil, gas, wind) as point locations
-- **`pipelines`** — subsea pipelines for oil and gas transport as line features
-- **`pcables*`** — power cables from multiple national sources (BSH, SHOM, Rijkswaterstaat, Norwegian) for offshore wind and interconnector coverage
+- **`platforms`**: offshore installations (oil, gas, wind) as point locations
+- **`pipelines`**: subsea pipelines for oil and gas transport as line features
+- **`pcables*`**: power cables from multiple national sources (BSH, SHOM, Rijkswaterstaat, Norwegian) for offshore wind and interconnector coverage
 
 ```{r}
 #| label: define-infrastructure-layers
@@ -262,17 +262,17 @@ infrastructure_layers <- c(
 
 ### Understanding Layer Structure
 
-WFS layers can contain thousands of features with dozens of attributes—downloading everything and filtering afterwards wastes bandwidth and time. Before committing to a download, we should:
+WFS layers can contain thousands of features with dozens of attributes. Downloading everything and filtering afterwards wastes bandwidth and time. Before committing to a download, we should:
 
-1. **Discover available attributes** — what columns exist and what types are they?
-2. **Identify filter candidates** — which attributes contain categorical values we can filter on?
-3. **Check actual values** — what values exist so we can write accurate filter expressions?
+1. **Discover available attributes**: what columns exist and what types are they?
+2. **Identify filter candidates**: which attributes contain categorical values we can filter on?
+3. **Check actual values**: what values exist so we can write accurate filter expressions?
 
 The `emodnet.wfs` package provides lightweight metadata functions that answer these questions without downloading full datasets. This "look before you leap" approach helps us write efficient, targeted queries.
 
 #### Inspecting Attribute Metadata
 
-The `layer_attribute_descriptions()` function returns metadata about each attribute—name, type, and whether it's the geometry column. Let's check all three protected area layers:
+The `layer_attribute_descriptions()` function returns metadata about each attribute: name, type, and whether it's the geometry column. Let's check all three protected area layers:
 
 ```{r}
 #| label: inspect-mpa-attributes
@@ -356,7 +356,7 @@ mpa_attr_tbls <- map(
 
 Both functions are more expensive than `layer_attribute_inspect()` since they fetch the complete dataset. Use them when you need to explore relationships between multiple attributes or perform detailed data quality checks.
 
-We've included pre-fetched attribute tables as package data—use the tabs below to browse:
+We've included pre-fetched attribute tables as package data. Use the tabs below to browse:
 
 ::: {.panel-tabset}
 
@@ -391,19 +391,19 @@ skimr::skim(mpa_attr_tbls$marineprotectedareas)
 
 Now that we understand what's available, we can plan exactly what to request. Defining a schema upfront has several benefits:
 
-1. **Reduces download size** — we only request the columns we actually need
-2. **Documents our decisions** — the schema captures which filters we're applying and why
-3. **Enables standardisation** — different layers use different names for similar concepts (`sitename` vs `name`), which we'll need to reconcile when combining data later
-4. **Supports automation** — we can programmatically extract property names and filters from the schema
+1. **Reduces download size**: we only request the columns we actually need
+2. **Documents our decisions**: the schema captures which filters we're applying and why
+3. **Enables standardisation**: different layers use different names for similar concepts (`sitename` vs `name`), which we'll need to reconcile when combining data later
+4. **Supports automation**: we can programmatically extract property names and filters from the schema
 
 Our schema structure has two components per layer:
 
-- **`cols`** — a named list defining the columns for our final combined dataset. The **names** are what we want our output columns to be called. Each element is either:
-  - `NULL` — the WFS layer already uses this column name and no type casting is needed
+- **`cols`**: a named list defining the columns for our final combined dataset. The **names** are what we want our output columns to be called. Each element is either:
+  - `NULL`: the WFS layer already uses this column name and no type casting is needed
   - A list with `from` and/or `type`:
-    - `from` — the actual attribute name in the WFS layer (when it differs from our desired output name)
-    - `type` — type shorthand for casting: `"d"` (double), `"i"` (integer), `"c"` (character), etc.
-- **`filter`** — a [CQL/ECQL filter expression](https://docs.ropensci.org/emodnet.wfs/articles/ecql_filtering.html) to apply server-side
+    - `from`: the actual attribute name in the WFS layer (when it differs from our desired output name)
+    - `type`: type shorthand for casting: `"d"` (double), `"i"` (integer), `"c"` (character), etc.
+- **`filter`**: a [CQL/ECQL filter expression](https://docs.ropensci.org/emodnet.wfs/articles/ecql_filtering.html) to apply server-side
 
 For example, `sitename = list(from = "name")` means: "download the `name` attribute from the WFS, but rename it to `sitename` in our output". This lets us harmonise column names across layers that use different conventions.
 
@@ -557,13 +557,13 @@ stopifnot(
 
 We specify `outputFormat = "application/json"` (GeoJSON) rather than the default GML format for two reasons:
 
-1. **Faster downloads** — GeoJSON is typically more compact and efficient to transfer over the network
-2. **Simpler geometries** — GeoJSON returns standard geometry types like `POLYGON` and `MULTIPOLYGON`, while GML may return complex types like `MULTISURFACE` or `CURVE` that can cause issues with spatial operations and plotting functions
+1. **Faster downloads**: GeoJSON is typically more compact and efficient to transfer over the network
+2. **Simpler geometries**: GeoJSON returns standard geometry types like `POLYGON` and `MULTIPOLYGON`, while GML may return complex types like `MULTISURFACE` or `CURVE` that can cause issues with spatial operations and plotting functions
 
 This is recommended practice for most `emodnet_get_layers()` calls.
 :::
 
-This returns a named list of `sf` objects—one per layer:
+This returns a named list of `sf` objects, one per layer:
 
 ```{r}
 #| label: inspect-protected-areas-list
@@ -652,7 +652,7 @@ combined_filter <- paste(
 )
 ```
 
-Server-side filtering reduces download size, which matters for large datasets. Client-side filtering with sf functions like `st_intersects()` is more flexible and works with any spatial data—not just WFS—making it a valuable skill for spatial analysis in R.
+Server-side filtering reduces download size, which matters for large datasets. Client-side filtering with sf functions like `st_intersects()` is more flexible and works with any spatial data, not just WFS, making it a valuable skill for spatial analysis in R.
 :::
 
 ### Quick Visualisation
@@ -717,7 +717,7 @@ imap(infra_descriptions, ~ .x$name)
 
 The layers have different attributes, reflecting different data sources and national reporting conventions. Unlike our protected area layers (which share common concepts like `sitename` and `country`), infrastructure attributes are specific to each layer type and source.
 
-We'll keep infrastructure layers separate rather than combining them. Mixing different geometry types (points and lines) in a single `sf` object is awkward—plotting requires filtering by type to apply appropriate aesthetics (`size` for points, `linewidth` for lines), and some spatial operations behave unexpectedly with mixed geometries. We'll download all attributes for each layer and reorganise them by infrastructure type later.
+We'll keep infrastructure layers separate rather than combining them. Mixing different geometry types (points and lines) in a single `sf` object is awkward. Plotting requires filtering by type to apply appropriate aesthetics (`size` for points, `linewidth` for lines), and some spatial operations behave unexpectedly with mixed geometries. We'll download all attributes for each layer and reorganise them by infrastructure type later.
 
 Let's verify these layers use `the_geom` so our bbox filter works:
 
@@ -776,7 +776,7 @@ Unlike protected areas (polygons), infrastructure features have different [geome
 sapply(infra_sf_list, function(x) unique(st_geometry_type(x)))
 ```
 
-The output shows `MULTILINESTRING` and `MULTIPOINT` rather than simple `LINESTRING` and `POINT`. The "MULTI" variants can store multiple disconnected parts in a single feature—for example, a pipeline route that has a gap, or a platform complex with several separate structures recorded as one feature.
+The output shows `MULTILINESTRING` and `MULTIPOINT` rather than simple `LINESTRING` and `POINT`. The "MULTI" variants can store multiple disconnected parts in a single feature. For example, a pipeline route that has a gap, or a platform complex with several separate structures recorded as one feature.
 
 In practice, `sf` spatial operations handle both variants identically: `st_intersects()` works the same whether you have `LINESTRING` or `MULTILINESTRING` geometries. The distinction matters mainly when you need to count or iterate over individual line segments.
 
@@ -786,7 +786,7 @@ For our analysis:
 - **Pipelines** are lines (connecting infrastructure)
 - **Cables** are lines (power transmission and interconnectors)
 
-This matters because spatial operations behave differently with different geometry types—intersecting a polygon with a line returns different results than intersecting two polygons.
+This matters because spatial operations behave differently with different geometry types. Intersecting a polygon with a line returns different results than intersecting two polygons.
 
 ### Quick Visualisation
 
@@ -847,9 +847,9 @@ ggplot() +
 
 Before we can test for intersections between protected areas and infrastructure, we need to prepare both datasets. This involves three steps:
 
-1. **Verify CRS alignment** — all layers must share the same coordinate reference system
-2. **Validate geometries** — fix any invalid geometries that could cause errors
-3. **Organise data structures** — combine MPA layers into a single dataset; group infrastructure by type
+1. **Verify CRS alignment**: all layers must share the same coordinate reference system
+2. **Validate geometries**: fix any invalid geometries that could cause errors
+3. **Organise data structures**: combine MPA layers into a single dataset; group infrastructure by type
 
 ### Checking CRS Alignment
 
@@ -900,13 +900,13 @@ infra_sf_list <- lapply(infra_sf_list, st_make_valid)
 
 Now we need to organise our data for analysis. The protected areas and infrastructure require different approaches:
 
-- **Protected areas**: We'll combine the three MPA layers into a single dataset. Our analysis question is "which protected areas intersect with infrastructure?"—we want to test all MPAs together, while preserving a `type` column to distinguish their source. This requires standardising column names across layers.
+- **Protected areas**: We'll combine the three MPA layers into a single dataset. Our analysis question is "which protected areas intersect with infrastructure?" We want to test all MPAs together, while preserving a `type` column to distinguish their source. This requires standardising column names across layers.
 
 - **Infrastructure**: We'll keep pipelines, cables, and platforms as separate objects. Mixing different geometry types (points and lines) in a single `sf` object is awkward for both analysis and plotting, so it's more practical to keep them separate.
 
 #### Combining protected area layers
 
-The three MPA layers have different column names—for example, site names are stored as `sitename` in two layers but `name` in the third:
+The three MPA layers have different column names. For example, site names are stored as `sitename` in two layers but `name` in the third:
 
 ```{r}
 #| label: inspect-protected-area-structures
@@ -999,7 +999,7 @@ The `sf` package provides several functions for testing spatial relationships:
 | `st_within()` | Logical matrix | Which features are completely inside? |
 | `st_contains()` | Logical matrix | Which features completely contain others? |
 
-For our analysis, we'll use `st_intersects()` to find protected areas that have **any** spatial overlap with infrastructure—even if a pipeline just crosses through.
+For our analysis, we'll use `st_intersects()` to find protected areas that have **any** spatial overlap with infrastructure, even if a pipeline just crosses through.
 
 ::: {.callout-note collapse="true"}
 ## `st_intersects()` vs `st_intersection()`
@@ -1069,7 +1069,7 @@ knitr::kable(summary_table)
 
 ### Preparing Geometries for Visualisation
 
-To visualise the results, we need to combine the intersection flags with the MPA geometries. We also simplify the geometries—marine protected area boundaries often contain highly detailed coastlines with thousands of vertices, which slows down plotting.
+To visualise the results, we need to combine the intersection flags with the MPA geometries. We also simplify the geometries because marine protected area boundaries often contain highly detailed coastlines with thousands of vertices, which slows down plotting.
 
 We temporarily disable [`s2` (spherical geometry)](../concepts.qmd#the-geospatial-software-stack) because `st_simplify()` uses the GEOS library, which expects planar coordinates. Since our data is already in a projected CRS (EPSG:3035), this is safe:
 
@@ -1085,7 +1085,7 @@ mpa_simple <- mpa_combined |>
 sf_use_s2(TRUE)
 ```
 
-The `dTolerance` parameter specifies the simplification tolerance in CRS units. Since we're using EPSG:3035 (metric), `dTolerance = 2000` means 2 km—imperceptible at our map scale but dramatically faster to render.
+The `dTolerance` parameter specifies the simplification tolerance in CRS units. Since we're using EPSG:3035 (metric), `dTolerance = 2000` means 2 km, imperceptible at our map scale but dramatically faster to render.
 
 ```{r}
 #| label: compare-simplification
@@ -1314,12 +1314,12 @@ knitr::include_url("interactive_map.html", height = "600px")
 This analysis identified protected areas in the North Sea that spatially overlap with subsea infrastructure. Of the 570 protected areas examined:
 
 - **117 (21%)** intersect with at least one type of energy infrastructure
-- **Natura 2000 sites are most affected** — 46% intersect with infrastructure, compared to 32% of other MPAs and 12% of CDDA sites
-- **Cables are the most common intersection** — 74 protected areas intersect with power cables, compared to 70 with pipelines and 43 with platforms
+- **Natura 2000 sites are most affected**: 46% intersect with infrastructure, compared to 32% of other MPAs and 12% of CDDA sites
+- **Cables are the most common intersection**: 74 protected areas intersect with power cables, compared to 70 with pipelines and 43 with platforms
 
 ### Interpreting the Patterns
 
-The higher intersection rate for Natura 2000 sites likely reflects their typically larger size and offshore extent—these sites often cover broad areas of seabed habitat like sandbanks (e.g., Dogger Bank), which are also attractive corridors for infrastructure routing. CDDA sites, with the lowest intersection rate, include many smaller coastal reserves where infrastructure is less prevalent.
+The higher intersection rate for Natura 2000 sites likely reflects their typically larger size and offshore extent. These sites often cover broad areas of seabed habitat like sandbanks (e.g., Dogger Bank), which are also attractive corridors for infrastructure routing. CDDA sites, with the lowest intersection rate, include many smaller coastal reserves where infrastructure is less prevalent.
 
 The prominence of cable intersections reflects the rapid expansion of offshore wind and cross-border power interconnectors in the North Sea. Unlike legacy oil and gas infrastructure (pipelines, platforms), cable networks are actively growing as part of Europe's energy transition.
 
@@ -1342,7 +1342,7 @@ These findings are relevant for:
 
 This analysis has several limitations to consider:
 
-1. **Spatial intersection ≠ impact**: A pipeline crossing a protected area doesn't necessarily cause ecological harm—actual impacts depend on factors including burial depth, operational status, and habitat sensitivity
+1. **Spatial intersection ≠ impact**: A pipeline crossing a protected area doesn't necessarily cause ecological harm. Actual impacts depend on factors including burial depth, operational status, and habitat sensitivity
 
 2. **Data currency**: EMODnet data is regularly updated but may not reflect the most recent infrastructure installations or MPA designations
 
@@ -1373,10 +1373,10 @@ These skills form the foundation for marine spatial analysis and can be applied 
 
 ## Further Resources
 
-- [EMODnet Seabed Habitats Portal](https://emodnet.ec.europa.eu/en/seabed-habitats) — Explore more protected area and habitat data
-- [EMODnet Human Activities Portal](https://emodnet.ec.europa.eu/en/human-activities) — Access additional infrastructure datasets
-- [emodnet.wfs package documentation](https://emodnet.github.io/emodnet.wfs/) — Full function reference
-- [sf package vignettes](https://r-spatial.github.io/sf/articles/) — Deep dive into spatial operations
-- [Geocomputation with R](https://r.geocompx.org/) — Comprehensive spatial analysis guide
+- [EMODnet Seabed Habitats Portal](https://emodnet.ec.europa.eu/en/seabed-habitats): Explore more protected area and habitat data
+- [EMODnet Human Activities Portal](https://emodnet.ec.europa.eu/en/human-activities): Access additional infrastructure datasets
+- [emodnet.wfs package documentation](https://emodnet.github.io/emodnet.wfs/): Full function reference
+- [sf package vignettes](https://r-spatial.github.io/sf/articles/): Deep dive into spatial operations
+- [Geocomputation with R](https://r.geocompx.org/): Comprehensive spatial analysis guide
 
 Ready for more? Continue to [Tutorial 2](tutorial-02.qmd) to learn about accessing raster data with EMODnet WCS services.

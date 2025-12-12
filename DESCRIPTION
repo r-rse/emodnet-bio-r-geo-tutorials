@@ -18,20 +18,31 @@ Encoding: UTF-8
 URL: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
 BugReports: https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues
 Imports:
+    cli,
     emodnet.wfs,
     emodnet.wcs,
+    here,
+    pins,
+    rlang,
     sf,
     terra,
     dplyr,
-    ggplot2
+    ggplot2,
+    yaml
 Remotes:
     EMODnet/emodnet.wfs,
     EMODnet/emodnet.wcs
 Config/Needs/website:
+    DT,
     knitr,
+    pkgload,
     rmarkdown,
     tibble,
     kableExtra,
     rnaturalearth,
     rnaturalearthdata,
     patchwork
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 3.5)
+LazyData: true

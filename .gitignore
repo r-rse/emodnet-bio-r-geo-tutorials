@@ -13,6 +13,9 @@ _freeze/
 *_cache/
 *_files/
 
+# Generated during render
+tutorials/interactive_map.html
+
 # Cached data
 data-cache/
 

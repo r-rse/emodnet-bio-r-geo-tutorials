@@ -272,7 +272,9 @@ The `emodnet.wfs` package provides lightweight metadata functions that answer th
 
 #### Inspecting Attribute Metadata
 
-The `layer_attribute_descriptions()` function returns metadata about each attribute: name, type, and whether it's the geometry column. Let's check all three protected area layers:
+The `layer_attribute_descriptions()` function returns metadata about each attribute in a layer: name, type, and whether it's the geometry column. It takes a WFS client connection (`wfs`) and a layer name (`layer`).
+
+Since we have three layers to inspect, we use `map()` to apply the function to each layer name in `mpa_layers`:
 
 ```{r}
 #| label: inspect-mpa-attributes
@@ -301,18 +303,23 @@ mpa_geom_cols
 
 #### Identifying Filter Candidates
 
-Looking at these descriptions, we can identify character attributes that might contain categorical values useful for filtering:
+Looking at these descriptions, we can identify attributes useful for filtering:
+
+**Categorical attributes** (character type): useful for selecting specific categories
 
 - **`cddaareas`**: `majorecosy` (ecosystem type) and `designated` (designation status) look promising
-- **`natura2000areas`**: `mar_perc` (marine percentage) could help us select primarily marine sites
 - **`marineprotectedareas`**: `status` likely indicates whether sites are designated or proposed
 
-#### Exploring Attribute Values
+**Numeric attributes**: useful for threshold-based filtering
 
-To check our assumptions, we can use `layer_attribute_inspect()` to fetch the unique values for specific attributes. This is much cheaper than downloading the full dataset:
+- **`natura2000areas`**: `mar_perc` (marine percentage) could help us select predominantly marine sites
+
+#### Exploring Categorical Values
+
+For categorical attributes, we can use `layer_attribute_inspect()` to fetch unique values. This is much cheaper than downloading the full dataset:
 
 ```{r}
-#| label: inspect-filter-candidates
+#| label: inspect-categorical-filters
 #| cache: true
 # Check ecosystem types in CDDA - we'll want to exclude terrestrial
 layer_attribute_inspect(
@@ -336,11 +343,30 @@ layer_attribute_inspect(
 )
 ```
 
-This confirms our filter strategy:
+This tells us:
 
 - **`cddaareas`**: exclude `majorecosy = 'Terrestrial'` and keep only `designated = 'Designated Site'`
-- **`natura2000areas`**: filter to `mar_perc > 50` for predominantly marine sites
 - **`marineprotectedareas`**: keep `status IN ('Designated', 'Designated and managed')`
+
+#### Exploring Numeric Values
+
+For numeric attributes like `mar_perc`, we need to understand the distribution of values to choose an appropriate threshold. The same `layer_attribute_inspect()` function works here too, but returns summary statistics instead of unique values:
+
+```{r}
+#| label: inspect-numeric-filters
+#| cache: true
+layer_attribute_inspect(
+  wfs = wfs,
+  layer = "natura2000areas",
+  attribute = "mar_perc"
+)
+```
+
+The `mar_perc` attribute represents the percentage of each Natura 2000 site that is marine (0-100). The summary shows sites span the full range from fully terrestrial (0%) to fully marine (100%), with a median of ~15% and mean of ~39%.
+
+For our analysis, we want sites that are **predominantly marine**. A threshold of 50% ensures we include sites that are more marine than terrestrial, while excluding coastal sites that are primarily land-based. This gives us:
+
+- **`natura2000areas`**: filter to `mar_perc > 50` for predominantly marine sites
 
 ::: {.callout-note collapse="true"}
 ## Fetching complete attribute tables
@@ -389,7 +415,7 @@ skimr::skim(mpa_attr_tbls$marineprotectedareas)
 
 ### Planning Our Data Schema
 
-Now that we understand what's available, we can plan exactly what to request. Defining a schema upfront has several benefits:
+Now that we've explored the available attributes and identified our [filter criteria](#identifying-filter-candidates), we can plan exactly what to request. Defining a schema upfront has several benefits:
 
 1. **Reduces download size**: we only request the columns we actually need
 2. **Documents our decisions**: the schema captures which filters we're applying and why

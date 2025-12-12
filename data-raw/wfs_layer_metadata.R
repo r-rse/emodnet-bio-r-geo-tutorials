@@ -12,7 +12,11 @@ library(purrr)
 wfs <- emodnet_init_wfs_client(service = "human_activities")
 
 # Define layers for tutorials
-protected_area_layers <- c("cddaareas", "natura2000areas", "marineprotectedareas")
+protected_area_layers <- c(
+  "cddaareas",
+  "natura2000areas",
+  "marineprotectedareas"
+)
 infrastructure_layers <- c(
   "platforms",
   "pipelines",

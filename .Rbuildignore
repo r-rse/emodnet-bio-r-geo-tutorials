@@ -1,0 +1,48 @@
+# RStudio/IDE files
+^\.Rproj\.user$
+^.*\.Rproj$
+^\.Rprofile$
+^\.vscode$
+^\.claude$
+^claude\.md$
+
+# Git
+^\.git$
+^\.github$
+^\.gitignore$
+^\.nojekyll$
+
+# Quarto website
+^_quarto\.yml$
+^_publish\.yml$
+^_site$
+^_freeze$
+^_extensions$
+^_tutorial-card\.qmd$
+^\.quarto$
+^.*_cache$
+^.*_files$
+^styles\.scss$
+^air\.toml$
+
+# Website content
+^index\.qmd$
+^about\.qmd$
+^concepts\.qmd$
+^tutorials$
+^assets$
+
+# Documentation (not package docs)
+^README\.md$
+^CONTRIBUTING\.md$
+^CITATION\.cff$
+^LICENSE-.*$
+
+# Data cache (runtime, not part of package)
+^data-cache$
+
+# Generated during render
+^lib$
+
+# Development artifacts
+^\.attic$

@@ -15,6 +15,7 @@ _freeze/
 
 # Generated during render
 tutorials/interactive_map.html
+lib/
 
 # Cached data
 data-cache/

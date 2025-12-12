@@ -509,11 +509,62 @@ Both WFS (vector) and WCS (raster) services accept bounding box parameters to sp
 
 The tutorials demonstrate practical bounding box usage for retrieving EMODnet data in specific regions, from local study sites to broader management areas.
 
+## The Geospatial Software Stack
+
+Before diving into R packages, it helps to understand the foundational libraries that power geospatial computing. These open-source C/C++ libraries do the heavy lifting. R packages like `sf` and `terra` are interfaces that make them accessible from R.
+
+### Core Libraries
+
+**GDAL (Geospatial Data Abstraction Library)**
+
+GDAL handles reading and writing spatial data formats. When you load a GeoTIFF, GeoJSON, or Shapefile in R, GDAL is doing the work behind the scenes. It supports over 200 raster and vector formats, making it the universal translator for geospatial data.
+
+- Website: [gdal.org](https://gdal.org/)
+
+**PROJ**
+
+PROJ handles coordinate transformations and projections. When you convert data from WGS84 (latitude/longitude) to a projected coordinate system like UTM, PROJ performs the mathematical transformation. It maintains an extensive database of coordinate reference system definitions.
+
+- Website: [proj.org](https://proj.org/)
+
+**GEOS (Geometry Engine - Open Source)**
+
+GEOS performs geometric operations on vector data: intersections, buffers, unions, validity checks, and more. It works with **planar coordinates**, treating geometries as flat 2D shapes and using Euclidean geometry. This is fast and works well with projected coordinate systems.
+
+- Website: [libgeos.org](https://libgeos.org/)
+
+**s2 (S2 Geometry Library)**
+
+s2 is Google's library for **spherical geometry**. Unlike GEOS, it treats the Earth as a sphere and performs calculations on the curved surface. This is appropriate for geographic CRS like WGS84 (EPSG:4326), where coordinates are in degrees. s2 is geometrically correct for unprojected data but slower than GEOS, stricter about geometry validity, and doesn't support all operations (e.g., `st_simplify()` requires GEOS).
+
+- Website: [s2geometry.io](https://s2geometry.io/)
+
+### Why This Matters
+
+Understanding this stack helps explain behaviours you'll encounter:
+
+- **GEOS vs s2**: The `sf` package uses s2 by default for geographic CRS and GEOS for projected CRS. Some operations only work with GEOS, which is why you sometimes see `sf_use_s2(FALSE)` in code to temporarily switch engines.
+
+- **CRS transformations**: When you call `st_transform()`, PROJ does the coordinate conversion.
+
+- **Format support**: If R can read a spatial format, it's because GDAL supports it.
+
+### The Stack in Practice
+
+When you run a typical spatial workflow in R:
+
+1. **Loading data**: GDAL reads the file format
+2. **Reprojecting**: PROJ transforms coordinates
+3. **Spatial operations**: GEOS or s2 performs intersections, buffers, etc.
+4. **Saving results**: GDAL writes the output format
+
+The R packages coordinate these libraries and provide a consistent interface, but the underlying work happens in optimised C/C++ code.
+
 ## Key R Packages
 
 ### sf - Simple Features for R
 
-The [`sf` package](https://r-spatial.github.io/sf/) is the modern standard for **vector spatial data** in R.
+The [`sf` package](https://r-spatial.github.io/sf/) is the modern standard for **vector spatial data** in R. It provides an R interface to GDAL (for data I/O), PROJ (for CRS transformations), and GEOS/s2 (for geometric operations).
 
 **Key features:**
 

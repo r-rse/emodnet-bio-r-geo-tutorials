@@ -41,7 +41,8 @@ Config/Needs/website:
     kableExtra,
     rnaturalearth,
     rnaturalearthdata,
-    patchwork
+    patchwork,
+    tmap
 RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5)

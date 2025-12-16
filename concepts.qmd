@@ -518,7 +518,7 @@ The [`sf` package](https://r-spatial.github.io/sf/) is the modern standard for *
 **Key features:**
 
 -   Represents spatial data as data frames with geometry columns
--   Integrates with tidyverse workflows
+-   Integrates with [tidyverse](https://tidyverse.org/) workflows
 -   Provides spatial operations (intersections, buffers, joins, etc.)
 -   Handles CRS transformations
 -   Reads/writes common spatial formats

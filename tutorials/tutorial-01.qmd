@@ -657,7 +657,7 @@ Now we apply `st_filter()` with `st_disjoint` to keep only features that don't t
 #| label: filter-irish-sea
 # Keep features that are disjoint from (don't touch) the Irish Sea
 mpa_sf_list <- map(mpa_sf_list, \(x) {
- st_filter(x, irish_sea_bbox, .predicate = st_disjoint)
+  st_filter(x, irish_sea_bbox, .predicate = st_disjoint)
 })
 
 # Check the filtered counts
@@ -707,9 +707,11 @@ bbox_ext <- st_bbox(bbox_3035)
 # Combine all protected areas with type labels (simplify for faster rendering)
 mpa_preview <- imap(
   mpa_sf_list,
-  \(x, y) select(x, geometry) |>
-    mutate(type = y) |>
-    st_simplify(dTolerance = 500, preserveTopology = TRUE)
+  \(x, y) {
+    select(x, geometry) |>
+      mutate(type = y) |>
+      st_simplify(dTolerance = 500, preserveTopology = TRUE)
+  }
 ) |>
   bind_rows()
 ```
@@ -995,8 +997,10 @@ type_labels <- c(
 
 mpa_combined <- imap(
   mpa_sf_list,
-  \(x, y) standardise_sf(x, mpa_schemas[[y]]$cols) |>
-    mutate(type = type_labels[[y]])
+  \(x, y) {
+    standardise_sf(x, mpa_schemas[[y]]$cols) |>
+      mutate(type = type_labels[[y]])
+  }
 ) |>
   bind_rows()
 rownames(mpa_combined) <- NULL
@@ -1012,7 +1016,10 @@ We reorganise `infra_sf_list` (named by WFS layer) into a new list organised by 
 #| label: organise-infrastructure
 infra_by_type <- list(
   pipelines = infra_sf_list$pipelines,
-  cables = bind_rows(infra_sf_list[startsWith(names(infra_sf_list), "pcables")]),
+  cables = bind_rows(infra_sf_list[startsWith(
+    names(infra_sf_list),
+    "pcables"
+  )]),
   platforms = infra_sf_list$platforms
 )
 

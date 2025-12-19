@@ -39,6 +39,8 @@ Config/Needs/website:
     purrr,
     rmarkdown,
     tibble,
+    tidyr,
+    tidyterra,
     kableExtra,
     rnaturalearth,
     rnaturalearthdata,

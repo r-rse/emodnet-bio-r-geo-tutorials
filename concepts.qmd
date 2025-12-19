@@ -269,9 +269,11 @@ Earth is a three-dimensional sphere, but maps and computer screens are two-dimen
 **There is no perfect solution** - every projection sacrifices something. This is why dozens of projections exist: each is optimized for different purposes and geographic regions.
 
 ::: callout-note
-## EPSG Codes
+## Specifying CRS: EPSG Codes and WKT
 
-Throughout this page, you'll see CRS referenced by **EPSG codes** (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil & Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide an unambiguous way to specify which CRS you're using.
+Throughout this page, you'll see CRS referenced by **EPSG codes** (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil & Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide a concise, unambiguous way to specify which CRS you're using.
+
+Under the hood, CRS definitions are stored as **WKT (Well-Known Text)** strings - a verbose text format that fully describes the coordinate system, datum, units, and other parameters. You'll occasionally encounter WKT when inspecting spatial objects, but in practice you'll usually work with EPSG codes which are simpler and map to the full WKT definitions.
 :::
 
 ### Geographic vs Projected CRS

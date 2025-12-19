@@ -132,9 +132,8 @@ install.packages(c(
     "tmap"
 ))
 
-# Install emodnet.wcs from GitHub (not yet on CRAN)
-# install.packages("pak")
-pak::pak("EMODnet/emodnet.wcs")
+# Install emodnet.wcs' latest version (not yet on CRAN)
+install.packages('emodnet.wcs', repos = c('https://emodnet.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ### Quick Start

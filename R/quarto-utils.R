@@ -6,10 +6,11 @@
 #' @return Character string with output directory path, or NULL
 #' @export
 get_quarto_output_dir <- function() {
-  quarto_yml <- here::here("_quarto.yml")
-  if (!file.exists(quarto_yml)) {
+  project_root <- quarto::find_project_root()
+  if (is.null(project_root)) {
     return(NULL)
   }
+  quarto_yml <- file.path(project_root, "_quarto.yml")
   yaml::read_yaml(quarto_yml)$project$`output-dir`
 }
 
@@ -28,10 +29,11 @@ get_output_path <- function(filename, subdir = NULL) {
   output_dir <- get_quarto_output_dir()
 
   if (!is.null(output_dir)) {
+    project_root <- quarto::find_project_root()
     if (!is.null(subdir)) {
-      file.path(here::here(output_dir), subdir, filename)
+      file.path(project_root, output_dir, subdir, filename)
     } else {
-      file.path(here::here(output_dir), filename)
+      file.path(project_root, output_dir, filename)
     }
   } else {
     filename

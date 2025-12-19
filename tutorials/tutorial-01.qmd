@@ -10,6 +10,7 @@ df-print: paged
 format:
   html:
     embed-resources: false
+    code-link: true
 ---
 
 ## Introduction
@@ -88,7 +89,10 @@ library(emodnet.bio.r.geo.tutorials)
 If you haven't installed these packages, run:
 
 ```r
-install.packages(c("emodnet.wfs", "sf", "dplyr", "purrr", "ggplot2", "tmap"))
+install.packages(c(
+  "emodnet.wfs", "sf", "dplyr", "purrr", "ggplot2", "tmap",
+  "rnaturalearth", "skimr"
+))
 ```
 
 For the latest development version:
@@ -101,7 +105,7 @@ pak::pak("EMODnet/emodnet.wfs")
 
 ### Study Area
 
-We'll focus on the North Sea, defined by the following [bounding box](../concepts.qmd#bounding-boxes-and-spatial-queries):
+We'll focus on the North Sea, defined by the following [bounding box](../concepts.qmd#bounding-boxes-and-spatial-queries). We'll use [EPSG:3035](../concepts.qmd#coordinate-reference-systems-crs) (ETRS89-LAEA) as our working CRS, a projected coordinate system with metric units that's well-suited for European marine analysis.
 
 ```{r}
 #| label: define-study-area-bbox
@@ -113,11 +117,9 @@ bbox_polygon <- sf::st_as_sfc(sf::st_bbox(north_sea_bbox, crs = 4326))
 bbox_3035 <- sf::st_transform(bbox_polygon, 3035)
 ```
 
-We'll use [EPSG:3035](../concepts.qmd#coordinate-reference-systems-crs) (ETRS89-LAEA) as our working CRS, a projected coordinate system with metric units that's well-suited for European marine analysis.
-
 ```{r}
 #| label: fig-study-area
-#| echo: false
+#| code-fold: true
 #| fig-cap: "Study area: North Sea region"
 
 # Get European coastlines, transform to EPSG:3035, and crop to study area
@@ -222,6 +224,8 @@ We'll use three complementary datasets to get comprehensive coverage of marine p
 - **`natura2000areas`**: the EU's flagship conservation network, essential for any European marine analysis
 - **`marineprotectedareas`**: includes sites designated under regional conventions (OSPAR, HELCOM) that may not appear in the other datasets
 
+Note that `cddalocations` also appears in the filter results. This layer contains point geometries representing the same protected areas, but we need the polygon boundaries from `cddaareas` for spatial intersection analysis.
+
 ```{r}
 #| label: define-protected-area-layers
 mpa_layers <- c(
@@ -281,7 +285,7 @@ Since we have three layers to inspect, we use `map()` to apply the function to e
 #| cache: true
 mpa_descriptions <- map(
   set_names(mpa_layers),
-  ~ layer_attribute_descriptions(wfs = wfs, layer = .x)
+  \(x) layer_attribute_descriptions(wfs = wfs, layer = x)
 )
 
 bind_rows(mpa_descriptions, .id = "layer")
@@ -294,7 +298,7 @@ The `geometry` column in the output flags which attribute holds the spatial data
 ```{r}
 #| label: get-geom-cols
 get_geom_cols <- function(descriptions) {
-  map_chr(descriptions, ~ .x$name[.x$geometry])
+  map_chr(descriptions, \(x) x$name[x$geometry])
 }
 
 mpa_geom_cols <- get_geom_cols(mpa_descriptions)
@@ -362,7 +366,7 @@ layer_attribute_inspect(
 )
 ```
 
-The `mar_perc` attribute represents the percentage of each Natura 2000 site that is marine (0-100). The summary shows sites span the full range from fully terrestrial (0%) to fully marine (100%), with a median of ~15% and mean of ~39%.
+The `mar_perc` attribute represents the percentage of each Natura 2000 site that is marine (0-100). The summary shows sites span the full range from fully terrestrial (0%) to fully marine (100%), with a median of `r round(median(mpa_attr_tbls$natura2000areas$mar_perc, na.rm = TRUE))`% and mean of `r round(mean(mpa_attr_tbls$natura2000areas$mar_perc, na.rm = TRUE))`%.
 
 For our analysis, we want sites that are **predominantly marine**. A threshold of 50% ensures we include sites that are more marine than terrestrial, while excluding coastal sites that are primarily land-based. This gives us:
 
@@ -376,7 +380,7 @@ For more comprehensive exploration, `layer_attributes_tbl()` fetches all attribu
 ```r
 mpa_attr_tbls <- map(
  set_names(mpa_layers),
- ~ layer_attributes_tbl(wfs = wfs, layer = .x)
+ \(x) layer_attributes_tbl(wfs = wfs, layer = x)
 )
 ```
 
@@ -510,7 +514,7 @@ To limit which attributes are downloaded, we pass a `propertyName` argument to t
 # Helper to build propertyName string from schema
 get_property_names <- function(schema, geom_col) {
   cols <- schema$cols
-  attrs <- imap_chr(cols, ~ .x$from %||% .y)
+  attrs <- imap_chr(cols, \(x, y) x$from %||% y)
   paste(c(geom_col, attrs), collapse = ",")
 }
 
@@ -518,7 +522,7 @@ get_property_names <- function(schema, geom_col) {
 mpa_property_names <- map2_chr(
   mpa_schemas,
   mpa_geom_cols,
-  ~ get_property_names(schema = .x, geom_col = .y)
+  \(x, y) get_property_names(schema = x, geom_col = y)
 )
 mpa_property_names
 ```
@@ -598,7 +602,7 @@ names(mpa_sf_list)
 
 ```{r}
 #| label: count-protected-area-features
-sapply(mpa_sf_list, nrow)
+map_int(mpa_sf_list, nrow)
 ```
 
 Let's examine the downloaded layers:
@@ -630,11 +634,15 @@ mpa_sf_list$marineprotectedareas
 
 ### Filtering by Location (Post-download)
 
-Our rectangular bounding box captures some protected areas in the Irish Sea that aren't part of our North Sea study area. We can apply a more precise spatial filter locally to remove these while keeping Scottish MPAs further north:
+Our rectangular bounding box captures some protected areas in the Irish Sea that aren't part of our North Sea study area. We can apply a more precise spatial filter locally to remove these while keeping Scottish MPAs further north.
+
+The `sf` package provides `st_filter()` for filtering spatial data based on geometric relationships. We'll use it with `st_disjoint` as the predicate, which keeps features that have no points in common with our exclusion zone.
+
+First, we define the Irish Sea exclusion zone as a bounding box polygon. We create it in geographic coordinates (EPSG:4326) and then transform it to our working CRS (EPSG:3035) to match our MPA data:
 
 ```{r}
 #| label: define-irish-sea-exclusion
-# Define Irish Sea exclusion zone (in EPSG:4326, then transform)
+# Define Irish Sea exclusion zone as a polygon
 irish_sea_bbox <- st_bbox(
   c(xmin = -7, ymin = 51, xmax = -2.5, ymax = 55.5),
   crs = 4326
@@ -643,16 +651,17 @@ irish_sea_bbox <- st_bbox(
   st_transform(3035)
 ```
 
+Now we apply `st_filter()` with `st_disjoint` to keep only features that don't touch the Irish Sea:
+
 ```{r}
 #| label: filter-irish-sea
-# Remove features that intersect with the Irish Sea
-mpa_sf_list <- lapply(mpa_sf_list, function(x) {
-  in_irish_sea <- lengths(st_intersects(x, irish_sea_bbox)) > 0
-  x[!in_irish_sea, ]
+# Keep features that are disjoint from (don't touch) the Irish Sea
+mpa_sf_list <- map(mpa_sf_list, \(x) {
+ st_filter(x, irish_sea_bbox, .predicate = st_disjoint)
 })
 
 # Check the filtered counts
-sapply(mpa_sf_list, nrow)
+map_int(mpa_sf_list, nrow)
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -661,7 +670,7 @@ sapply(mpa_sf_list, nrow)
 When working with web services like WFS, filtering can happen in two places:
 
 - **Server-side**: The WFS server applies filters before sending data. You receive only the features that match your criteria. This is what our CQL `BBOX` and attribute filters do.
-- **Client-side**: You download the data first, then filter it locally in R using functions like `st_intersects()`. This is what we did above with the Irish Sea exclusion.
+- **Client-side**: You download the data first, then filter it locally in R using functions like `st_filter()`. This is what we did above with the Irish Sea exclusion.
 
 The Irish Sea filter could also be applied server-side using CQL's `DISJOINT` function, which selects features that don't intersect with a geometry:
 
@@ -678,7 +687,7 @@ combined_filter <- paste(
 )
 ```
 
-Server-side filtering reduces download size, which matters for large datasets. Client-side filtering with sf functions like `st_intersects()` is more flexible and works with any spatial data, not just WFS, making it a valuable skill for spatial analysis in R.
+Server-side filtering reduces download size, which matters for large datasets. Client-side filtering with sf functions like `st_filter()` is more flexible and works with any spatial data, not just WFS, making it a valuable skill for spatial analysis in R.
 :::
 
 ### Quick Visualisation
@@ -698,8 +707,8 @@ bbox_ext <- st_bbox(bbox_3035)
 # Combine all protected areas with type labels (simplify for faster rendering)
 mpa_preview <- imap(
   mpa_sf_list,
-  ~ select(.x, geometry) |>
-    mutate(type = .y) |>
+  \(x, y) select(x, geometry) |>
+    mutate(type = y) |>
     st_simplify(dTolerance = 500, preserveTopology = TRUE)
 ) |>
   bind_rows()
@@ -735,10 +744,10 @@ Next, let's download the subsea infrastructure data. First, let's check the laye
 #| cache: true
 infra_descriptions <- map(
   set_names(infrastructure_layers),
-  ~ layer_attribute_descriptions(wfs = wfs, layer = .x)
+  \(x) layer_attribute_descriptions(wfs = wfs, layer = x)
 )
 
-imap(infra_descriptions, ~ .x$name)
+imap(infra_descriptions, \(x, y) x$name)
 ```
 
 The layers have different attributes, reflecting different data sources and national reporting conventions. Unlike our protected area layers (which share common concepts like `sitename` and `country`), infrastructure attributes are specific to each layer type and source.
@@ -778,19 +787,18 @@ names(infra_sf_list)
 
 ```{r}
 #| label: count-infrastructure-features
-sapply(infra_sf_list, nrow)
+map_int(infra_sf_list, nrow)
 ```
 
 As with the protected areas, we apply the Irish Sea exclusion filter to keep our visualisations focused on the North Sea:
 
 ```{r}
 #| label: filter-infrastructure-irish-sea
-infra_sf_list <- lapply(infra_sf_list, function(x) {
-  in_irish_sea <- lengths(st_intersects(x, irish_sea_bbox)) > 0
-  x[!in_irish_sea, ]
+infra_sf_list <- map(infra_sf_list, \(x) {
+  st_filter(x, irish_sea_bbox, .predicate = st_disjoint)
 })
 
-sapply(infra_sf_list, nrow)
+map_int(infra_sf_list, nrow)
 ```
 
 ### Understanding Geometry Types
@@ -799,7 +807,7 @@ Unlike protected areas (polygons), infrastructure features have different [geome
 
 ```{r}
 #| label: check-infrastructure-geometry-types
-sapply(infra_sf_list, function(x) unique(st_geometry_type(x)))
+map(infra_sf_list, \(x) unique(st_geometry_type(x)))
 ```
 
 The output shows `MULTILINESTRING` and `MULTIPOINT` rather than simple `LINESTRING` and `POINT`. The "MULTI" variants can store multiple disconnected parts in a single feature. For example, a pipeline route that has a gap, or a platform complex with several separate structures recorded as one feature.
@@ -884,10 +892,10 @@ All layers should share the same [coordinate reference system](../concepts.qmd#c
 ```{r}
 #| label: check-crs-alignment
 # Check CRS of protected areas
-purrr::map_chr(mpa_sf_list, ~ st_crs(.x)[["input"]])
+purrr::map_chr(mpa_sf_list, \(x) st_crs(x)[["input"]])
 
 # Check CRS of infrastructure
-purrr::map_chr(infra_sf_list, ~ st_crs(.x)[["input"]])
+purrr::map_chr(infra_sf_list, \(x) st_crs(x)[["input"]])
 ```
 
 Since we specified `crs = 3035` when downloading, all layers are in ETRS89-LAEA with metric units. This projected CRS is ideal for spatial analysis as it avoids the complexities of spherical geometry calculations.
@@ -901,25 +909,25 @@ Spatial data from web services occasionally contains invalid geometries (self-in
 ```{r}
 #| label: validate-protected-area-geometries
 # Check for invalid geometries
-sapply(mpa_sf_list, function(x) sum(!st_is_valid(x)))
+map_int(mpa_sf_list, \(x) sum(!st_is_valid(x)))
 ```
 
 ```{r}
 #| label: fix-protected-area-geometries
 # Fix any invalid geometries
-mpa_sf_list <- lapply(mpa_sf_list, st_make_valid)
+mpa_sf_list <- map(mpa_sf_list, st_make_valid)
 ```
 
 #### Infrastructure
 
 ```{r}
 #| label: validate-infrastructure-geometries
-sapply(infra_sf_list, function(x) sum(!st_is_valid(x)))
+map_int(infra_sf_list, \(x) sum(!st_is_valid(x)))
 ```
 
 ```{r}
 #| label: fix-infrastructure-geometries
-infra_sf_list <- lapply(infra_sf_list, st_make_valid)
+infra_sf_list <- map(infra_sf_list, st_make_valid)
 ```
 
 ### Organising Data Structures
@@ -936,7 +944,7 @@ The three MPA layers have different column names. For example, site names are st
 
 ```{r}
 #| label: inspect-protected-area-structures
-lapply(mpa_sf_list, names)
+map(mpa_sf_list, names)
 ```
 
 To combine them with `bind_rows()`, we need to standardise these first. We'll use the schema we defined in [Planning Our Data Schema](#planning-our-data-schema), where the `from` field maps source column names to our target names (e.g., `name` → `sitename`).
@@ -946,6 +954,10 @@ Here's a helper function that applies these transformations:
 ```{r}
 #| label: define-standardise-sf
 standardise_sf <- function(data, schema = NULL) {
+  if (is.null(schema)) {
+    return(data)
+  }
+
   # Type conversion map using readr-style shorthand
   type_map <- list(
     c = as.character,
@@ -955,10 +967,6 @@ standardise_sf <- function(data, schema = NULL) {
     D = as.Date,
     T = as.POSIXct
   )
-
-  if (is.null(schema)) {
-    return(data)
-  }
 
   # Build rename vector: target_name = source_name
   # If 'from' not specified, use the target name (no rename)
@@ -970,7 +978,7 @@ standardise_sf <- function(data, schema = NULL) {
 
   data |>
     select(any_of(rename_vec)) |>
-    mutate(across(any_of(names(schema)), ~ get_type(cur_column())(.x)))
+    mutate(across(any_of(names(schema)), \(x) get_type(cur_column())(x)))
 }
 ```
 
@@ -987,10 +995,11 @@ type_labels <- c(
 
 mpa_combined <- imap(
   mpa_sf_list,
-  ~ standardise_sf(.x, mpa_schemas[[.y]]$cols) |>
-    mutate(type = type_labels[[.y]])
+  \(x, y) standardise_sf(x, mpa_schemas[[y]]$cols) |>
+    mutate(type = type_labels[[y]])
 ) |>
   bind_rows()
+rownames(mpa_combined) <- NULL
 
 mpa_combined
 ```
@@ -1003,11 +1012,11 @@ We reorganise `infra_sf_list` (named by WFS layer) into a new list organised by 
 #| label: organise-infrastructure
 infra_by_type <- list(
   pipelines = infra_sf_list$pipelines,
-  cables = bind_rows(infra_sf_list[grep("^pcables", names(infra_sf_list))]),
+  cables = bind_rows(infra_sf_list[startsWith(names(infra_sf_list), "pcables")]),
   platforms = infra_sf_list$platforms
 )
 
-sapply(infra_by_type, nrow)
+map_int(infra_by_type, nrow)
 ```
 
 ## Spatial Intersection Analysis
@@ -1020,10 +1029,10 @@ The `sf` package provides several functions for testing spatial relationships:
 
 | Function | Returns | Use case |
 |----------|---------|----------|
-| `st_intersects()` | Logical matrix | Which features touch or overlap? |
+| `st_intersects()` | Sparse index list | Which features touch or overlap? |
 | `st_intersection()` | New geometries | What is the actual overlapping area? |
-| `st_within()` | Logical matrix | Which features are completely inside? |
-| `st_contains()` | Logical matrix | Which features completely contain others? |
+| `st_within()` | Sparse index list | Which features are completely inside? |
+| `st_contains()` | Sparse index list | Which features completely contain others? |
 
 For our analysis, we'll use `st_intersects()` to find protected areas that have **any** spatial overlap with infrastructure, even if a pipeline just crosses through.
 
@@ -1042,16 +1051,49 @@ For identifying *which* features are affected, use `st_intersects()`. For calcul
 By requesting data in EPSG:3035, we avoid the complexities of spherical geometry. The `sf` package uses planar geometry operations (via GEOS) for projected coordinate systems, which are faster and more tolerant of minor geometry issues than the s2 spherical geometry library used for geographic CRS like WGS84.
 :::
 
+### Understanding `st_intersects()` Output
+
+`st_intersects(x, y)` returns a **sparse geometry binary predicate list** (sgbp). Each list element corresponds to a feature in `x` and contains the row indices of features in `y` that it intersects:
+
+```{r}
+#| label: demo-st-intersects
+# Create 3 circular polygons at different positions
+# st_point() creates a point, st_buffer() expands it into a circle
+demo_features <- st_sfc(
+  st_buffer(st_point(c(0, 0)), 1),
+  st_buffer(st_point(c(3, 0)), 1),
+  st_buffer(st_point(c(5, 0)), 1)
+)
+
+# Create a region to check for intersection (overlaps features 2 and 3)
+demo_check_area <- st_buffer(st_point(c(4, 0)), 2) |> st_sfc()
+
+# Which features intersect the check area?
+result <- st_intersects(demo_features, demo_check_area)
+result
+```
+
+To use this for filtering or flagging, we convert to a logical vector using `lengths() > 0`, which is `TRUE` for features that intersect with at least one feature in the other dataset:
+
+```{r}
+#| label: demo-lengths-pattern
+# Convert to counts, then to logical
+lengths(result)
+lengths(result) > 0
+```
+
+This `lengths(st_intersects(...)) > 0` pattern is the standard way to create logical flags from spatial intersection tests.
+
 ### Computing Intersections
 
-Rather than testing each infrastructure type separately, we map `st_intersects()` over `infra_by_type`. For each infrastructure type, `st_intersects()` returns a sparse matrix with one entry per MPA (in the same row order as `mpa_combined`), and `lengths() > 0` converts this to a logical vector. Since the row order is preserved, we can use `bind_cols()` to combine these into a data frame of intersection flags. We also add an `any` column that's `TRUE` if a protected area intersects with any infrastructure type:
+Rather than testing each infrastructure type separately, we map `st_intersects()` over `infra_by_type`. For each infrastructure type, `st_intersects()` returns a sparse list with one entry per MPA (in the same row order as `mpa_combined`), and `lengths() > 0` converts this to a logical vector. Since the row order is preserved, we can use `bind_cols()` to combine these into a data frame of intersection flags. We also add an `any` column that's `TRUE` if a protected area intersects with any infrastructure type:
 
 ```{r}
 #| label: compute-intersections
 # Compute intersection flags for each infrastructure type
 intersections <- map(
   infra_by_type,
-  ~ lengths(st_intersects(mpa_combined, .x)) > 0
+  \(x) lengths(st_intersects(mpa_combined, x)) > 0
 ) |>
   bind_cols() |>
   mutate(any = pipelines | cables | platforms)

@@ -205,7 +205,7 @@ WFS delivers **vector data**: discrete geographic features with attributes.
 -   Allows querying specific areas or feature properties
 -   Ideal for points, lines, and polygons
 
-**In R:** Use the [`emodnet.wfs`](https://github.com/EMODnet/emodnet.wfs) package to access WFS services. The package simplifies discovering available layers, filtering by extent or attributes, and retrieving data as `sf` objects.
+**In R:** Use the [`emodnet.wfs`](https://docs.ropensci.org/emodnet.wfs/) package to access WFS services. The package simplifies discovering available layers, filtering by extent or attributes, and retrieving data as `sf` objects.
 
 **What information can you access?**
 
@@ -229,7 +229,7 @@ WCS delivers **raster data**: gridded coverage representing continuous variables
 -   Can extract specific bands from multi-band datasets
 -   Ideal for environmental layers and modeled surfaces
 
-**In R:** Use the [`emodnet.wcs`](https://github.com/EMODnet/emodnet.wcs) package to access WCS services. The package handles coverage discovery, spatial/temporal subsetting, and returns data as `terra` raster objects.
+**In R:** Use the [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs) package to access WCS services. The package handles coverage discovery, spatial/temporal subsetting, and returns data as `terra` raster objects.
 
 **What information can you access?**
 

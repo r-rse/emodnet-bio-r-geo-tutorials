@@ -59,12 +59,12 @@ format:
     code-fold: false
     code-tools: false
     code-copy: true
+    code-link: true
     link-external-newwindow: true
     link-external-icon: true
 
 execute:
   freeze: auto
-  cache: true
   warning: false
   message: false
 

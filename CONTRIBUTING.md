@@ -8,6 +8,7 @@ Thank you for your interest in contributing to this project! This document provi
 - [Getting Started](#getting-started)
 - [Code Style Guidelines](#code-style-guidelines)
 - [Adding New Tutorials](#adding-new-tutorials)
+- [Data and Caching](#data-and-caching)
 - [Pull Request Process](#pull-request-process)
 - [Testing Requirements](#testing-requirements)
 - [Documentation Standards](#documentation-standards)
@@ -54,7 +55,17 @@ pak::pak(c("CopernicusMarine", "worrms"))
 # renv::restore()
 ```
 
-3. **Install Quarto**
+3. **Install the local package**
+
+The repository includes an R package with helper functions and cached data used by tutorials. Install it with:
+
+```r
+pak::local_install()
+```
+
+Re-run this command after pulling changes that modify files in `R/`, `data/`, or `DESCRIPTION`.
+
+4. **Install Quarto**
 
 Download and install Quarto from [quarto.org](https://quarto.org/docs/get-started/)
 
@@ -63,13 +74,13 @@ Verify installation:
 quarto --version
 ```
 
-4. **Create a feature branch**
+5. **Create a feature branch**
 
 ```bash
 git checkout -b feature/your-feature-name
 ```
 
-5. **Set up Air R formatter (Recommended)**
+6. **Set up Air R formatter (Recommended)**
 
 This project uses [Air](https://posit-dev.github.io/air/), an extremely fast R formatter written in Rust. Air configuration is already set up in the repository.
 
@@ -99,7 +110,7 @@ The project's Air settings are defined in `air.toml`:
 
 For more details, see [Air documentation](https://posit-dev.github.io/air/).
 
-6. **Build and preview the website locally**
+7. **Build and preview the website locally**
 
 **From Positron or RStudio (Recommended):**
 
@@ -355,23 +366,55 @@ website:
 
 ### Data and Caching
 
-- Use the `data-cache/` directory for cached data (gitignored)
-- Document any external data dependencies
-- Use reasonable cache expiry for WFS/WCS requests
-- Include data provenance information
+This project uses two levels of caching to speed up rendering and avoid redundant API calls.
 
-```r
-# Good practice: set up caching
-cache_dir <- "data-cache"
-if (!dir.exists(cache_dir)) dir.create(cache_dir)
+#### Quarto Freeze (Document-level)
 
-cache_file <- file.path(cache_dir, "mpa_data.rds")
-if (file.exists(cache_file)) {
-  mpa_data <- readRDS(cache_file)
-} else {
-  mpa_data <- emodnet.wfs::get_layers(...)
-  saveRDS(mpa_data, cache_file)
-}
+Configured via `freeze: auto` in `_quarto.yml`:
+
+- Saves computational results in `_freeze/` (mirrors project structure)
+- Unchanged documents reuse cached results on subsequent renders
+- **Gitignored** - each contributor manages their own freeze
+- CI builds from clean state, ensuring tutorials remain executable
+
+**Refreshing freeze:**
+
+```bash
+# All documents
+rm -rf _freeze/
+quarto render
+
+# Single tutorial
+rm -rf _freeze/tutorials/tutorial-01/
+quarto render tutorials/tutorial-01.qmd
+```
+
+#### Knitr Cache (Chunk-level)
+
+Chunks with `#| cache: true` store results in per-file `*_cache/` directories (e.g., `tutorial-01_cache/`). These are also gitignored.
+
+**Refreshing knitr cache:**
+
+```bash
+# Via quarto flag
+quarto render --cache-refresh
+
+# Or remove directories
+rm -rf *_cache/ tutorials/*_cache/
+```
+
+#### Full Cache Refresh (Before PRs)
+
+To ensure tutorials run correctly with current package versions:
+
+```bash
+# All documents
+rm -rf _freeze/
+quarto render --cache-refresh
+
+# Single tutorial
+rm -rf _freeze/tutorials/tutorial-01/ tutorials/tutorial-01_cache/
+quarto render tutorials/tutorial-01.qmd --cache-refresh
 ```
 
 ## Pull Request Process

@@ -122,14 +122,18 @@ Install the required packages using the following code:
 #| eval: false
 #| code-fold: false
 
-# Install EMODnet data access packages
-pak::pak(c("emodnet/emodnet.wfs", "emodnet/emodnet.wcs"))
+# Install packages from CRAN
+install.packages(c(
+    "emodnet.wfs",
+    "sf",
+    "terra",
+    "dplyr",
+    "ggplot2",
+    "tmap"
+))
 
-# Install spatial data packages
-pak::pak(c("sf", "terra"))
-
-# Install data manipulation and visualization packages
-pak::pak(c("dplyr", "ggplot2"))
+# Install emodnet.wcs' latest version (not yet on CRAN)
+install.packages('emodnet.wcs', repos = c('https://emodnet.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ### Quick Start

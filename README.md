@@ -123,6 +123,18 @@ If you want to preview the full website or contribute changes:
    - Generates site in `_site/` directory
    - Check `_site/index.html` to verify build
 
+6. **Refresh caches before submitting PRs:**
+   ```bash
+   # Remove freeze cache and re-execute all code
+   rm -rf _freeze/
+   quarto render --cache-refresh
+
+   # Or for a single tutorial
+   rm -rf _freeze/tutorials/tutorial-01/
+   quarto render tutorials/tutorial-01.qmd --cache-refresh
+   ```
+   This ensures tutorials run correctly with current package versions. See [CONTRIBUTING.md](CONTRIBUTING.md#data-and-caching) for details on caching.
+
 ### Troubleshooting Workflow Failures
 
 If the [CI/CD workflow](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml) fails:

@@ -133,7 +133,7 @@ europe <- rnaturalearth::ne_countries(
 
 ggplot() +
   geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
-  geom_sf(data = bbox_3035, fill = NA, color = "#0077BE", linewidth = 1.5) +
+  geom_sf(data = bbox_3035, fill = NA, color = "#004494", linewidth = 1.5) +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
   theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))

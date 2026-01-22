@@ -1,38 +1,1409 @@
 ---
 title: "4: Functional Traits Across Seabed Habitats"
-subtitle: "Exploring Functional Traits Across Seabed Habitats in the Aegean Sea"
+subtitle: "Integrating EMODnet Data with Trait and Environmental Data Sources in the Gulf of Lion"
 difficulty: "Advanced"
 time: "~90 minutes"
 data-type: "WFS + WCS + External sources"
-description: "Integrate EMODnet data with external trait databases and Copernicus Marine Service environmental data. Investigate how benthic species body size varies across habitat types and environmental gradients in the Aegean Sea."
-datasets: "Benthic species occurrences, seabed habitat maps, trait databases, temperature reanalysis data"
+description: "Learn to integrate EMODnet WFS and WCS services with external data sources including the Copernicus Marine Service and trait databases. Investigate how benthic species body size varies across seabed habitat types and environmental gradients in the Gulf of Lion."
+datasets: "Benthic species occurrences, seabed habitat polygons, bathymetry, bottom temperature, body size traits"
+df-print: paged
+bibliography: references.bib
+format:
+  html:
+    embed-resources: false
+    code-link: true
 ---
 
-## Tutorial Content
+## Introduction
 
-This tutorial is currently under development.
+The Gulf of Lion, located in the northwestern Mediterranean off the coast of southern France, hosts a rich diversity of benthic communities shaped by the Rhône River delta, diverse substrates from sandy beaches to deep canyons, and strong environmental gradients. Understanding how functional traits like body size vary across these habitats can reveal patterns of community assembly and environmental filtering that underpin ecosystem function.
 
-### What You'll Learn
+In this tutorial, we demonstrate how to **integrate multiple EU marine data infrastructures** to explore trait-environment relationships in benthic communities. We combine:
 
-- Demonstrating combined use of emodnet.wfs, emodnet.wcs, and CopernicusMarine packages
-- Retrieving and visualising body size traits for benthic species using trait databases
-- Exploring trait–environment relationships across habitat types
-- Practical geospatial workflows including raster extraction and spatial joins
+- **EMODnet WFS** for species occurrence records and habitat maps
+- **EMODnet WCS** for bathymetry data
+- **Copernicus Marine Service** for bottom temperature
+- **MOBS database** for species body size traits
+
+This multi-source approach reflects real-world marine ecological analysis, where insights emerge from combining data across platforms and domains.
+
+### Why Body Size?
+
+Body size is a fundamental trait linked to metabolism, feeding strategy, life history, and ecological role. Larger organisms generally have lower mass-specific metabolic rates, longer lifespans, and different trophic positions than smaller organisms. The distribution of body sizes in a community can reveal patterns of:
+
+- **Environmental filtering**: Temperature and depth gradients may favour certain body size ranges
+- **Habitat associations**: Different seabed types may support communities with distinct size structures
+- **Community function**: Body size distributions affect energy flow and ecosystem processes
+
+### Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Access benthic species occurrence data from EMODnet Biology WFS
+- Retrieve seabed habitat polygons from EMODnet Seabed Habitats WFS
+- Download bathymetry rasters from EMODnet Bathymetry WCS
+- Access bottom temperature data from the Copernicus Marine Service
+- Link species records to body size traits from external databases
+- Perform spatial joins between points and polygons
+- Extract raster values to point locations
+- Visualise trait-environment relationships across habitat types
 
 ### Data Sources
 
-- **EMODnet WFS:**
-  - `eb185_benthos_full_matched`: Benthic species records in the Aegean
-  - `eu_seabed_habitats_2019`: Seabed habitat polygons
-- **EMODnet WCS:**
-  - `emodnet__mean_2020`: Bathymetry raster (mean depth of seafloor)
-- **Copernicus Marine Service:**
-  - `GLOBAL_MULTIYEAR_PHY_001_030`: Bottom temperature and/or salinity reanalysis data
-- **External Resources:**
-  - **MOBS (Marine Organism Body Size) database**: [github.com/crmcclain/MOBS_OPEN](https://github.com/crmcclain/MOBS_OPEN)
+**EMODnet WFS (Vector Data):**
+
+| Layer | Service | Description |
+|-------|---------|-------------|
+| `eb185_benthos_full_matched` | biology | Benthic species occurrence records from European seas |
+| `eusm_2023_eunis2019_full` | seabed_habitats_general_datasets_and_products | EU Seabed Map with EUNIS 2019 classification |
+
+**EMODnet WCS (Raster Data):**
+
+| Coverage | Service | Description |
+|----------|---------|-------------|
+| `emodnet__mean_2020` | bathymetry | Mean water depth (bathymetry) |
+
+**External Sources:**
+
+| Source | Description |
+|--------|-------------|
+| [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from GLOBAL_MULTIYEAR_PHY_001_030 reanalysis |
+| [MOBS Database](https://github.com/crmcclain/MOBS_OPEN) | Marine Organism Body Size database [@mccallum2025] |
+
+## Setup
+
+### Packages
+
+This tutorial uses a broader set of packages than previous tutorials, reflecting the multi-source integration workflow:
+
+```{r}
+#| label: load-packages
+#| message: false
+library(emodnet.wfs)
+library(emodnet.wcs)
+library(CopernicusMarine)
+library(terra)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(patchwork)
+library(tidyterra)
+library(tmap)
+```
+
+```{r}
+#| label: setup
+#| include: false
+# Set PROJ path if needed (for coordinate transformations)
+if (
+  Sys.getenv("PROJ_LIB") == "" &&
+    file.exists("/opt/homebrew/share/proj/proj.db")
+) {
+  Sys.setenv(PROJ_LIB = "/opt/homebrew/share/proj")
+}
+
+# Load package data and helper functions
+library(emodnet.bio.r.geo.tutorials)
+```
+
+::: {.callout-tip collapse="true"}
+## Package installation
+
+Most packages are available from CRAN:
+
+```r
+install.packages(c(
+  "terra", "sf", "dplyr", "tidyr", "purrr",
+  "ggplot2", "tidyterra", "tmap", "rnaturalearth"
+))
+```
+
+For the EMODnet packages (development versions from GitHub):
+
+```r
+# install.packages("pak")
+pak::pak(c("EMODnet/emodnet.wfs", "EMODnet/emodnet.wcs"))
+```
+
+For the Copernicus Marine Service package:
+
+```r
+pak::pak("pepijn-devries/CopernicusMarine")
+```
+
+**Note:** The CopernicusMarine package requires you to register for a free account at [marine.copernicus.eu](https://marine.copernicus.eu/) and configure your credentials. See the [package documentation](https://pepijn-devries.github.io/CopernicusMarine/) for setup instructions.
+:::
 
 ### Study Area
 
-Aegean Sea
+We focus on the Gulf of Lion in the northwestern Mediterranean. This region offers excellent data coverage with diverse substrate types (sand, mud, coarse sediments, seagrass meadows) and good spatial sampling across 165 unique locations. The Gulf of Lion also spans multiple biozones from infralittoral to bathyal depths:
 
-Check back soon for the complete tutorial!
+```{r}
+#| label: define-study-area-bbox
+# Study area: Gulf of Lion for habitats and environmental data
+study_bbox <- c(xmin = 3, ymin = 41, xmax = 7, ymax = 44)
+
+# Create bbox polygon for visualisation
+bbox_polygon <- sf::st_as_sfc(sf::st_bbox(study_bbox, crs = 4326))
+```
+
+```{r}
+#| label: fig-study-area
+#| echo: false
+#| fig-cap: "Study area: Gulf of Lion in the northwestern Mediterranean"
+
+# Get Mediterranean coastlines
+med_countries <- rnaturalearth::ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+) |>
+  sf::st_crop(c(xmin = -2, ymin = 38, xmax = 12, ymax = 46))
+
+ggplot() +
+  geom_sf(data = med_countries, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(data = bbox_polygon, fill = NA, color = "#0077BE", linewidth = 1.5) +
+  coord_sf(xlim = c(-2, 12), ylim = c(38, 46)) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+```
+
+## Retrieving Species Occurrence Data
+
+Our first data source is benthic species occurrence records from EMODnet Biology. The Gulf of Lion has excellent coverage with over 16,000 records from 165 sampling locations, providing a rich species pool for trait analysis. These records have been matched to the World Register of Marine Species (WoRMS), ensuring taxonomic consistency.
+
+### Connecting to EMODnet Biology WFS
+
+```{r}
+#| label: init-biology-wfs
+bio_wfs <- emodnet_init_wfs_client(service = "biology")
+```
+
+### Exploring Available Layers
+
+Let's search for benthic occurrence data:
+
+```{r}
+#| label: explore-biology-layers
+#| cache: true
+bio_layers <- emodnet_get_wfs_info(bio_wfs)
+
+# Filter for benthos-related layers
+bio_layers |>
+  filter(grepl("benthos", layer_name, ignore.case = TRUE)) |>
+  select(layer_name, title)
+```
+
+The `eb185_benthos_full_matched` layer contains benthic occurrence records that have been matched to WoRMS, providing standardised species identifications with AphiaIDs (unique WoRMS identifiers).
+
+### Understanding Layer Structure
+
+Before downloading, let's examine what attributes are available:
+
+```{r}
+#| label: inspect-benthos-attributes
+#| cache: true
+benthos_attrs <- layer_attribute_descriptions(
+  wfs = bio_wfs,
+  layer = "eb185_benthos_full_matched"
+)
+
+benthos_attrs
+```
+
+Key attributes for our analysis include:
+
+- **`aphiaid`**: WoRMS identifier for linking to trait databases
+- **`scientificname`**: Species name for display
+- **`lon`**, **`lat`**: Coordinates
+- **`year`**: Sampling year
+
+### Downloading Occurrence Data
+
+We use a CQL filter to request records from the Gulf of Lion study area:
+
+```{r}
+#| label: define-benthos-bbox-filter
+# Get the geometry column name
+benthos_geom_col <- benthos_attrs$name[benthos_attrs$geometry]
+
+# Create ECQL BBOX filter for study area
+benthos_bbox_filter <- sprintf(
+  "BBOX(%s, %s, %s, %s, %s, 'EPSG:4326')",
+  benthos_geom_col,
+  study_bbox["xmin"],
+  study_bbox["ymin"],
+  study_bbox["xmax"],
+  study_bbox["ymax"]
+)
+```
+
+```{r}
+#| label: download-benthos-occurrences
+#| cache: true
+benthos_occurrences <- emodnet_get_layers(
+  wfs = bio_wfs,
+  layers = "eb185_benthos_full_matched",
+  cql_filter = benthos_bbox_filter,
+  outputFormat = "application/json",
+  simplify = TRUE
+)
+
+# Check the result
+nrow(benthos_occurrences)
+```
+
+```{r}
+#| label: preview-benthos
+benthos_occurrences |>
+  select(aphiaid, scientificname, lon, lat, year) |>
+  head(10)
+```
+
+### Data Quality Check
+
+Let's examine the taxonomic diversity and data completeness:
+
+```{r}
+#| label: benthos-summary
+# How many unique species?
+n_species <- n_distinct(benthos_occurrences$aphiaid)
+
+# How many records have valid AphiaIDs for trait matching?
+n_with_aphiaid <- sum(!is.na(benthos_occurrences$aphiaid))
+
+cat(sprintf(
+  "Total records: %d\nUnique species (AphiaIDs): %d\nRecords with valid AphiaID: %d (%.1f%%)\n",
+  nrow(benthos_occurrences),
+  n_species,
+  n_with_aphiaid,
+  100 * n_with_aphiaid / nrow(benthos_occurrences)
+))
+```
+
+### Quick Visualisation
+
+```{r}
+#| label: fig-benthos-occurrences
+#| fig-cap: "Benthic species occurrence records in the Gulf of Lion"
+
+ggplot() +
+  geom_sf(data = med_countries, fill = "gray90", colour = "gray70") +
+  geom_sf(
+    data = benthos_occurrences,
+    colour = "#0077BE",
+    size = 0.5,
+    alpha = 0.3
+  ) +
+  coord_sf(
+    xlim = c(study_bbox["xmin"], study_bbox["xmax"]),
+    ylim = c(study_bbox["ymin"], study_bbox["ymax"])
+  ) +
+  labs(
+    title = "Benthic Species Occurrences",
+    subtitle = sprintf("%d records in the Gulf of Lion", nrow(benthos_occurrences))
+  ) +
+  theme_minimal()
+```
+
+## Retrieving Seabed Habitat Data
+
+Next, we retrieve seabed habitat polygons to classify our occurrence records by habitat type.
+
+### Connecting to EMODnet Seabed Habitats WFS
+
+```{r}
+#| label: init-habitats-wfs
+hab_wfs <- emodnet_init_wfs_client(service = "seabed_habitats_general_datasets_and_products")
+```
+
+### Exploring Habitat Layers
+
+```{r}
+#| label: explore-habitat-layers
+#| cache: true
+hab_layers <- emodnet_get_wfs_info(hab_wfs)
+
+# Search for EU seabed habitat layers
+hab_layers |>
+  filter(grepl("eu.*seabed|seabed.*habitat", layer_name, ignore.case = TRUE)) |>
+  select(layer_name, title)
+```
+
+### Understanding Habitat Classifications
+
+Let's examine the attribute structure of the habitat layer:
+
+```{r}
+#| label: inspect-habitat-attributes
+#| cache: true
+habitat_attrs <- layer_attribute_descriptions(
+  wfs = hab_wfs,
+  layer = "eusm_2023_eunis2019_full"
+)
+
+habitat_attrs
+```
+
+Key attributes include:
+
+- **`eunis2019c`**: EUNIS 2019 habitat classification (level 3)
+- **`eunis2019d`**: EUNIS 2019 habitat classification (level 4, more detailed)
+- **`substrate`**: Seabed substrate type
+- **`biozone`**: Biological zone
+
+Let's check what habitat values are present:
+
+```{r}
+#| label: explore-habitat-types
+#| cache: true
+layer_attribute_inspect(
+  wfs = hab_wfs,
+  layer = "eusm_2023_eunis2019_full",
+  attribute = "eunis2019c"
+)
+```
+
+### Downloading Habitat Polygons
+
+```{r}
+#| label: download-habitat-polygons
+#| cache: true
+# Get geometry column name
+habitat_geom_col <- habitat_attrs$name[habitat_attrs$geometry]
+
+# Create BBOX filter
+habitat_bbox_filter <- sprintf(
+  "BBOX(%s, %s, %s, %s, %s, 'EPSG:4326')",
+  habitat_geom_col,
+  study_bbox["xmin"],
+  study_bbox["ymin"],
+  study_bbox["xmax"],
+  study_bbox["ymax"]
+)
+
+seabed_habitats <- emodnet_get_layers(
+  wfs = hab_wfs,
+  layers = "eusm_2023_eunis2019_full",
+  cql_filter = habitat_bbox_filter,
+  outputFormat = "application/json",
+  simplify = TRUE
+)
+
+# Convert biozone to ordered factor (shallow to deep)
+biozone_levels <- c(
+ "Infralittoral",
+ "Shallow circalittoral",
+  "Deep circalittoral",
+  "Upper bathyal",
+  "Lower bathyal",
+  "Abyssal"
+)
+
+seabed_habitats <- seabed_habitats |>
+  mutate(biozone = factor(biozone, levels = biozone_levels, ordered = TRUE))
+
+nrow(seabed_habitats)
+```
+
+The `biozone` variable represents depth zones from shallow (Infralittoral) to deep (Abyssal), which we convert to an ordered factor for meaningful analysis along depth gradients.
+
+```{r}
+#| label: habitat-type-summary
+# Summarise habitat types present
+seabed_habitats |>
+  st_drop_geometry() |>
+  count(eunis2019c, sort = TRUE) |>
+  head(10)
+```
+
+### Visualising Seabed Habitats
+
+```{r}
+#| label: fig-seabed-habitats
+#| fig-cap: "Seabed habitat classification in the Gulf of Lion (EUNIS 2019). Colours represent different EUNIS habitat codes."
+#| fig-height: 6
+#| fig-width: 8
+
+ggplot() +
+  geom_sf(data = med_countries, fill = "gray90", colour = "gray70") +
+
+  geom_sf(
+    data = seabed_habitats,
+    aes(fill = eunis2019c),
+    colour = NA,
+    alpha = 0.8
+  ) +
+  coord_sf(
+    xlim = c(study_bbox["xmin"], study_bbox["xmax"]),
+    ylim = c(study_bbox["ymin"], study_bbox["ymax"])
+  ) +
+  scale_fill_viridis_d(option = "turbo") +
+  labs(title = "Seabed Habitats (EUNIS 2019)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+The map shows the spatial distribution of EUNIS 2019 habitat types across the Gulf of Lion. The diversity of colours reflects the variety of seabed habitats present, from shallow coastal sediments to deeper muddy substrates. Rather than listing all `r n_distinct(seabed_habitats$eunis2019c)` habitat codes in a legend, we summarise the main habitat categories below:
+
+## Retrieving Bathymetry Data
+
+Bathymetry (water depth) provides essential environmental context. We retrieve this from EMODnet Bathymetry using WCS.
+
+### Connecting to EMODnet Bathymetry WCS
+
+```{r}
+#| label: init-bathymetry-wcs
+bathy_wcs <- emdn_init_wcs_client(service = "bathymetry")
+```
+
+### Exploring Available Coverages
+
+```{r}
+#| label: list-bathymetry-coverages
+bathy_coverage_ids <- emdn_get_coverage_ids(bathy_wcs)
+bathy_coverage_ids
+```
+
+We'll use the mean depth product:
+
+```{r}
+#| label: get-bathymetry-info
+bathy_info <- emdn_get_coverage_info(
+  wcs = bathy_wcs,
+  coverage_ids = "emodnet__mean_2020"
+)
+
+bathy_info |>
+  knitr::kable()
+```
+
+### Downloading Bathymetry
+
+The full-resolution bathymetry data can be quite large, so we download it in tiles and mosaic them together:
+
+```{r}
+#| label: download-bathymetry
+# Split the bbox into smaller tiles to avoid download limits
+# Create a 2x2 grid of tiles
+lon_breaks <- seq(study_bbox["xmin"], study_bbox["xmax"], length.out = 3)
+lat_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 3)
+
+# Download each tile
+tiles <- list()
+tile_idx <- 1
+for (i in 1:2) {
+  for (j in 1:2) {
+    tile_bbox <- c(
+      xmin = lon_breaks[i],
+      ymin = lat_breaks[j],
+      xmax = lon_breaks[i + 1],
+      ymax = lat_breaks[j + 1]
+    )
+    tiles[[tile_idx]] <- emdn_get_coverage(
+      wcs = bathy_wcs,
+      coverage_id = "emodnet__mean_2020",
+      bbox = tile_bbox
+    )
+    tile_idx <- tile_idx + 1
+  }
+}
+
+# Combine tiles into a SpatRasterCollection and merge
+tiles_collection <- terra::sprc(tiles)
+bathymetry <- terra::merge(tiles_collection)
+bathymetry
+```
+
+Note that EMODnet bathymetry values are typically **negative** (depth below sea level). Let's verify and convert to positive depth values for easier interpretation:
+
+```{r}
+#| label: process-bathymetry
+# Check value range
+global(bathymetry, range, na.rm = TRUE)
+
+# Convert to positive depth values
+depth <- -1 * bathymetry
+names(depth) <- "depth_m"
+```
+
+### Visualising Bathymetry
+
+```{r}
+#| label: fig-bathymetry
+#| fig-cap: "Bathymetry of the Gulf of Lion (depth in metres)"
+
+ggplot() +
+  geom_spatraster(data = depth) +
+  geom_sf(data = med_countries, fill = "gray40", colour = "gray30") +
+  scale_fill_viridis_c(
+    name = "Depth (m)",
+    na.value = "white",
+    option = "mako",
+    direction = -1
+  ) +
+  coord_sf(
+    xlim = c(study_bbox["xmin"], study_bbox["xmax"]),
+    ylim = c(study_bbox["ymin"], study_bbox["ymax"])
+  ) +
+  labs(title = "Gulf of Lion Bathymetry") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Retrieving Bottom Temperature
+
+Bottom temperature provides insight into thermal niches and may influence body size distributions. We access this from the [Copernicus Marine Service](https://marine.copernicus.eu/) using the [`CopernicusMarine`](https://pepijn-devries.github.io/CopernicusMarine/) R package.
+
+### Understanding the Data Product
+
+We use the GLOBAL_MULTIYEAR_PHY_001_030 product, which provides ocean reanalysis data including bottom temperature. Let's explore what's available:
+
+```{r}
+#| label: explore-copernicus-products
+#| cache: true
+# List available products
+cms_products_list() |>
+  filter(grepl("GLOBAL_MULTIYEAR_PHY", product_id)) |>
+  select(product_id, title)
+```
+
+### Downloading Bottom Temperature
+
+We download bottom temperature for our study area. The `cms_download_subset()` function returns a `stars` object that we can convert to a `terra` raster:
+
+```{r}
+#| label: download-bottom-temperature
+# Download bottom temperature subset
+# This returns a stars object directly into memory
+bottom_temp_stars <- cms_download_subset(
+  product = "GLOBAL_MULTIYEAR_PHY_001_030",
+  layer = "cmems_mod_glo_phy_my_0.083deg_P1M-m",
+  variable = "bottomT",
+  region = study_bbox,
+  timerange = c("2020-01-01", "2020-12-31")
+)
+
+# The stars object may have multiple time slices - aggregate to mean
+# Use stars functions to handle the aggregation properly
+if ("time" %in% names(stars::st_dimensions(bottom_temp_stars))) {
+  bottom_temp_mean_stars <- stars::st_apply(
+    bottom_temp_stars,
+    c("longitude", "latitude"),
+    mean,
+    na.rm = TRUE
+  )
+} else {
+  bottom_temp_mean_stars <- bottom_temp_stars
+}
+
+# Convert to terra raster using sf as intermediate
+# First drop units if present
+bottom_temp_mean_stars[[1]] <- as.numeric(bottom_temp_mean_stars[[1]])
+
+# Convert via sf
+bottom_temp_sf <- sf::st_as_sf(bottom_temp_mean_stars, as_points = TRUE)
+bottom_temp_mean <- terra::rasterize(
+  terra::vect(bottom_temp_sf),
+  terra::rast(
+    extent = terra::ext(
+      study_bbox["xmin"], study_bbox["xmax"],
+      study_bbox["ymin"], study_bbox["ymax"]
+    ),
+    resolution = 0.083,  # ~8km resolution matching the data
+    crs = "EPSG:4326"
+  ),
+  field = names(bottom_temp_sf)[1]
+)
+names(bottom_temp_mean) <- "bottom_temp_C"
+
+# Quick check
+bottom_temp_mean
+```
+
+### Visualising Bottom Temperature
+
+```{r}
+#| label: fig-bottom-temperature
+#| fig-cap: "Mean annual bottom temperature in the Gulf of Lion (2020)"
+
+ggplot() +
+  geom_spatraster(data = bottom_temp_mean) +
+  geom_sf(data = med_countries, fill = "gray40", colour = "gray30") +
+  scale_fill_viridis_c(
+    name = "Temperature (°C)",
+    na.value = "white",
+    option = "inferno"
+  ) +
+  coord_sf(
+    xlim = c(study_bbox["xmin"], study_bbox["xmax"]),
+    ylim = c(study_bbox["ymin"], study_bbox["ymax"])
+  ) +
+  labs(title = "Bottom Temperature (2020 mean)") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+::: {.callout-tip collapse="true"}
+## Finding available products and layers
+
+Use `cms_products_list()` to browse available products and `cms_product_details()` to explore layers within a product:
+```r
+# List all products
+products <- cms_products_list()
+
+# Get details for a specific product
+cms_product_details("GLOBAL_MULTIYEAR_PHY_001_030")
+```
+:::
+
+::: {.callout-note collapse="true"}
+## Working with Copernicus Marine Data
+
+The CopernicusMarine package provides access to a wealth of oceanographic data:
+
+- **Physical reanalysis**: Temperature, salinity, currents
+- **Biogeochemical**: Nutrients, chlorophyll, oxygen
+- **Multiple depths**: Surface to bottom
+
+Key functions:
+
+- `cms_products_list()`: Browse available products
+- `cms_product_details()`: Get metadata for a specific product
+- `cms_download_subset()`: Download data for a region and time period
+
+See the [package documentation](https://pepijn-devries.github.io/CopernicusMarine/) for complete usage examples.
+:::
+
+## Linking Trait Data from MOBS
+
+The Marine Organism Body Size (MOBS) database provides body size measurements for marine species, linked via WoRMS AphiaIDs.
+
+### About MOBS
+
+The MOBS database [@mccallum2025] compiles body size data from literature sources, standardised to maximum body length where possible. This makes it ideal for linking to occurrence data that includes WoRMS identifiers.
+
+### Loading MOBS Data
+
+The MOBS database is available from GitHub. We download and filter to species present in our Gulf of Lion occurrence data:
+
+```{r}
+#| label: download-mobs
+#| cache: true
+# Download MOBS database from GitHub
+# The database uses valid_AphiaID and size measurements in cm
+mobs_url <- "https://raw.githubusercontent.com/crmcclain/MOBS_OPEN/main/data_all_112224.csv"
+mobs_raw <- read.csv(mobs_url)
+
+# Preview structure
+names(mobs_raw)
+```
+
+The MOBS database includes body size measurements (length, diameter/width, height) in centimetres. We'll use the length measurement and convert to millimetres for consistency.
+
+```{r}
+#| label: filter-mobs-to-occurrences
+# Get unique AphiaIDs from Gulf of Lion occurrences
+occurrence_aphiaids <- unique(benthos_occurrences$aphiaid)
+
+# Filter MOBS to matching species and select relevant columns
+# Convert length from cm to mm
+mobs_matched <- mobs_raw |>
+  filter(valid_aphiaID %in% occurrence_aphiaids) |>
+  mutate(MaxLength_mm = length_cm * 10) |>  # Convert cm to mm
+  select(valid_aphiaID, scientificName, MaxLength_mm, phylum, class) |>
+  # Take max length per species if multiple records
+  group_by(valid_aphiaID, scientificName, phylum, class) |>
+  summarise(MaxLength_mm = max(MaxLength_mm, na.rm = TRUE), .groups = "drop") |>
+  filter(!is.na(MaxLength_mm), is.finite(MaxLength_mm))
+
+# How many species matched?
+n_matched <- nrow(mobs_matched)
+n_total <- length(occurrence_aphiaids)
+
+cat(sprintf(
+  "Matched %d of %d species (%.1f%%) to MOBS body size data\n",
+  n_matched, n_total, 100 * n_matched / n_total
+))
+```
+
+```{r}
+#| label: preview-mobs-matched
+mobs_matched |>
+  arrange(desc(MaxLength_mm)) |>
+  head(15)
+```
+
+### Body Size Distribution
+
+Let's examine the distribution of body sizes among our matched species:
+
+```{r}
+#| label: fig-body-size-distribution
+#| fig-cap: "Distribution of maximum body length for Gulf of Lion benthic species with MOBS data (log scale)"
+
+ggplot(mobs_matched, aes(x = MaxLength_mm)) +
+  geom_histogram(bins = 30, fill = "#0077BE", colour = "white", alpha = 0.7) +
+  scale_x_log10() +
+  labs(
+    title = "Body Size Distribution",
+    subtitle = sprintf("n = %d Gulf of Lion species with MOBS data", nrow(mobs_matched)),
+    x = "Maximum body length (mm, log scale)",
+    y = "Number of species"
+  ) +
+  theme_minimal()
+```
+
+## Spatial Data Integration
+
+Now we integrate all our data sources through spatial operations:
+
+1. **Characterise habitats environmentally**: Extract mean depth and temperature per habitat type
+2. **Join occurrences to habitats**: Assign each species occurrence to a seabed habitat
+3. **Link trait data**: Match species to body size from MOBS
+
+This approach characterises habitats by their environmental conditions rather than extracting values at individual occurrence points, which is more robust given the patchy distribution of occurrence records.
+
+### Ensuring CRS Alignment
+
+First, let's ensure all spatial data use the same coordinate reference system:
+
+```{r}
+#| label: check-crs-alignment
+# Check CRS of each dataset
+st_crs(benthos_occurrences)$input
+st_crs(seabed_habitats)$input
+crs(depth, describe = TRUE)$name
+```
+
+```{r}
+#| label: align-crs
+# Transform all to WGS84 if needed
+if (st_crs(benthos_occurrences) != st_crs(4326)) {
+  benthos_occurrences <- st_transform(benthos_occurrences, 4326)
+}
+
+if (st_crs(seabed_habitats) != st_crs(4326)) {
+  seabed_habitats <- st_transform(seabed_habitats, 4326)
+}
+```
+
+### Characterising Habitats by Environmental Conditions
+
+We extract mean depth and temperature for each habitat type by aggregating raster values across habitat polygons. This gives us a robust environmental characterisation of each habitat class:
+
+```{r}
+#| label: extract-habitat-environment
+# Extract mean depth per habitat type
+# First aggregate habitat polygons by type, then extract
+habitat_types <- seabed_habitats |>
+  st_drop_geometry() |>
+  distinct(eunis2019c, substrate, biozone)
+
+# For efficiency, sample centroids of habitat polygons
+# and extract environmental values
+habitat_centroids <- seabed_habitats |>
+  st_centroid() |>
+  suppressWarnings()
+
+# Extract depth and temperature at centroids
+centroid_coords <- habitat_centroids |>
+  st_coordinates() |>
+  as.data.frame()
+
+habitat_centroids$depth_m <- terra::extract(depth, centroid_coords)$depth_m
+habitat_centroids$bottom_temp_C <- terra::extract(bottom_temp_mean, centroid_coords)$bottom_temp_C
+
+# Summarise environmental conditions by habitat type
+habitat_env_summary <- habitat_centroids |>
+  st_drop_geometry() |>
+  group_by(eunis2019c, substrate, biozone) |>
+  summarise(
+    n_polygons = n(),
+    mean_depth_m = mean(depth_m, na.rm = TRUE),
+    sd_depth_m = sd(depth_m, na.rm = TRUE),
+    mean_temp_C = mean(bottom_temp_C, na.rm = TRUE),
+    sd_temp_C = sd(bottom_temp_C, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(!is.na(mean_depth_m))
+
+habitat_env_summary |>
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |>
+  head(15) |>
+  knitr::kable()
+```
+
+### Spatial Join: Occurrences to Habitats
+
+We use `st_join()` to link species occurrences to habitat polygons. Only points that fall within a mapped habitat polygon receive a habitat classification:
+
+```{r}
+#| label: spatial-join-habitats
+# Join occurrences to habitat polygons
+# Points outside habitat polygons get NA for habitat columns
+occurrences_with_habitat <- benthos_occurrences |>
+  st_join(seabed_habitats, join = st_within)
+
+# Check how many got habitat assignments
+n_with_habitat <- sum(!is.na(occurrences_with_habitat$eunis2019c))
+cat(sprintf(
+  "%d of %d occurrences (%.1f%%) fall within mapped habitat polygons\n",
+  n_with_habitat, nrow(occurrences_with_habitat),
+  100 * n_with_habitat / nrow(occurrences_with_habitat)
+))
+
+# Filter to occurrences with habitat data
+occurrences_in_habitat <- occurrences_with_habitat |>
+  filter(!is.na(eunis2019c))
+
+cat(sprintf(
+  "Retained %d occurrences with habitat assignments for analysis\n",
+  nrow(occurrences_in_habitat)
+))
+```
+
+### Joining Trait Data
+
+We link species to their body size data via AphiaID, and add habitat-level environmental data:
+
+```{r}
+#| label: join-trait-data
+# Join MOBS data to occurrences
+occurrences_complete <- occurrences_in_habitat |>
+  left_join(
+    mobs_matched,
+    by = c("aphiaid" = "valid_aphiaID")
+  ) |>
+  # Add habitat-level environmental data
+  # Join by all grouping columns to avoid duplicates
+  left_join(
+    habitat_env_summary |> select(eunis2019c, substrate, biozone, mean_depth_m, mean_temp_C),
+    by = c("eunis2019c", "substrate", "biozone")
+  )
+
+# Summary of complete records
+occurrences_complete |>
+  st_drop_geometry() |>
+  summarise(
+    total_records = n(),
+    with_habitat = sum(!is.na(eunis2019c)),
+    with_substrate = sum(!is.na(substrate)),
+    with_biozone = sum(!is.na(biozone)),
+    with_body_size = sum(!is.na(MaxLength_mm)),
+    with_env_data = sum(!is.na(mean_depth_m))
+  ) |>
+  knitr::kable()
+```
+
+## Analysing Trait-Environment Relationships
+
+With our integrated dataset, we can explore how body size varies across habitats and environmental gradients.
+
+### Body Size by Habitat Type
+
+```{r}
+#| label: tbl-bodysize-by-habitat
+#| tbl-cap: "Mean body size by seabed habitat type"
+
+habitat_summary <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(eunis2019c), !is.na(MaxLength_mm)) |>
+  group_by(eunis2019c) |>
+  summarise(
+    n_records = n(),
+    n_species = n_distinct(aphiaid),
+    mean_length_mm = mean(MaxLength_mm, na.rm = TRUE),
+    sd_length_mm = sd(MaxLength_mm, na.rm = TRUE),
+    median_length_mm = median(MaxLength_mm, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(n_records >= 10) |>
+  arrange(desc(mean_length_mm))
+
+habitat_summary |>
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |>
+  knitr::kable()
+```
+
+```{r}
+#| label: fig-bodysize-by-habitat
+#| fig-cap: "Body size distribution by seabed habitat type"
+#| fig-height: 7
+
+plot_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(eunis2019c), !is.na(MaxLength_mm)) |>
+  group_by(eunis2019c) |>
+  filter(n() >= 10) |>
+  ungroup()
+
+ggplot(plot_data, aes(x = reorder(eunis2019c, MaxLength_mm, FUN = median), y = MaxLength_mm)) +
+  geom_boxplot(fill = "#0077BE", alpha = 0.5, outlier.size = 0.5) +
+  scale_y_log10() +
+  coord_flip() +
+  labs(
+    title = "Body Size by Habitat Type",
+    x = "Seabed habitat",
+    y = "Maximum body length (mm, log scale)"
+  ) +
+  theme_minimal()
+```
+
+### Body Size by Substrate Type
+
+The spatial join with habitat polygons allows us to examine how body size varies by substrate type - something the embedded EUNIS codes alone cannot reveal.
+
+```{r}
+#| label: tbl-bodysize-by-substrate
+#| tbl-cap: "Mean body size by substrate type"
+
+substrate_summary <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(substrate), !is.na(MaxLength_mm)) |>
+  group_by(substrate) |>
+  summarise(
+    n_records = n(),
+    n_species = n_distinct(aphiaid),
+    mean_length_mm = mean(MaxLength_mm, na.rm = TRUE),
+    sd_length_mm = sd(MaxLength_mm, na.rm = TRUE),
+    median_length_mm = median(MaxLength_mm, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(n_records >= 10) |>
+  arrange(desc(mean_length_mm))
+
+substrate_summary |>
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |>
+  knitr::kable()
+```
+
+```{r}
+#| label: fig-bodysize-by-substrate
+#| fig-cap: "Body size distribution by seabed substrate type"
+#| fig-height: 5
+
+substrate_plot_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(substrate), !is.na(MaxLength_mm)) |>
+  group_by(substrate) |>
+  filter(n() >= 10) |>
+  ungroup()
+
+if (nrow(substrate_plot_data) > 0) {
+  ggplot(substrate_plot_data, aes(x = reorder(substrate, MaxLength_mm, FUN = median), y = MaxLength_mm)) +
+    geom_boxplot(fill = "#8B4513", alpha = 0.6, outlier.size = 0.5) +
+    scale_y_log10() +
+    coord_flip() +
+    labs(
+      title = "Body Size by Substrate Type",
+      x = "Substrate",
+      y = "Maximum body length (mm, log scale)"
+    ) +
+    theme_minimal()
+} else {
+  message("No substrate data available for plotting")
+}
+```
+
+### Body Size by Biozone
+
+Biozones represent the vertical zonation of the seabed (e.g., infralittoral, circalittoral, bathyal), which correlates with light availability, temperature, and pressure.
+
+```{r}
+#| label: tbl-bodysize-by-biozone
+#| tbl-cap: "Mean body size by biozone"
+
+biozone_summary <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(biozone), !is.na(MaxLength_mm)) |>
+  group_by(biozone) |>
+  summarise(
+    n_records = n(),
+    n_species = n_distinct(aphiaid),
+    mean_length_mm = mean(MaxLength_mm, na.rm = TRUE),
+    sd_length_mm = sd(MaxLength_mm, na.rm = TRUE),
+    median_length_mm = median(MaxLength_mm, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(n_records >= 10) |>
+  arrange(desc(mean_length_mm))
+
+biozone_summary |>
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |>
+  knitr::kable()
+```
+
+```{r}
+#| label: fig-bodysize-by-biozone
+#| fig-cap: "Body size distribution by biozone"
+#| fig-height: 5
+
+biozone_plot_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(biozone), !is.na(MaxLength_mm)) |>
+  group_by(biozone) |>
+  filter(n() >= 10) |>
+  ungroup()
+
+if (nrow(biozone_plot_data) > 0) {
+  ggplot(biozone_plot_data, aes(x = reorder(biozone, MaxLength_mm, FUN = median), y = MaxLength_mm)) +
+    geom_boxplot(fill = "#2E8B57", alpha = 0.6, outlier.size = 0.5) +
+    scale_y_log10() +
+    coord_flip() +
+    labs(
+      title = "Body Size by Biozone",
+      x = "Biozone",
+      y = "Maximum body length (mm, log scale)"
+    ) +
+    theme_minimal()
+} else {
+  message("No biozone data available for plotting")
+}
+```
+
+### Body Size Along Habitat Depth Gradient
+
+Using the mean depth of each habitat type, we can examine how body size varies along the depth gradient:
+
+```{r}
+#| label: fig-bodysize-depth
+#| fig-cap: "Relationship between body size and habitat mean depth"
+
+depth_plot_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(mean_depth_m), !is.na(MaxLength_mm), mean_depth_m > 0)
+
+ggplot(depth_plot_data, aes(x = mean_depth_m, y = MaxLength_mm)) +
+  geom_point(alpha = 0.2, size = 1, colour = "#0077BE") +
+  geom_smooth(method = "loess", colour = "darkred", fill = "pink", alpha = 0.3) +
+  scale_y_log10() +
+  labs(
+    title = "Body Size vs Habitat Depth",
+    x = "Mean habitat depth (m)",
+    y = "Maximum body length (mm, log scale)"
+  ) +
+  theme_minimal()
+```
+
+### Habitat Depth Distribution
+
+```{r}
+#| label: fig-depth-by-habitat
+#| fig-cap: "Mean depth of habitat types where species occur"
+#| fig-height: 6
+
+habitat_depth_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(eunis2019c), !is.na(mean_depth_m)) |>
+  group_by(eunis2019c) |>
+  filter(n() >= 10) |>
+  ungroup()
+
+ggplot(habitat_depth_data, aes(x = reorder(eunis2019c, mean_depth_m, FUN = median, na.rm = TRUE), y = mean_depth_m)) +
+  geom_boxplot(fill = "#228B22", alpha = 0.5) +
+  coord_flip() +
+  labs(
+    title = "Depth Distribution by Habitat Type",
+    x = "Seabed habitat",
+    y = "Mean habitat depth (m)"
+  ) +
+  theme_minimal()
+```
+
+### Body Size Along Habitat Temperature Gradient
+
+```{r}
+#| label: fig-bodysize-temperature
+#| fig-cap: "Relationship between body size and habitat mean bottom temperature"
+
+temp_plot_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(mean_temp_C), !is.na(MaxLength_mm))
+
+ggplot(temp_plot_data, aes(x = mean_temp_C, y = MaxLength_mm)) +
+  geom_point(alpha = 0.2, size = 1, colour = "#E74C3C") +
+  geom_smooth(method = "loess", colour = "darkblue", fill = "lightblue", alpha = 0.3) +
+  scale_y_log10() +
+  labs(
+    title = "Body Size vs Habitat Temperature",
+    x = "Mean habitat bottom temperature (°C)",
+    y = "Maximum body length (mm, log scale)"
+  ) +
+  theme_minimal()
+```
+
+### Body Size-Environment Interactions by Habitat Type
+
+To explore whether body size-environment relationships differ across habitat types, we create two-panel plots comparing the overall trend with habitat-specific patterns. We focus on habitats with sufficient data (at least 20 occurrences with body size data):
+
+```{r}
+#| label: fig-bodysize-depth-habitat
+#| fig-cap: "Body size vs depth: overall trend (left) compared with habitat-specific patterns (right)"
+#| fig-height: 5
+#| fig-width: 12
+
+# Filter to habitats with enough data for reliable trends
+depth_habitat_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(mean_depth_m), !is.na(MaxLength_mm), !is.na(eunis2019c), mean_depth_m > 0) |>
+  group_by(eunis2019c) |>
+  filter(n() >= 20) |>
+  ungroup()
+
+# Panel A: Overall trend
+p_depth_overall <- ggplot(depth_habitat_data, aes(x = mean_depth_m, y = MaxLength_mm)) +
+  geom_point(alpha = 0.3, size = 1, colour = "grey40") +
+  geom_smooth(method = "loess", colour = "black", fill = "grey70", linewidth = 1.5) +
+  scale_y_log10() +
+  labs(
+    title = "A) Overall trend",
+    x = "Mean habitat depth (m)",
+    y = "Maximum body length (mm)"
+  ) +
+  theme_minimal()
+
+# Panel B: By habitat type
+p_depth_habitat <- ggplot(depth_habitat_data, aes(x = mean_depth_m, y = MaxLength_mm, colour = eunis2019c)) +
+  geom_point(alpha = 0.4, size = 1.5) +
+  geom_smooth(method = "loess", se = FALSE, linewidth = 1.2) +
+  scale_y_log10() +
+  scale_colour_viridis_d(option = "turbo", name = "Habitat") +
+  labs(
+    title = "B) By habitat type",
+    x = "Mean habitat depth (m)",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(colour = guide_legend(nrow = 3, override.aes = list(size = 3)))
+
+p_depth_overall + p_depth_habitat
+```
+
+```{r}
+#| label: fig-bodysize-temp-habitat
+#| fig-cap: "Body size vs temperature: overall trend (left) compared with habitat-specific patterns (right)"
+#| fig-height: 5
+#| fig-width: 12
+
+# Filter to habitats with enough data
+temp_habitat_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(mean_temp_C), !is.na(MaxLength_mm), !is.na(eunis2019c)) |>
+  group_by(eunis2019c) |>
+  filter(n() >= 20) |>
+
+  ungroup()
+
+# Panel A: Overall trend
+p_temp_overall <- ggplot(temp_habitat_data, aes(x = mean_temp_C, y = MaxLength_mm)) +
+  geom_point(alpha = 0.3, size = 1, colour = "grey40") +
+  geom_smooth(method = "loess", colour = "black", fill = "grey70", linewidth = 1.5) +
+  scale_y_log10() +
+  labs(
+    title = "A) Overall trend",
+    x = "Mean habitat temperature (°C)",
+    y = "Maximum body length (mm)"
+  ) +
+  theme_minimal()
+
+# Panel B: By habitat type
+p_temp_habitat <- ggplot(temp_habitat_data, aes(x = mean_temp_C, y = MaxLength_mm, colour = eunis2019c)) +
+  geom_point(alpha = 0.4, size = 1.5) +
+  geom_smooth(method = "loess", se = FALSE, linewidth = 1.2) +
+  scale_y_log10() +
+  scale_colour_viridis_d(option = "turbo", name = "Habitat") +
+  labs(
+    title = "B) By habitat type",
+    x = "Mean habitat temperature (°C)",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(colour = guide_legend(nrow = 3, override.aes = list(size = 3)))
+
+p_temp_overall + p_temp_habitat
+```
+
+```{r}
+#| label: fig-bodysize-habitat-facet
+#| fig-cap: "Body size distributions across habitat types, ordered by median body size"
+#| fig-height: 8
+#| fig-width: 10
+
+facet_data <- occurrences_complete |>
+  st_drop_geometry() |>
+  filter(!is.na(MaxLength_mm), !is.na(eunis2019c)) |>
+  group_by(eunis2019c) |>
+  filter(n() >= 10) |>
+  ungroup()
+
+# Calculate median for ordering
+habitat_order <- facet_data |>
+  group_by(eunis2019c) |>
+  summarise(median_size = median(MaxLength_mm, na.rm = TRUE)) |>
+  arrange(median_size) |>
+  pull(eunis2019c)
+
+facet_data <- facet_data |>
+  mutate(eunis2019c = factor(eunis2019c, levels = habitat_order))
+
+ggplot(facet_data, aes(x = eunis2019c, y = MaxLength_mm, fill = eunis2019c)) +
+  geom_boxplot(alpha = 0.7, outlier.size = 0.5) +
+  scale_y_log10() +
+  scale_fill_viridis_d(option = "turbo") +
+  labs(
+    title = "Body Size Distribution by Habitat Type",
+    x = "EUNIS habitat type",
+    y = "Maximum body length (mm, log scale)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none"
+  ) +
+  coord_flip()
+```
+
+## Interactive Map
+
+Let's create an interactive map showing species occurrences coloured by body size class, overlaid on seabed habitats:
+
+```{r}
+#| label: create-bodysize-classes
+# Create body size classes for visualisation
+occurrences_for_map <- occurrences_complete |>
+  filter(!is.na(MaxLength_mm)) |>
+  mutate(
+    size_class = cut(
+      MaxLength_mm,
+      breaks = c(0, 10, 50, 200, 1000, Inf),
+      labels = c("<10mm", "10-50mm", "50-200mm", "200-1000mm", ">1000mm"),
+      right = FALSE
+    )
+  )
+```
+
+```{r}
+#| label: fig-interactive-map
+#| eval: false
+
+tmap_mode("view")
+
+tm_shape(seabed_habitats) +
+  tm_polygons(
+    fill = "eunis2019c",
+    fill.scale = tm_scale_categorical(values = "Set3"),
+    fill.legend = tm_legend(title = "EUNIS Habitat"),
+    fill_alpha = 0.5,
+    col_alpha = 0
+  ) +
+  tm_shape(occurrences_for_map) +
+  tm_symbols(
+    fill = "size_class",
+    fill.scale = tm_scale_categorical(values = "viridis"),
+    fill.legend = tm_legend(title = "Body size"),
+    size = 0.1,
+    fill_alpha = 0.7,
+    popup.vars = c(
+      "Species" = "scientificname",
+      "Body length (mm)" = "MaxLength_mm",
+      "Habitat" = "eunis2019c",
+      "Substrate" = "substrate",
+      "Biozone" = "biozone"
+    )
+  )
+```
+
+```{r}
+#| label: fig-interactive-map-render
+#| echo: false
+#| fig-cap: "Benthic species occurrences coloured by body size class in the Gulf of Lion"
+#| fig-height: 8
+
+# Static map version for reliable rendering
+ggplot() +
+  geom_sf(data = med_countries, fill = "gray90", colour = "gray70") +
+  geom_sf(
+    data = occurrences_for_map,
+    aes(colour = size_class),
+    size = 1.5,
+    alpha = 0.6
+  ) +
+  scale_colour_viridis_d(option = "viridis", name = "Body size") +
+  coord_sf(
+    xlim = c(study_bbox["xmin"], study_bbox["xmax"]),
+    ylim = c(study_bbox["ymin"], study_bbox["ymax"])
+  ) +
+  labs(
+    title = "Body Size Distribution Across the Gulf of Lion",
+    subtitle = sprintf("n = %d occurrences with trait data", nrow(occurrences_for_map))
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Discussion
+
+### Key Findings
+
+This analysis demonstrates the integration of multiple EU marine data infrastructures to explore trait-environment relationships:
+
+1. **Habitat associations**: Different seabed habitats support benthic communities with distinct body size distributions
+2. **Environmental gradients**: Body size shows variation along both depth and temperature gradients
+3. **Data integration**: Linking occurrence data to external trait databases and environmental layers substantially enriches analytical potential
+
+### Ecological Interpretation
+
+The observed patterns may reflect several ecological processes:
+
+- **Environmental filtering**: Physical conditions in different habitats may favour certain body sizes
+- **Resource availability**: Habitat productivity and food supply influence what body sizes can be sustained
+- **Predation pressure**: Different habitats offer varying levels of refuge, potentially affecting body size distributions
+
+However, these interpretations require caution:
+
+1. **Sampling bias**: Occurrence records may not represent true community composition
+2. **Taxonomic coverage**: MOBS trait data is incomplete, with smaller and less-studied taxa underrepresented
+3. **Spatial mismatch**: Environmental data resolution may not capture fine-scale heterogeneity
+
+### Limitations
+
+- **Trait coverage**: Not all species in the occurrence data have body size records in MOBS
+- **Temporal mismatch**: Occurrence records span different time periods than environmental data
+- **Single trait focus**: Body size is just one dimension of functional diversity
+
+### Extensions
+
+This workflow could be extended to:
+
+- Include additional traits (feeding mode, mobility, reproduction strategy)
+- Analyse temporal trends in trait composition
+- Model trait-environment relationships more formally
+- Compare patterns across regions
+
+## What You've Learned
+
+This tutorial demonstrated advanced multi-source integration:
+
+- **EMODnet WFS**: Accessing occurrence records and habitat polygons
+- **EMODnet WCS**: Retrieving bathymetry rasters
+- **Copernicus Marine Service**: Downloading oceanographic data
+- **External databases**: Linking to trait data via taxonomic identifiers
+- **Spatial operations**: Joins, extractions, and alignments across data types
+- **Trait-based analysis**: Exploring functional diversity across habitats
+
+These skills enable complex marine ecological analyses that draw on the full breadth of available EU marine data.
+
+## Further Resources
+
+- [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology): Species occurrence data
+- [EMODnet Seabed Habitats Portal](https://emodnet.ec.europa.eu/en/seabed-habitats): Habitat maps
+- [Copernicus Marine Service](https://marine.copernicus.eu/): Oceanographic data
+- [World Register of Marine Species (WoRMS)](https://www.marinespecies.org/): Taxonomic backbone
+- [MOBS Database](https://github.com/crmcclain/MOBS_OPEN): Marine body size data
+
+## References

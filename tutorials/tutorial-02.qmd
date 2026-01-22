@@ -53,7 +53,7 @@ By the end of this tutorial, you will be able to:
 
 ### Packages
 
-We'll use `emodnet.wcs` to access EMODnet WCS services, `terra` for raster data handling, `sf` for spatial operations, `dplyr` for data manipulation, and `ggplot2` with `tidyterra` for visualization.
+We'll use [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs/) to access EMODnet WCS services, [`terra`](https://rspatial.github.io/terra/) for raster data handling, [`sf`](https://r-spatial.github.io/sf/) for spatial operations, [`dplyr`](https://dplyr.tidyverse.org/) for data manipulation, and [`ggplot2`](https://ggplot2.tidyverse.org/) with [`tidyterra`](https://dieghernan.github.io/tidyterra/) for visualization.
 
 ```{r}
 #| label: load-packages

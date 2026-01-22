@@ -1079,6 +1079,39 @@ result <- st_intersects(demo_features, demo_check_area)
 result
 ```
 
+::: {.callout-tip collapse="true"}
+## Visualise intersections
+```{r}
+#| label: fig-demo-st-intersects
+#| fig-cap: "Features 2 and 3 (green) intersect the check area (dashed red), while feature 1 does not."
+#| code-fold: true
+ggplot() +
+  geom_sf(
+    data = st_sf(geometry = demo_check_area),
+    fill = "red", alpha = 0.2, color = "red", linetype = "dashed", linewidth = 1
+  ) +
+  geom_sf(
+    data = st_sf(
+      id = factor(1:3),
+      intersects = lengths(st_intersects(demo_features, demo_check_area)) > 0,
+      geometry = demo_features
+    ),
+    aes(fill = intersects), alpha = 0.5, color = "black"
+  ) +
+  geom_sf_text(
+    data = st_sf(id = 1:3, geometry = demo_features),
+    aes(label = id), size = 5
+  ) +
+  scale_fill_manual(
+    values = c("TRUE" = "green", "FALSE" = "grey70"),
+    labels = c("TRUE" = "Yes", "FALSE" = "No"),
+    name = "Intersects?"
+  ) +
+  theme_minimal() +
+  theme(axis.text = element_blank(), axis.title = element_blank())
+```
+:::
+
 To use this for filtering or flagging, we convert to a logical vector using `lengths() > 0`, which is `TRUE` for features that intersect with at least one feature in the other dataset:
 
 ```{r}

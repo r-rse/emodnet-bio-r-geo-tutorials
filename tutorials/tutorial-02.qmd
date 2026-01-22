@@ -25,7 +25,7 @@ We'll access gridded (raster) data from EMODnet using [Web Coverage Services (WC
 
 By the end of this tutorial, you will be able to:
 
-- Explore and discover available [WCS](../concepts.qmd#wcs-web-coverage-service) coverages using `emodnet.wcs` functions
+- Explore and discover available [WCS](../concepts.qmd#wcs-web-coverage-service) coverages using [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs/) functions
 - Retrieve raster data for a specific area and time period using `emdn_get_coverage()`
 - Align rasters from different sources with different resolutions
 - Extract and summarize environmental conditions within habitat areas

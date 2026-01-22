@@ -190,7 +190,8 @@ The coverage IDs follow a naming convention:
 - `Emodnetbio__` prefix indicates EMODnet Biology
 - Species abbreviation (e.g., `cal_fin` for *Calanus finmarchicus*)
 - Time period (`19582016` = 1958-2016)
-- Processing level (e.g., `L1_err`)
+- Processing level (e.g., `L1` for the DIVAnd interpolation model)
+- `_err` suffix indicates error bands are included
 
 For this tutorial, we'll use four copepod layers that are ecologically relevant for gadoid larvae: *Calanus finmarchicus* (a key prey species), *Temora longicornis* (an important coastal copepod), and total large and small copepod relative abundance.
 

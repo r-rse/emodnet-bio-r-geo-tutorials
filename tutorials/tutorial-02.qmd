@@ -354,7 +354,7 @@ The full metadata for our selected layers is in the table above. Key points for 
 ::: {.callout-note}
 ## About these data products
 
-These Essential Fish Habitat (EFH) layers are from the [Scottish Government EFH mapping project](https://www.gov.scot/publications/developing-essential-fish-habitat-maps-fish-shellfish-species-scotland-report/), produced using decision tree models with fish survey data (2010-2020) and environmental predictors. Values represent **habitat suitability** (0-1 probability scores).
+These Essential Fish Habitat (EFH) layers are from the [Scottish Government EFH mapping project](https://www.gov.scot/publications/developing-essential-fish-habitat-maps-fish-shellfish-species-scotland-report/), produced using decision tree models with fish survey data (2010-2020) and environmental predictors. Environmental predictors include physical oceanographic variables (temperature, depth, salinity, currents) rather than biological factors like prey availability. Values represent **habitat suitability** (0-1 probability scores).
 :::
 
 ::: {.callout-warning}

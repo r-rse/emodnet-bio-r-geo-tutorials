@@ -132,7 +132,7 @@ plot_bbox <- c(xmin = -10, ymin = 48, xmax = 15, ymax = 65)
 
 ggplot() +
   geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
-  geom_sf(data = bbox_polygon, fill = NA, color = "#0077BE", linewidth = 1.5) +
+  geom_sf(data = bbox_polygon, fill = NA, color = "#004494", linewidth = 1.5) +
   coord_sf(
     xlim = c(plot_bbox["xmin"], plot_bbox["xmax"]),
     ylim = c(plot_bbox["ymin"], plot_bbox["ymax"])

@@ -172,7 +172,7 @@ To query a WCS service, we first create client connections:
 ```{r}
 #| label: init-wcs-clients
 bio_wcs <- emdn_init_wcs_client(service = "biology")
-hab_wcs <- emdn_init_wcs_client(service = "seabed_habitats")
+habitat_wcs <- emdn_init_wcs_client(service = "seabed_habitats")
 ```
 
 ### Discovering Copepod Coverages
@@ -296,12 +296,12 @@ Now let's find fish spawning ground data that overlaps with our copepod coverage
 
 ```{r}
 #| label: list-spawning-coverages
-hab_coverage_ids <- emdn_get_coverage_ids(hab_wcs)
+habitat_coverage_ids <- emdn_get_coverage_ids(habitat_wcs)
 
 # Filter for spawning ground coverages
-spawning_ids <- hab_coverage_ids[grepl(
+spawning_ids <- habitat_coverage_ids[grepl(
   "spawning",
-  hab_coverage_ids,
+  habitat_coverage_ids,
   ignore.case = TRUE
 )]
 spawning_ids
@@ -312,7 +312,7 @@ There are spawning ground predictions from Denmark (DK), France (FR), Great Brit
 ```{r}
 #| label: check-spawning-extents
 spawning_info_all <- emdn_get_coverage_info(
-  wcs = hab_wcs,
+  wcs = habitat_wcs,
   coverage_ids = spawning_ids
 )
 spawning_info_all |>
@@ -562,7 +562,7 @@ spawning_coverage_ids <- c(
 
 # Download each spawning ground layer and combine into a multi-layer raster
 spawning <- map(spawning_coverage_ids, \(id) {
-  emdn_get_coverage(wcs = hab_wcs, coverage_id = id, bbox = north_sea_bbox)
+  emdn_get_coverage(wcs = habitat_wcs, coverage_id = id, bbox = north_sea_bbox)
 }) |>
   rast()
 

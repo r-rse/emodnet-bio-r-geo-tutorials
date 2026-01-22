@@ -834,9 +834,7 @@ cell_data |>
   )
 ```
 
-A clear pattern emerges: **unsuitable spawning habitat tends to have higher copepod abundance than suitable habitat**. This trend is particularly striking for haddock, where unsuitable areas show substantially higher mean abundance across all copepod types. For whiting, the pattern is similar but less pronounced, with the exception of *Temora* where suitable habitat actually shows slightly higher abundance.
-
-This makes ecological sense. Adult fish select spawning sites based on physical factors like temperature, depth, and substrate type [@gonzalezirusta2016], not prey availability. Copepod abundance matters more for larvae after hatching than for the spawning adults choosing where to release eggs.
+An interesting pattern emerges: **unsuitable spawning habitat tends to have higher copepod abundance than suitable habitat**. This trend is particularly striking for haddock, where unsuitable areas show substantially higher mean abundance across all copepod types. For whiting, the pattern is similar but less pronounced, with the exception of *Temora* where suitable habitat actually shows slightly higher abundance. We'll explore what might explain this in the [Discussion].
 
 ### Exploring the Full Suitability Gradient
 

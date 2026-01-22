@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-aad255b13f57194280e6d4968a8fb73e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -240,6 +240,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#why-use-bounding-boxes" id="toc-why-use-bounding-boxes" class="nav-link" data-scroll-target="#why-use-bounding-boxes">Why Use Bounding Boxes?</a></li>
   <li><a href="#bounding-boxes-in-emodnet-services" id="toc-bounding-boxes-in-emodnet-services" class="nav-link" data-scroll-target="#bounding-boxes-in-emodnet-services">Bounding Boxes in EMODnet Services</a></li>
+  </ul></li>
+  <li><a href="#the-geospatial-software-stack" id="toc-the-geospatial-software-stack" class="nav-link" data-scroll-target="#the-geospatial-software-stack">The Geospatial Software Stack</a>
+  <ul class="collapse">
+  <li><a href="#core-libraries" id="toc-core-libraries" class="nav-link" data-scroll-target="#core-libraries">Core Libraries</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  <li><a href="#the-stack-in-practice" id="toc-the-stack-in-practice" class="nav-link" data-scroll-target="#the-stack-in-practice">The Stack in Practice</a></li>
   </ul></li>
   <li><a href="#key-r-packages" id="toc-key-r-packages" class="nav-link" data-scroll-target="#key-r-packages">Key R Packages</a>
   <ul class="collapse">
@@ -615,11 +621,58 @@ Figure&nbsp;4: Example bounding box for the North Sea region. The blue rectangle
 <p>The tutorials demonstrate practical bounding box usage for retrieving EMODnet data in specific regions, from local study sites to broader management areas.</p>
 </section>
 </section>
+<section id="the-geospatial-software-stack" class="level2">
+<h2 class="anchored" data-anchor-id="the-geospatial-software-stack">The Geospatial Software Stack</h2>
+<p>Before diving into R packages, it helps to understand the foundational libraries that power geospatial computing. These open-source C/C++ libraries do the heavy lifting. R packages like <code>sf</code> and <code>terra</code> are interfaces that make them accessible from R.</p>
+<section id="core-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="core-libraries">Core Libraries</h3>
+<p><strong>GDAL (Geospatial Data Abstraction Library)</strong></p>
+<p>GDAL handles reading and writing spatial data formats. When you load a GeoTIFF, GeoJSON, or Shapefile in R, GDAL is doing the work behind the scenes. It supports over 200 raster and vector formats, making it the universal translator for geospatial data.</p>
+<ul>
+<li>Website: <a href="https://gdal.org/">gdal.org</a></li>
+</ul>
+<p><strong>PROJ</strong></p>
+<p>PROJ handles coordinate transformations and projections. When you convert data from WGS84 (latitude/longitude) to a projected coordinate system like UTM, PROJ performs the mathematical transformation. It maintains an extensive database of coordinate reference system definitions.</p>
+<ul>
+<li>Website: <a href="https://proj.org/">proj.org</a></li>
+</ul>
+<p><strong>GEOS (Geometry Engine - Open Source)</strong></p>
+<p>GEOS performs geometric operations on vector data: intersections, buffers, unions, validity checks, and more. It works with <strong>planar coordinates</strong>, treating geometries as flat 2D shapes and using Euclidean geometry. This is fast and works well with projected coordinate systems.</p>
+<ul>
+<li>Website: <a href="https://libgeos.org/">libgeos.org</a></li>
+</ul>
+<p><strong>s2 (S2 Geometry Library)</strong></p>
+<p>s2 is Google’s library for <strong>spherical geometry</strong>. Unlike GEOS, it treats the Earth as a sphere and performs calculations on the curved surface. This is appropriate for geographic CRS like WGS84 (EPSG:4326), where coordinates are in degrees. s2 is geometrically correct for unprojected data but slower than GEOS, stricter about geometry validity, and doesn’t support all operations (e.g., <code>st_simplify()</code> requires GEOS).</p>
+<ul>
+<li>Website: <a href="https://s2geometry.io/">s2geometry.io</a></li>
+</ul>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>Understanding this stack helps explain behaviours you’ll encounter:</p>
+<ul>
+<li><p><strong>GEOS vs s2</strong>: The <code>sf</code> package uses s2 by default for geographic CRS and GEOS for projected CRS. Some operations only work with GEOS, which is why you sometimes see <code>sf_use_s2(FALSE)</code> in code to temporarily switch engines.</p></li>
+<li><p><strong>CRS transformations</strong>: When you call <code>st_transform()</code>, PROJ does the coordinate conversion.</p></li>
+<li><p><strong>Format support</strong>: If R can read a spatial format, it’s because GDAL supports it.</p></li>
+</ul>
+</section>
+<section id="the-stack-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="the-stack-in-practice">The Stack in Practice</h3>
+<p>When you run a typical spatial workflow in R:</p>
+<ol type="1">
+<li><strong>Loading data</strong>: GDAL reads the file format</li>
+<li><strong>Reprojecting</strong>: PROJ transforms coordinates</li>
+<li><strong>Spatial operations</strong>: GEOS or s2 performs intersections, buffers, etc.</li>
+<li><strong>Saving results</strong>: GDAL writes the output format</li>
+</ol>
+<p>The R packages coordinate these libraries and provide a consistent interface, but the underlying work happens in optimised C/C++ code.</p>
+</section>
+</section>
 <section id="key-r-packages" class="level2">
 <h2 class="anchored" data-anchor-id="key-r-packages">Key R Packages</h2>
 <section id="sf---simple-features-for-r" class="level3">
 <h3 class="anchored" data-anchor-id="sf---simple-features-for-r">sf - Simple Features for R</h3>
-<p>The <a href="https://r-spatial.github.io/sf/"><code>sf</code> package</a> is the modern standard for <strong>vector spatial data</strong> in R.</p>
+<p>The <a href="https://r-spatial.github.io/sf/"><code>sf</code> package</a> is the modern standard for <strong>vector spatial data</strong> in R. It provides an R interface to GDAL (for data I/O), PROJ (for CRS transformations), and GEOS/s2 (for geometric operations).</p>
 <p><strong>Key features:</strong></p>
 <ul>
 <li>Represents spatial data as data frames with geometry columns</li>

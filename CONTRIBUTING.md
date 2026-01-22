@@ -393,6 +393,10 @@ quarto render tutorials/tutorial-01.qmd
 
 Chunks with `#| cache: true` store results in per-file `*_cache/` directories (e.g., `tutorial-01_cache/`). These are also gitignored.
 
+::: {.callout-warning}
+**Avoid caching WCS/terra objects.** Terra `SpatRaster` objects and WCS client objects (R6 classes) store external pointers that become invalid when restored from cache. This causes "external pointer is not valid" errors on subsequent renders. For WCS tutorials, avoid `#| cache: true` on chunks that download coverages or create terra rasters.
+:::
+
 **Refreshing knitr cache:**
 
 ```bash

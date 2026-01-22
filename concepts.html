@@ -152,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials/tutorial-02.html">
- <span class="dropdown-text">Tutorial 2: Zooplankton and Plaice Nurseries</span></a>
+ <span class="dropdown-text">Tutorial 2: Copepods and Fish Spawning Grounds</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials/tutorial-03.html">
@@ -484,11 +484,12 @@ Figure&nbsp;2: Web service request flow from R to EMODnet data services
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>EPSG Codes
+<span class="screen-reader-only">Note</span>Specifying CRS: EPSG Codes and WKT
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Throughout this page, you’ll see CRS referenced by <strong>EPSG codes</strong> (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil &amp; Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide an unambiguous way to specify which CRS you’re using.</p>
+<p>Throughout this page, you’ll see CRS referenced by <strong>EPSG codes</strong> (e.g., EPSG:4326, EPSG:3857). EPSG stands for the European Petroleum Survey Group (now maintained by the International Association of Oil &amp; Gas Producers), which created a standardized registry assigning unique numeric codes to coordinate reference systems. These codes provide a concise, unambiguous way to specify which CRS you’re using.</p>
+<p>Under the hood, CRS definitions are stored as <strong>WKT (Well-Known Text)</strong> strings - a verbose text format that fully describes the coordinate system, datum, units, and other parameters. You’ll occasionally encounter WKT when inspecting spatial objects, but in practice you’ll usually work with EPSG codes which are simpler and map to the full WKT definitions.</p>
 </div>
 </div>
 </section>

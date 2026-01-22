@@ -1,33 +1,1076 @@
 ---
-title: "2: Zooplankton and Plaice Nursery Grounds"
-subtitle: "Exploring the Overlap Between Zooplankton Distributions and Predicted Plaice Nursery Grounds"
+title: "2: Copepods and Fish Spawning Grounds"
+subtitle: "Characterizing Zooplankton Conditions Across Gadoid Spawning Grounds in the North Sea"
 difficulty: "Beginner"
-time: "~60 minutes"
+time: "~45 minutes"
 data-type: "WCS (raster)"
-description: "Discover how to access and analyze gridded environmental data using EMODnet WCS services. Explore the spatial relationship between zooplankton abundance and fish nursery habitats in the Eastern English Channel using raster analysis techniques."
-datasets: "Copepod abundance grids, fish habitat suitability models, multi-band raster data"
+description: "Discover how to access and analyze gridded environmental data using EMODnet WCS services. Characterize copepod distributions across whiting and haddock spawning grounds, learning raster alignment, tidy data extraction, and interactive map visualization."
+datasets: "Copepod relative abundance grids, fish spawning ground predictions"
+df-print: paged
+bibliography: references.bib
+format:
+  html:
+    embed-resources: false
 ---
 
-## Tutorial Content
+## Introduction
 
-This tutorial is currently under development.
+The North Sea is a critical spawning area for commercially important gadoid fish, including whiting (*Merlangius merlangus*) and haddock (*Melanogrammus aeglefinus*). The larvae of these species depend heavily on copepods for food, and the match between larval emergence and copepod availability is a key factor in recruitment success.
 
-### What You'll Learn
+In this tutorial, we'll use EMODnet data to **characterize copepod conditions across predicted spawning grounds** for these species. This is a descriptive analysis: we're not testing whether fish "choose" spawning sites based on copepods, but rather documenting the zooplankton environment that larvae would encounter.
 
-- Understanding how to identify and retrieve relevant raster layers using `describe_coverages()`
-- Using `emdn_get_coverage()` to download WCS data for a specific area and time
-- Applying raster alignment, masking, and standardisation for comparative analysis
-- Interpreting spatial patterns in relative abundance and their ecological relevance
+We'll access gridded (raster) data from EMODnet using [Web Coverage Services (WCS)](../concepts.qmd#wcs-web-coverage-service). Unlike the vector data explored in [Tutorial 1](tutorial-01.qmd), raster data represents continuous surfaces divided into regular grid cells, making it ideal for environmental layers like zooplankton relative abundance.
+
+### Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Explore and discover available [WCS](../concepts.qmd#wcs-web-coverage-service) coverages using [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs/) functions
+- Retrieve raster data for a specific area and time period using `emdn_get_coverage()`
+- Align rasters from different sources with different resolutions
+- Extract and summarize environmental conditions within habitat areas
+- Visualize multi-layer raster data with spawning ground overlays
 
 ### Data Sources
 
-- **EMODnet Biology WCS:** Copepod relative abundance layers (*Acartia* spp., *Temora longicornis*, *Calanus finmarchicus*)
-- **EMODnet Seabed Habitats WCS:** Plaice Essential Fish Habitat (nursery grounds) predictions (GRAY_INDEX band)
+**EMODnet Biology WCS:** Copepod relative abundance layers
+
+| Coverage ID | Description |
+|-------------|-------------|
+| `Emodnetbio__cal_fin_*` | *Calanus finmarchicus* - key prey for gadoid larvae |
+| `Emodnetbio__tem_lon_*` | *Temora longicornis* - important coastal copepod |
+| `Emodnetbio__tot_lar_*` | Total large copepods |
+| `Emodnetbio__tot_sma_*` | Total small copepods |
+
+**EMODnet Seabed Habitats WCS:** UK Essential Fish Habitat spawning ground predictions
+
+| Species | Coverage ID |
+|---------|-------------|
+| Whiting | `GB000050_EFH_Whiting_SpawningGrounds` |
+| Haddock | `GB000051_EFH_Haddock_SpawningGrounds` |
+
+## Setup
+
+### Packages
+
+We'll use [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs/) to access EMODnet WCS services, [`terra`](https://rspatial.github.io/terra/) for raster data handling, [`sf`](https://r-spatial.github.io/sf/) for spatial operations, [`dplyr`](https://dplyr.tidyverse.org/) for data manipulation, and [`ggplot2`](https://ggplot2.tidyverse.org/) with [`tidyterra`](https://dieghernan.github.io/tidyterra/) for visualization.
+
+```{r}
+#| label: load-packages
+#| message: false
+library(emodnet.wcs)
+library(terra)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(tidyterra)
+library(tmap)
+```
+
+```{r}
+#| label: setup
+#| include: false
+# Set PROJ path if needed (for coordinate transformations)
+if (
+  Sys.getenv("PROJ_LIB") == "" &&
+    file.exists("/opt/homebrew/share/proj/proj.db")
+) {
+  Sys.setenv(PROJ_LIB = "/opt/homebrew/share/proj")
+}
+
+# Load package data and helper functions
+library(emodnet.bio.r.geo.tutorials)
+```
+
+::: {.callout-tip collapse="true"}
+## Package installation
+If you haven't installed these packages, run:
+
+```r
+install.packages(c("terra", "sf", "dplyr", "tidyr", "purrr", "ggplot2", "tidyterra", "tmap"))
+```
+
+For the EMODnet packages (development versions from GitHub):
+
+```r
+# install.packages("pak")
+pak::pak(c("EMODnet/emodnet.wfs", "EMODnet/emodnet.wcs"))
+```
+:::
 
 ### Study Area
 
-Eastern English Channel
+We'll focus on the North Sea, where UK Essential Fish Habitat data overlaps with EMODnet Biology copepod coverage:
 
-**Bounding box:** xmin = 0.0, ymin = 49.5, xmax = 2.5, ymax = 51.0
+```{r}
+#| label: define-study-area-bbox
+# Geographic bbox for WCS queries (EPSG:4326)
+north_sea_bbox <- c(xmin = -4, ymin = 50, xmax = 10, ymax = 62)
 
-Check back soon for the complete tutorial!
+# Create bbox polygon for visualization
+bbox_polygon <- sf::st_as_sfc(sf::st_bbox(north_sea_bbox, crs = 4326))
+```
+
+Note that unlike WFS queries (which use a character string like `"xmin,ymin,xmax,ymax"`), WCS queries in `emodnet.wcs` expect a **named numeric vector** with `xmin`, `ymin`, `xmax`, and `ymax` elements. The bbox is assumed to be in WGS84 (EPSG:4326) by default, but you can specify a different CRS using the `crs` argument.
+
+```{r}
+#| label: fig-study-area
+#| echo: false
+#| fig-cap: "Study area: North Sea"
+
+# Get European coastlines
+europe <- rnaturalearth::ne_countries(
+  scale = "medium",
+  continent = "Europe",
+  returnclass = "sf"
+)
+
+# Expand bbox slightly for context
+plot_bbox <- c(xmin = -10, ymin = 48, xmax = 15, ymax = 65)
+
+ggplot() +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(data = bbox_polygon, fill = NA, color = "#004494", linewidth = 1.5) +
+  coord_sf(
+    xlim = c(plot_bbox["xmin"], plot_bbox["xmax"]),
+    ylim = c(plot_bbox["ymin"], plot_bbox["ymax"])
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+```
+
+## Exploring EMODnet WCS Services
+
+Before downloading raster data, let's explore what's available.
+
+### Discovering Available Services
+
+EMODnet provides raster data through several thematic WCS services:
+
+```{r}
+#| label: list-wcs-services-code
+#| eval: false
+emdn_wcs()
+```
+
+```{r}
+#| label: list-wcs-services
+#| echo: false
+emdn_wcs() |>
+  knitr::kable()
+```
+
+For this tutorial, we'll use the **biology** service for copepod data and the **seabed_habitats** service for spawning ground predictions.
+
+### Connecting to Services
+
+To query a WCS service, we first create client connections:
+
+```{r}
+#| label: init-wcs-clients
+bio_wcs <- emdn_init_wcs_client(service = "biology")
+habitat_wcs <- emdn_init_wcs_client(service = "seabed_habitats")
+```
+
+### Discovering Copepod Coverages
+
+Let's explore what copepod data is available:
+
+```{r}
+#| label: list-biology-coverages
+bio_coverage_ids <- emdn_get_coverage_ids(bio_wcs)
+bio_coverage_ids
+```
+
+The coverage IDs follow a naming convention:
+
+- `Emodnetbio__` prefix indicates EMODnet Biology
+- Species abbreviation (e.g., `cal_fin` for *Calanus finmarchicus*)
+- Time period (`19582016` = 1958-2016)
+- Processing level (e.g., `L1` for the DIVAnd interpolation model)
+- `_err` suffix indicates error bands are included
+
+For this tutorial, we'll use four copepod layers that are ecologically relevant for gadoid larvae: *Calanus finmarchicus* (a key prey species), *Temora longicornis* (an important coastal copepod), and total large and small copepod relative abundance.
+
+::: {.callout-note}
+## About these data products
+
+These copepod layers are from EMODnet's [OOPS products](https://emodnet.ec.europa.eu/en/use-case/operational-zooplankton-data-service-long-term-monitoring-programme), created by interpolating [Continuous Plankton Recorder (CPR)](https://www.cprsurvey.org/) survey data using [DIVAnd](https://emodnet.ec.europa.eu/en/new-emodnet-biology-data-product-gridded-maps-calanus-finmarchicus-and-calanus-helgolandicus).
+
+The underlying CPR data records organisms per 3 m³ of filtered seawater (from 10 nautical mile tows). However, the DIVAnd interpolation produces **dimensionless relative abundance indices** rather than absolute counts. Importantly, DIVAnd processes each species independently (univariate analysis), so values are **not comparable between species**. You can compare spatial patterns within a species (e.g., "Calanus is more abundant here than there") but not across species (e.g., "Calanus is more abundant than Temora").
+
+The `_err` suffix indicates coverages include both relative abundance and error bands.
+:::
+
+### Understanding Coverage Properties
+
+Let's examine the metadata for our selected copepod layers:
+
+```{r}
+#| label: define-copepod-ids
+copepod_ids <- c(
+  "Emodnetbio__cal_fin_19582016_L1_err",
+  "Emodnetbio__tem_lon_19582016_L1_err",
+  "Emodnetbio__tot_lar_19582016_L1_err",
+  "Emodnetbio__tot_sma_19582016_L1_err"
+)
+```
+
+The `emdn_get_coverage_info()` function provides a full overview of coverage metadata:
+
+```{r}
+#| label: get-copepod-info
+copepod_info <- emdn_get_coverage_info(
+  wcs = bio_wcs,
+  coverage_ids = copepod_ids
+)
+```
+
+```{r}
+#| label: show-copepod-info
+#| echo: false
+copepod_info |>
+  knitr::kable()
+```
+
+To retrieve specific pieces of metadata, we can get a coverage summary object and use accessor functions. For example, let's examine what dimensions are available for the *Calanus* coverage:
+
+```{r}
+#| label: get-coverage-summary
+# Returns a list with one element per coverage ID - extract the first (and only) element
+calanus_summary <- emdn_get_coverage_summaries(bio_wcs, copepod_ids[1])[[1]]
+
+# What dimensions does this coverage have?
+emdn_get_dimensions_info(calanus_summary, format = "tibble")
+```
+
+The coverage has latitude, longitude, and a **time** dimension. The `range` column shows the temporal extent, but to see the actual available time steps we use `emdn_get_coverage_dim_coefs()`:
+```{r}
+#| label: get-time-steps
+# Returns a named list - extract the vector for our coverage
+time_steps <- emdn_get_coverage_dim_coefs(bio_wcs, copepod_ids[1])[[1]]
+
+# Temporal extent
+range(time_steps)
+
+# How many time steps?
+length(time_steps)
+
+# Show first few to see the pattern
+head(time_steps, 8)
+```
+
+The 236 timestamps show **quarterly data** (February, May, August, November) from 1958 to 2016.
+
+We can also check spatial properties:
+
+```{r}
+#| label: spatial-info
+# Spatial resolution (degrees)
+emdn_get_resolution(calanus_summary)
+
+# Bounding box in WGS84
+emdn_get_WGS84bbox(calanus_summary)
+```
+
+The resolution is 0.1° (approximately 7-11 km depending on latitude). The bounding box spans the North Atlantic, but note that this shows the grid boundaries, not where actual data exists. CPR survey coverage is patchy in some regions, so always check for NA values when working with a specific area.
+
+And band metadata:
+
+```{r}
+#| label: band-info
+# Band descriptions
+emdn_get_band_descriptions(calanus_summary)
+
+# Band units of measurement
+emdn_get_band_uom(calanus_summary)
+```
+
+The band descriptions confirm these coverages contain two bands: the relative abundance estimate and its error. However, the `band_uom` shows `W.m-2.Sr-1`, a radiance unit from remote sensing. This is incorrect metadata, likely propagated from satellite-derived environmental inputs used in the DIVAnd interpolation. As noted above, the actual values are dimensionless relative abundance indices.
+
+### Discovering Spawning Ground Coverages
+
+Now let's find fish spawning ground data that overlaps with our copepod coverage. First, we search for spawning-related coverages:
+
+```{r}
+#| label: list-spawning-coverages
+habitat_coverage_ids <- emdn_get_coverage_ids(habitat_wcs)
+
+# Filter for spawning ground coverages
+spawning_ids <- habitat_coverage_ids[grepl(
+  "spawning",
+  habitat_coverage_ids,
+  ignore.case = TRUE
+)]
+spawning_ids
+```
+
+There are spawning ground predictions from Denmark (DK), France (FR), Great Britain (GB), and Portugal (PT). Let's get their full metadata to get a better understanding of what they contain:
+
+```{r}
+#| label: check-spawning-extents
+spawning_info_all <- emdn_get_coverage_info(
+  wcs = habitat_wcs,
+  coverage_ids = spawning_ids
+)
+spawning_info_all |>
+  dplyr::select(coverage_id, wgs84_extent) |>
+  knitr::kable()
+```
+
+Checking the spatial extents helps identify which layers might overlap with our North Sea copepod data. Note that `wgs84_extent` shows grid boundaries, not actual data coverage. When exploring these layers, we found the **UK (GB) spawning grounds** work best for this tutorial because they cover the North Sea where copepod data is most complete. Other regions had sparse copepod coverage or limited spatial extent.
+
+We'll use **whiting** and **haddock**, both gadoids whose larvae depend on copepods:
+
+```{r}
+#| label: select-uk-spawning
+spawning_ids <- c(
+  "emodnet_open_maplibrary__GB000050_EFH_Whiting_SpawningGrounds",
+  "emodnet_open_maplibrary__GB000051_EFH_Haddock_SpawningGrounds"
+)
+```
+
+Let's subset the overall metadata table for the coverages of interest to take a closer look:
+```{r}
+#| label: show-spawning-info
+#| echo: false
+spawning_info <- spawning_info_all |>
+  dplyr::filter(coverage_id %in% spawning_ids)
+
+spawning_info |>
+  knitr::kable()
+```
+
+The full metadata for our selected layers is in the table above. Key points for combining with our copepod data:
+
+- **Resolution**: ~6.3 km (finer than the copepod grid at ~10 km)
+- **Temporal extent**: NA, meaning these are static layers with no time dimension, unlike our quarterly copepod data
+- **Dimensions**: Only 2 (x, y), so no time slicing needed when downloading
+- **CRS**: Projected coordinate system (meters), which we'll need to reproject to match the copepod WGS84 grid
+
+::: {.callout-note}
+## About these data products
+
+These Essential Fish Habitat (EFH) layers are from the [Scottish Government EFH mapping project](https://www.gov.scot/publications/developing-essential-fish-habitat-maps-fish-shellfish-species-scotland-report/), produced using decision tree models with fish survey data (2010-2020) and environmental predictors. Environmental predictors include physical oceanographic variables (temperature, depth, salinity, currents) rather than biological factors like prey availability. Values represent **habitat suitability** (0-1 probability scores).
+:::
+
+::: {.callout-warning}
+## Misleading unit metadata
+
+Again, `band_uom` shows `W.m-2.Sr-1`. As with the copepod layers, this likely propagated from satellite-derived environmental inputs used in the models. The actual values are dimensionless suitability scores.
+:::
+
+## Retrieving Copepod Data
+
+Now, let's go ahead and start downloading actual data. Let's start with copepod relative abundance data for the spawning period.
+
+### Selecting the Time Period
+
+The copepod data uses quarterly timesteps (February, May, August, November). Gadoids in the North Sea typically spawn in late winter to early spring, so we'll use **February** timesteps.
+
+Rather than using a single year (which might be anomalous), we'll download multiple years and calculate the mean. This gives a more representative picture of typical conditions. We'll use the three most recent February timesteps available in the dataset (2014-2016):
+
+```{r}
+#| label: define-times
+# Most recent February timesteps available
+spawning_times <- c(
+  "2014-02-16T01:00:00",
+  "2015-02-16T01:00:00",
+  "2016-02-16T01:00:00"
+)
+```
+
+### Downloading Copepod Layers
+
+We can pass multiple time values to `emdn_get_coverage()` which will return a multi-layer stack.
+
+We've seen that these coverages include both relative abundance estimates and associated errors (from the DIVAnd interpolation). In a full analysis, you'd want to consider these errors, as areas with sparse CPR sampling will have higher uncertainty. For simplicity, in this tutorial we'll focus on the relative abundance values only and use argument `rangesubset` to request just the "Relative abundance" band from each coverage:
+
+```{r}
+#| label: download-copepods
+# Download Calanus with all three timepoints, relative abundance band only
+calanus_stack <- emdn_get_coverage(
+  wcs = bio_wcs,
+  coverage_id = "Emodnetbio__cal_fin_19582016_L1_err",
+  bbox = north_sea_bbox,
+  time = spawning_times,
+  rangesubset = "Relative abundance"
+)
+
+# Check the structure - one layer per timepoint
+calanus_stack
+```
+
+Let's download the remaining copepod layers the same way:
+
+```{r}
+#| label: download-remaining-copepods
+temora_stack <- emdn_get_coverage(
+  wcs = bio_wcs,
+  coverage_id = "Emodnetbio__tem_lon_19582016_L1_err",
+  bbox = north_sea_bbox,
+  time = spawning_times,
+  rangesubset = "Relative abundance"
+)
+
+tot_large_stack <- emdn_get_coverage(
+  wcs = bio_wcs,
+  coverage_id = "Emodnetbio__tot_lar_19582016_L1_err",
+  bbox = north_sea_bbox,
+  time = spawning_times,
+  rangesubset = "Relative abundance"
+)
+
+tot_small_stack <- emdn_get_coverage(
+  wcs = bio_wcs,
+  coverage_id = "Emodnetbio__tot_sma_19582016_L1_err",
+  bbox = north_sea_bbox,
+  time = spawning_times,
+  rangesubset = "Relative abundance"
+)
+```
+
+::: {.callout-tip collapse="true"}
+## Downloading multiple coverages with `map()`
+
+The repetitive download code above could be condensed using `purrr::map()`. This returns a list of rasters:
+
+```r
+copepod_stacks <- map(copepod_ids, \(id) {
+  emdn_get_coverage(
+    wcs = bio_wcs,
+    coverage_id = id,
+    bbox = north_sea_bbox,
+    time = spawning_times,
+    rangesubset = "Relative abundance"
+  )
+})
+```
+
+We use the explicit approach in this tutorial for clarity, but `map()` is useful when downloading many coverages.
+:::
+
+### Averaging Across Years
+
+Each stack now contains three rasters, one for each February (2014, 2015, 2016). To create a representative picture of typical spawning-season conditions, we calculate the mean across years using `terra::mean()`. This operates cell-by-cell across the stack.
+
+We can use `map()` to apply the averaging to all stacks at once, then combine the resulting list of rasters into a single multi-layer raster using `rast()`:
+
+```{r}
+#| label: average-copepods
+# Average across years for each species, then combine into one raster
+copepods <- list(
+  calanus_stack,
+  temora_stack,
+  tot_large_stack,
+  tot_small_stack
+) |>
+  map(\(stack) mean(stack, na.rm = TRUE)) |>
+  rast()
+
+# Name the layers for easy subsetting and plot labels
+names(copepods) <- c("Calanus", "Temora", "Large", "Small")
+
+# Check result - a 4-layer raster
+copepods
+```
+
+The result is a multi-layer `SpatRaster` where each layer contains the 3-year February mean relative abundance for one copepod type. Note that combining the rasters only works because all four coverages share the same grid (extent and resolution), which they do here as they were produced together as part of the same data product.
+
+::: {.callout-tip collapse="true"}
+## Combining rasters: `rast()` vs `c()`
+
+Both `rast()` and `c()` can combine `SpatRaster` objects into a multi-layer raster:
+
+- `rast(list_of_rasters)` - takes a **list** of rasters (useful after `map()`)
+- `c(r1, r2, r3)` - takes **individual** raster objects
+
+For example, if we had individual raster objects instead of a list:
+
+```r
+copepods <- c(calanus_mean, temora_mean, large_mean, small_mean)
+```
+
+We use `rast()` here because `map()` returns a list.
+:::
+
+We can check the number of layers and subset using list-like syntax:
+
+```{r}
+#| label: demo-raster-subsetting
+# Number of layers
+nlyr(copepods)
+
+# Subset by name
+copepods[["Calanus"]]
+copepods$Calanus # equivalent
+
+# Subset by index
+copepods[[1]]
+
+# Subset multiple layers
+copepods[[c("Calanus", "Temora")]]
+```
+
+### Quick Visualization
+
+Let's visualize our copepod data. We use `tidyterra::geom_spatraster()` which integrates terra rasters with ggplot2. Using `facet_wrap(~lyr)` creates a separate panel for each layer in the stack:
+
+```{r}
+#| label: fig-copepods-preview
+#| fig-cap: "Mean copepod relative abundance in the North Sea (February 2014-2016)"
+#| fig-height: 8
+
+ggplot() +
+  geom_spatraster(data = copepods) +
+  facet_wrap(~lyr, ncol = 2) +
+  scale_fill_viridis_c(
+    name = "Relative\nabundance",
+    na.value = "white",
+    option = "plasma"
+  ) +
+  labs(
+    title = "Copepod Distributions",
+    subtitle = "North Sea, February mean (2014-2016)",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 8, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    legend.position = "bottom",
+    panel.spacing = unit(0.5, "lines")
+  )
+```
+
+February is relatively early in the seasonal cycle, so values are generally lower than summer months. Each panel shows distinct spatial patterns: total large copepods show higher relative abundance in the northwest, while total small copepods peak in the southeastern North Sea (German Bight) with elevated values extending along the eastern margin. *Calanus* and *Temora* both show low values overall, but with contrasting distributions: *Calanus* peaks in the northwest while *Temora* is higher in the southeast. Remember that values are not comparable across panels (each species is modelled independently), but the spatial gradients within each layer provide the variation needed for our analysis.
+
+## Retrieving Spawning Ground Data
+
+Now let's download spawning ground predictions for whiting and haddock. With only two coverages, we can use `map()` to download them in a single step:
+
+```{r}
+#| label: download-spawning-grounds
+# Coverage IDs for each species
+spawning_coverage_ids <- c(
+  Whiting = "emodnet_open_maplibrary__GB000050_EFH_Whiting_SpawningGrounds",
+  Haddock = "emodnet_open_maplibrary__GB000051_EFH_Haddock_SpawningGrounds"
+)
+
+# Download each spawning ground layer and combine into a multi-layer raster
+spawning <- map(spawning_coverage_ids, \(id) {
+  emdn_get_coverage(wcs = habitat_wcs, coverage_id = id, bbox = north_sea_bbox)
+}) |>
+  rast()
+
+spawning
+```
+
+### Defining a Suitability Threshold
+
+To characterize copepod conditions in spawning habitat, we need to classify cells as either suitable or unsuitable spawning grounds. This requires choosing a threshold on the suitability index to divide the data into two zones: areas above the threshold representing functional spawning habitat, and areas below representing marginal or unsuitable habitat.
+
+Habitat suitability indices range from 0 (unsuitable) to 1 (highly suitable), but interpreting intermediate values requires care. We want to exclude low-suitability cells that likely represent poor or marginal habitat. A threshold of 0.3 is commonly used in habitat suitability studies to separate "unsuitable" from "marginal" habitat [@brooks1997; @kim2025], so we adopt this value:
+
+```{r}
+#| label: define-threshold
+suitability_threshold <- 0.3
+```
+
+::: {.callout-note collapse="true"}
+## Threshold selection in habitat models
+
+Ideally, thresholds for habitat suitability models would be derived from model training data using statistical methods like "minimum training presence" (the lowest suitability at which the species was observed) or "maximum sum of sensitivity and specificity" [@liu2005]. However, these approaches require access to the original occurrence data and model outputs, which we don't have for these spawning ground predictions.
+
+When such data aren't available, common practice provides a pragmatic alternative. Values around 0.3 frequently appear as the boundary between "poor/unsuitable" and "marginal" habitat across various systems, from wildlife assessments [@brooks1997] to recent plant distribution studies [@kim2025]. We adopt this threshold to focus on areas with at least moderate suitability.
+:::
+
+### Exploring Spawning Ground Suitability
+
+Let's examine the distribution of habitat suitability values. We iterate over each layer using `map()`, extract cell values as a vector with `terra::values()`, and calculate summary statistics:
+
+```{r}
+#| label: explore-spawning-suitability
+# Calculate summary statistics for each species
+suitability_summary <- map(names(spawning), \(sp) {
+  vals <- spawning[[sp]] |> values() |> na.omit()
+  tibble(
+    species = sp,
+    n = length(vals),
+    min = min(vals),
+    max = max(vals),
+    mean = mean(vals),
+    median = median(vals),
+    pct_above_threshold = sum(vals > suitability_threshold) / length(vals) * 100
+  )
+}) |>
+  list_rbind()
+
+suitability_summary |>
+  mutate(across(where(is.numeric) & !n, ~ round(.x, 3))) |>
+  knitr::kable(
+    col.names = c(
+      "Species",
+      "n",
+      "Min",
+      "Max",
+      "Mean",
+      "Median",
+      paste0("% > ", suitability_threshold)
+    ),
+    caption = "Spawning ground suitability statistics by species"
+  )
+```
+
+The two species show markedly different suitability distributions. Whiting spawning grounds have higher mean suitability (`r round(suitability_summary$mean[suitability_summary$species == "Whiting"], 2)` vs `r round(suitability_summary$mean[suitability_summary$species == "Haddock"], 2)`) and a much larger proportion of cells above our threshold (`r round(suitability_summary$pct_above_threshold[suitability_summary$species == "Whiting"], 1)`% vs `r round(suitability_summary$pct_above_threshold[suitability_summary$species == "Haddock"], 1)`%). This indicates that the whiting model predicts more extensive suitable habitat, while haddock suitability is concentrated in a smaller area with most cells showing low values.
+
+### Visualizing Spawning Grounds
+
+Let's visualize the spatial distribution of spawning suitability. We use `geom_spatraster_contour()` to add a contour line at our threshold value, delineating areas of suitable habitat:
+
+```{r}
+#| label: fig-spawning-grounds
+#| fig-cap: "Spawning ground suitability for gadoid fish in the North Sea. White contour marks our suitability threshold."
+#| fig-height: 6
+
+ggplot() +
+  geom_spatraster(data = spawning) +
+  geom_spatraster_contour(
+    data = spawning,
+    breaks = suitability_threshold,
+    color = "white",
+    linewidth = 0.3
+  ) +
+  facet_wrap(~lyr, ncol = 2) +
+  scale_fill_viridis_c(
+    name = "Habitat\nsuitability",
+    na.value = "white",
+    option = "mako"
+  ) +
+  labs(
+    title = "Gadoid Spawning Grounds",
+    subtitle = paste0(
+      "UK Essential Fish Habitat predictions (threshold = ",
+      suitability_threshold,
+      ")"
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text = element_text(size = 7),
+    legend.position = "bottom"
+  )
+```
+
+The maps confirm what the statistics suggested: whiting spawning grounds show distinct hotspots (lighter areas) particularly in the western and southern North Sea, while haddock suitability is more uniformly low across the coverage area with only subtle variation in the northern region.
+
+## Aligning Rasters for Analysis
+
+To compare copepod and spawning ground data, we need to align them to a common grid. First, let's check whether alignment is necessary by comparing each raster's properties. We use `terra::res()` to check the resolution (cell size), `terra::crs()` to check the coordinate reference system, and `terra::is.lonlat()` to check whether the CRS uses geographic coordinates (degrees). By default, `crs()` returns the full WKT (Well-Known Text) string which is verbose; setting `describe = TRUE` returns a data frame with parsed CRS details including the name and EPSG code:
+
+```{r}
+#| label: compare-rasters
+# Compare coordinate reference systems (name and EPSG code)
+crs(copepods, describe = TRUE)[, c("name", "authority", "code")]
+crs(spawning, describe = TRUE)[, c("name", "authority", "code")]
+
+# Check if using geographic coordinates (degrees)
+is.lonlat(copepods)
+is.lonlat(spawning)
+
+# Compare resolutions
+res(copepods)
+res(spawning)
+```
+
+The copepods data uses WGS84 (geographic coordinates) while the spawning data uses Web Mercator (EPSG:3857, a projected CRS). The `is.lonlat()` results confirm that copepods uses degrees while spawning does not - projected CRS typically use meters. This means the resolution values aren't directly comparable since they're in different units.
+
+To align the rasters, we need to choose a target grid. Two considerations guide this choice:
+
+1. **Resolution**: Best practice is to resample to the coarser resolution to avoid creating artificial detail [see @pebesma2023, Ch. 5]. The copepod grid at 0.1° translates to roughly 6-11 km cells at North Sea latitudes, while the spawning grid is approximately 6 km - similar resolutions.
+
+2. **CRS suitability**: Web Mercator (EPSG:3857) is designed for web mapping, not spatial analysis - it severely distorts areas at higher latitudes like the North Sea. WGS84, while not ideal for area calculations, avoids this distortion.
+
+Since the resolutions are similar and the copepod data drives our analysis question, we resample spawning to match the copepod grid.
+
+We use `terra::project()` to reproject the spawning data onto the copepod grid. The first argument is the raster to transform, the second is the target raster (whose CRS, extent, and resolution will be matched), and `method` specifies the resampling algorithm - `"bilinear"` interpolates values from the four nearest cells, which is appropriate for continuous data like suitability scores.
+
+```{r}
+#| label: align-rasters
+spawning_aligned <- project(spawning, copepods, method = "bilinear")
+
+# Verify alignment
+res(spawning_aligned)
+crs(spawning_aligned, describe = TRUE)$name
+all(res(copepods) == res(spawning_aligned))
+```
+
+::: {.callout-note}
+## Why WGS84 is acceptable here
+
+In [Tutorial 1](tutorial-01.qmd), we emphasized that vector spatial operations requiring accurate area or distance calculations should use an appropriate projected CRS. For raster analysis, the situation is different.
+
+When we calculate zonal statistics (e.g., mean copepod abundance within spawning areas), we're averaging cell values - each cell contributes equally regardless of its geographic area. This is appropriate when the underlying data was modeled on the same grid, as the values already represent conditions at that cell's location.
+
+There is a subtlety: in WGS84, cells don't represent equal areas - a 0.1° cell near Scotland covers less area than one near the English Channel. For area-weighted analyses or when comparing total quantities across latitudes, this matters. But for our analysis - characterizing typical copepod conditions within spawning grounds - treating cells equally is reasonable, especially within the relatively narrow latitude range of the North Sea (~50-62°N).
+:::
+
+## Characterizing Copepod Conditions
+
+Now we can extract copepod statistics within each species' spawning grounds.
+
+### Building a Tidy Data Frame
+
+To analyze the relationship between spawning suitability and copepod abundance, we first extract all raster values into a tidy data frame. We combine the aligned spawning and copepod rasters using `c()`, then use `tidyterra::as_tibble()` to extract cell values as a tibble with one column per layer:
+
+```{r}
+#| label: extract-cell-values
+# Combine all layers and extract values as a tibble
+cell_values <- c(spawning_aligned, copepods) |>
+  tidyterra::as_tibble()
+
+cell_values
+```
+
+Now we reshape this wide data frame into tidy (long) format. We use two `pivot_longer()` calls to create `fish` and `copepod` columns, classify cells as above or below our suitability threshold, and finally drop any rows with missing values using `drop_na()`:
+
+```{r}
+#| label: create-tidy-data
+cell_data <- cell_values |>
+  pivot_longer(
+    cols = c(Whiting, Haddock),
+    names_to = "fish",
+    values_to = "suitability"
+  ) |>
+  pivot_longer(
+    cols = c(Calanus, Temora, Large, Small),
+    names_to = "copepod",
+    values_to = "abundance"
+  ) |>
+  mutate(suitable = suitability >= suitability_threshold) |>
+  drop_na()
+
+cell_data
+```
+
+Each row now represents one cell-fish-copepod combination, with the suitability value, copepod abundance, and whether the cell exceeds our suitability threshold. The `drop_na()` removes cells where either the spawning suitability or copepod abundance is missing (NA values in the copepod data indicate areas outside CPR survey coverage).
+
+### Summary Statistics
+
+With our tidy data frame, calculating summary statistics by group is straightforward using `group_by()` and `summarise()`. We group by fish species, habitat suitability, and copepod type, then calculate the mean and standard deviation of copepod abundance for each combination. The result is reshaped to a wider format for easier reading:
+
+```{r}
+#| label: tbl-copepod-summary
+#| tbl-cap: "Copepod relative abundance in suitable vs unsuitable spawning habitat"
+
+cell_data |>
+  # Group by all classification variables
+  group_by(fish, suitable, copepod) |>
+  # Calculate summary statistics for each group
+  summarise(
+    mean = mean(abundance),
+    sd = sd(abundance),
+    n = n(),
+    .groups = "drop"
+  ) |>
+  # Convert logical to readable labels
+  mutate(suitable = if_else(suitable, "Suitable", "Unsuitable")) |>
+  # Reshape to wide format for display
+  select(fish, suitable, copepod, mean) |>
+  pivot_wider(names_from = copepod, values_from = mean) |>
+  mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+  knitr::kable(
+    col.names = c("Fish", "Habitat", "Calanus", "Temora", "Large", "Small")
+  )
+```
+
+### Comparing Suitable vs Unsuitable Habitat
+
+Now that we have our tidy data frame with habitat classifications, we can compare copepod conditions between suitable and unsuitable spawning areas. We reuse the same `group_by()` and `summarise()` pattern from the table above, but this time pipe the results directly into ggplot2 for visualization. The bar chart uses `geom_col()` with `position = "dodge"` to place bars side-by-side, and `geom_errorbar()` to show standard deviations. We facet by fish species to compare patterns:
+
+```{r}
+#| label: fig-copepod-by-zone
+#| fig-cap: "Copepod relative abundance in suitable vs unsuitable spawning habitat"
+#| fig-height: 5
+
+cell_data |>
+  group_by(fish, suitable, copepod) |>
+  summarise(
+    mean = mean(abundance),
+    sd = sd(abundance),
+    .groups = "drop"
+  ) |>
+  mutate(suitable = if_else(suitable, "Suitable", "Unsuitable")) |>
+  ggplot(aes(x = copepod, y = mean, fill = suitable)) +
+  geom_col(position = "dodge") +
+  geom_errorbar(
+    aes(ymin = mean - sd, ymax = mean + sd),
+    position = position_dodge(width = 0.9),
+    width = 0.25
+  ) +
+  facet_wrap(~fish) +
+  scale_fill_manual(
+    values = c("Suitable" = "#228B22", "Unsuitable" = "grey60"),
+    name = "Habitat"
+  ) +
+  labs(
+    title = "Copepod Conditions by Habitat Suitability",
+    subtitle = paste0(
+      "Mean ± SD relative abundance (threshold = ",
+      suitability_threshold,
+      ")"
+    ),
+    x = "Copepod type",
+    y = "Mean relative abundance"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+An interesting pattern emerges: **unsuitable spawning habitat tends to have higher copepod abundance than suitable habitat**. This trend is particularly striking for haddock, where unsuitable areas show substantially higher mean abundance across all copepod types. For whiting, the pattern is similar but less pronounced, with the exception of *Temora* where suitable habitat actually shows slightly higher abundance. We'll explore what might explain this in the [Discussion].
+
+### Exploring the Full Suitability Gradient
+
+The bar chart shows averages, but the relationship between suitability and copepod abundance may be more nuanced. Let's examine how copepod abundance varies across the full range of suitability values:
+
+```{r}
+#| label: fig-suitability-vs-copepods
+#| fig-cap: "Spawning habitat suitability vs copepod relative abundance across all grid cells"
+#| fig-height: 6
+
+ggplot(cell_data, aes(x = suitability, y = abundance, color = fish)) +
+  geom_point(alpha = 0.15, size = 0.8) +
+  geom_vline(
+    xintercept = suitability_threshold,
+    linetype = "dashed",
+    color = "black",
+    linewidth = 0.6
+  ) +
+  geom_smooth(
+    method = "loess",
+    se = TRUE,
+    color = "grey40",
+    fill = "grey80",
+    linewidth = 0.8
+  ) +
+  facet_grid(copepod ~ fish, scales = "free_y") +
+  scale_color_manual(values = c("Haddock" = "#E69F00", "Whiting" = "#56B4E9")) +
+  labs(
+    title = "Spawning Habitat Suitability vs Copepod Abundance",
+    x = "Habitat suitability",
+    y = "Copepod relative abundance"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 9, face = "bold"),
+    axis.text = element_text(size = 7),
+    legend.position = "none"
+  )
+```
+
+The scatter plots show the full range of variation in the data. The vertical dashed line marks our suitability threshold (`r suitability_threshold`). Various patterns are visible - declining trends, flat regions, and even upticks at higher suitability values for some fish-copepod combinations. We interpret these patterns in the Discussion.
+
+## Spatial Overlays
+
+Finally, let's create an interactive map to explore the spatial relationship between copepod abundance and spawning grounds visually. This allows us to see how the copepod distributions align geographically with the predicted spawning areas.
+
+### Preparing Spawning Ground Boundaries
+
+First, we need to convert our continuous suitability rasters into polygon boundaries showing "suitable" areas. We create binary masks by applying our threshold, then convert to polygons using `terra::as.polygons()`. This function creates vector polygons from raster cells, grouping adjacent cells with the same value. We then convert to `sf` objects and filter to keep only the suitable areas (value = 1):
+
+```{r}
+#| label: create-spawning-polygons
+
+# Create binary masks: TRUE where suitability >= threshold
+whiting_suitable <- spawning_aligned$Whiting >= suitability_threshold
+haddock_suitable <- spawning_aligned$Haddock >= suitability_threshold
+
+# Convert raster masks to polygon boundaries
+# as.polygons() groups adjacent cells with the same value into polygons
+whiting_poly <- as.polygons(whiting_suitable) |>
+  st_as_sf() |>
+  filter(Whiting == 1)  # Keep only suitable areas
+
+haddock_poly <- as.polygons(haddock_suitable) |>
+  st_as_sf() |>
+  filter(Haddock == 1)
+```
+
+### Building the Interactive Map
+
+We use the `tmap` package in "view" mode to create an interactive Leaflet map. Maps in tmap are built by combining a `tm_shape()` call (which specifies the spatial data) with one or more layer functions like `tm_raster()` or `tm_borders()` (which specify how to display it). Multiple shapes and layers are combined with `+`.
+
+The key feature here is **layer group controls**: by setting `group.control = "radio"` on each copepod layer, we create mutually exclusive radio buttons that let users switch between copepod types. This avoids visual clutter from overlapping semi-transparent rasters.
+
+The map components are:
+
+- `tm_basemap()`: A neutral grey basemap that won't distract from our data. We set `group.control = "none"` so it doesn't appear in the layer controls.
+- `tm_raster()`: Each copepod layer with consistent color scaling. The `group` parameter sets the label shown in the radio button control. The legend title includes both the copepod name and "(relative abundance)" so users always know what they're viewing.
+- `tm_borders()`: Spawning ground boundaries as polygon outlines. Grey for whiting, cyan for haddock, both always visible (`group.control = "none"`).
+- `tm_add_legend()`: A manual legend for the spawning ground boundaries, since `tm_borders()` with a fixed color doesn't automatically generate one.
+
+```{r}
+#| label: fig-copepod-spawning-overlay
+#| eval: false
+
+# Switch tmap to interactive (Leaflet) mode
+tmap_mode("view")
+
+# Build the map layer by layer
+tm_basemap("Esri.WorldGrayCanvas", group.control = "none") +
+  # Copepod raster layers with radio button controls
+  tm_shape(copepods$Calanus) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Calanus\n(relative abundance)"),
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Temora) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Temora\n(relative abundance)"),
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Large) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Large copepods\n(relative abundance)"),
+    group = "Large copepods",  # Override default "Large" for clearer label
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Small) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Small copepods\n(relative abundance)"),
+    group = "Small copepods",  # Override default "Small" for clearer label
+    group.control = "radio"
+  ) +
+  # Spawning ground boundaries (always visible)
+  tm_shape(whiting_poly) +
+  tm_borders(col = "grey", lwd = 2, group.control = "none") +
+  tm_shape(haddock_poly) +
+  tm_borders(col = "cyan", lwd = 2, group.control = "none") +
+  # Manual legend for spawning ground boundaries
+  tm_add_legend(
+    type = "lines",
+    labels = c("Whiting spawning", "Haddock spawning"),
+    col = c("grey", "cyan"),
+    lwd = 2,
+    title = "Spawning grounds"
+  )
+```
+
+::: {.callout-tip collapse="true"}
+## Plotting multi-layer rasters
+
+You can pass a multi-layer raster directly to `tm_raster()`:
+
+```r
+tm_shape(copepods) +
+  tm_raster()
+```
+
+This creates **facets** (separate panels for each layer), similar to using `facet_wrap()` with ggplot2. Here we use separate `tm_shape()` calls because we want a single map with switchable layers.
+:::
+
+```{r}
+#| label: fig-copepod-spawning-overlay-render
+#| echo: false
+#| fig-cap: "Interactive map of copepod abundance with spawning ground overlays. Grey boundaries show whiting spawning grounds, cyan shows haddock. Use the layer control (top right) to switch between copepod types."
+
+# Switch to interactive mode
+tmap_mode("view")
+
+# Build interactive map with radio buttons for copepod layers
+interactive_map <- tm_basemap("Esri.WorldGrayCanvas", group.control = "none") +
+  tm_shape(copepods$Calanus) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Calanus\n(relative abundance)"),
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Temora) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Temora\n(relative abundance)"),
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Large) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Large copepods\n(relative abundance)"),
+    group = "Large copepods",
+    group.control = "radio"
+  ) +
+  tm_shape(copepods$Small) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "plasma"),
+    col.legend = tm_legend(title = "Small copepods\n(relative abundance)"),
+    group = "Small copepods",
+    group.control = "radio"
+  ) +
+  tm_shape(whiting_poly) +
+  tm_borders(col = "grey", lwd = 2, group.control = "none") +
+  tm_shape(haddock_poly) +
+  tm_borders(col = "cyan", lwd = 2, group.control = "none") +
+  tm_add_legend(
+    type = "lines",
+    labels = c("Whiting spawning", "Haddock spawning"),
+    col = c("grey", "cyan"),
+    lwd = 2,
+    title = "Spawning grounds"
+  )
+
+# Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
+tmap_save(
+  interactive_map,
+  get_output_path("copepod_spawning_map.html", "tutorials")
+)
+
+knitr::include_url("copepod_spawning_map.html", height = "600px")
+```
+
+::: {.callout-tip}
+## Interacting with the map
+Click the **layer control icon** (stacked squares) in the top right corner to reveal the radio buttons. Select different copepod types to see how their spatial distributions compare to the spawning ground boundaries. You can also zoom and pan to explore specific areas in detail.
+:::
+
+## Discussion
+
+The clearest pattern from our analysis is that predicted spawning grounds tend to have **lower copepod relative abundance** compared to unsuitable areas (@fig-copepod-by-zone). This pattern is most consistent for *Calanus* and large copepods across both fish species. Small copepods show weaker differences, and *Temora* shows a reversed pattern for whiting (slightly higher in suitable areas). The scatter plots (@fig-suitability-vs-copepods) show more varied patterns at finer scales, but these should not be over-interpreted as we performed exploratory analysis only (summaries and visualizations, not formal statistical testing).
+
+Both copepod distributions and spawning suitability show distinct spatial structure in the North Sea. Copepods vary with oceanographic gradients (*Calanus* higher offshore, *Temora* and small copepods higher in coastal areas), while spawning suitability reflects physical habitat factors. When two spatially structured variables are overlaid, apparent patterns can emerge from geographic coincidence alone.
+
+This lack of a clear ecological relationship actually makes sense. Adult fish select spawning sites based on physical factors such as temperature, depth, substrate type, and hydrography [@gonzalezirusta2016], not prey availability. Copepod abundance matters more for **larvae** after hatching than for spawning adults. The ecologically relevant question is whether larvae encounter sufficient prey during early development (the "match-mismatch" hypothesis, @endo2022), which depends on nursery ground conditions and timing, not spawning site characteristics.
+
+More ecologically relevant analyses (e.g., copepod conditions on nursery grounds) were limited by spatial coverage gaps between available EMODnet datasets.
+
+Despite the limited ecological conclusions, this tutorial successfully demonstrates the **technical workflow** for combining EMODnet WCS raster layers: accessing multi-dimensional coverages, aligning different resolutions and coordinate systems, building tidy data frames from raster values, and visualizing spatial relationships. These skills transfer directly to analyses where the ecological question and available data are better matched.
+
+## What You've Learned
+
+This tutorial demonstrated key skills for working with EMODnet raster data:
+
+- **Exploring WCS services**: Using `emdn_get_coverage_info()` to understand available data
+- **Temporal subsetting**: Selecting specific time slices from multi-dimensional coverages
+- **Multi-source integration**: Combining rasters from different EMODnet services
+- **Resolution handling**: Aligning data with different spatial resolutions using `project()`
+- **Zonal statistics**: Extracting environmental conditions within habitat areas
+- **Visualization**: Creating informative maps with raster data and contour overlays
+
+These skills transfer to many marine spatial analyses where you need to characterize environmental conditions across habitats or species distributions.
+
+## Further Resources
+
+- **Continuous Plankton Recorder Survey**: [www.cprsurvey.org](https://www.cprsurvey.org/) for long-term plankton monitoring with raw data access
+- **ICES**: [ices.dk](https://www.ices.dk/) for stock assessments and biological data for North Sea fish
+- **EMODnet Biology Portal**: [emodnet.ec.europa.eu/en/biology](https://emodnet.ec.europa.eu/en/biology) for additional species distribution products
+
+Ready for more? Continue to [Tutorial 3](tutorial-03.qmd) to learn how to combine WFS vector data with WCS raster data for integrated analyses.

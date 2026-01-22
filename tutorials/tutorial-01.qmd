@@ -10,7 +10,6 @@ df-print: paged
 format:
   html:
     embed-resources: false
-    code-link: true
 ---
 
 ## Introduction

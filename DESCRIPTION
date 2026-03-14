@@ -33,11 +33,17 @@ Remotes:
     EMODnet/emodnet.wfs,
     EMODnet/emodnet.wcs
 Config/Needs/website:
+    CopernicusMarine,
     DT,
+    ggridges,
+    janitor,
     knitr,
     pkgload,
     purrr,
+    readr,
     rmarkdown,
+    stars,
+    stringr,
     tibble,
     tidyr,
     tidyterra,
@@ -45,6 +51,7 @@ Config/Needs/website:
     rnaturalearth,
     rnaturalearthdata,
     patchwork,
+    scales,
     skimr,
     tmap
 RoxygenNote: 7.3.2

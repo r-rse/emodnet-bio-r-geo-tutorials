@@ -592,6 +592,20 @@ The [`terra` package](https://rspatial.github.io/terra/) is the modern replaceme
 
 **When to use:** Working with gridded data, environmental layers, or continuous surfaces.
 
+### stars - Spatiotemporal Arrays
+
+The [`stars` package](https://r-spatial.github.io/stars/) handles **multi-dimensional spatial data** (sometimes called datacubes). While `terra` works with 2D raster grids (and stacks of them), `stars` is designed for data with additional dimensions like time, depth, or wavelength — common in oceanographic and climate datasets.
+
+**Key features:**
+
+-   Represents data as multi-dimensional arrays with named dimensions (e.g., longitude, latitude, time, elevation)
+-   Supports both regular and rectilinear grids (where cell sizes vary along a dimension)
+-   Applies functions across specified dimensions (e.g., computing a time-series mean for each pixel)
+-   Resamples or regrids data onto a different grid structure
+-   Integrates with `sf` for spatial operations on the underlying geometry
+
+**When to use:** Working with multi-dimensional data such as oceanographic reanalysis products (temperature over time and depth), satellite time series, or any data served as datacubes. The `CopernicusMarine` package returns `stars` objects, which can be summarised and converted to `terra` rasters for further analysis.
+
 ## Understanding Spatial Data Objects in R
 
 Understanding how R represents spatial data internally helps you work more effectively with these packages and troubleshoot issues when they arise.
@@ -765,7 +779,16 @@ The tutorials demonstrate when and how to specify output formats to optimize you
 -   Multi-dimensional arrays
 -   Common for oceanographic and climate data
 -   Handles time series and multiple variables
--   Used by Copernicus Marine Service
+-   Traditional file-based format: you download the whole file before reading it
+
+**Zarr** (.zarr)
+
+-   Cloud-native, chunked array format for multi-dimensional data
+-   Designed for efficient remote access: clients can read spatial or temporal subsets without downloading the entire dataset
+-   Increasingly used by ocean data providers including the Copernicus Marine Service, which stores data in both NetCDF and zarr formats
+-   Stores arrays alongside metadata (dimensions, units, coordinate reference systems) in a directory or object-store structure
+-   The `CopernicusMarine` R package uses zarr stores for efficient spatial/temporal subsetting via `cms_download_subset()`, returning data as `stars` objects
+-   Copernicus Marine discovers and describes datasets through a [STAC](https://stacspec.org/) catalogue. Layer-level metadata uses the [STAC datacube extension](https://github.com/stac-extensions/datacube) to describe dimensions and variables, with additional Copernicus-specific fields for variable names, units, and visualisation hints
 
 ## Glossary of Common Terms
 
@@ -800,9 +823,12 @@ glossary <- tibble::tribble(
   "Raster"                            , "Gridded spatial data where each cell contains a value."                                                                                                                                                                                     ,
   "Resolution"                        , "The size of raster cells (e.g., 100m × 100m); smaller cells = finer detail."                                                                                                                                                               ,
   "Spatial join"                      , "Combining features from different layers based on spatial relationships."                                                                                                                                                                   ,
+  "STAC (SpatioTemporal Asset Catalog)", "A specification for describing geospatial datasets through standardised metadata catalogues. Used by Copernicus Marine Service to organise and discover data products, layers, and variables."                                                  ,
+  "stars object"                      , "An R object from the stars package representing multi-dimensional spatial data (datacubes) with named dimensions such as longitude, latitude, time, and depth."                                                                             ,
   "Vector"                            , "Spatial data representing discrete features as points, lines, or polygons."                                                                                                                                                                 ,
   "WCS (Web Coverage Service)"        , "A standard protocol for serving raster data."                                                                                                                                                                                               ,
-  "WFS (Web Feature Service)"         , "A standard protocol for serving vector data."
+  "WFS (Web Feature Service)"         , "A standard protocol for serving vector data."                                                                                                                                                                                               ,
+  "Zarr"                              , "A cloud-native, chunked array format for multi-dimensional data. Designed for efficient remote subsetting so clients can read only the data they need without downloading entire files."
 )
 
 knitr::kable(glossary, col.names = c("Term", "Definition")) |>
@@ -824,6 +850,12 @@ knitr::kable(glossary, col.names = c("Term", "Definition")) |>
 -   [**terra Package Reference**](https://rspatial.github.io/terra/reference/terra-package.html) - Complete function reference for raster operations
 -   [**emodnet.wfs Documentation**](https://github.com/EMODnet/emodnet.wfs) - Guide to accessing EMODnet WFS services
 -   [**emodnet.wcs Documentation**](https://github.com/EMODnet/emodnet.wcs) - Guide to accessing EMODnet WCS services
+
+### Standards and Specifications
+
+-   [**STAC Specification**](https://stacspec.org/) - The SpatioTemporal Asset Catalog standard for describing geospatial datasets
+-   [**STAC Intro Tutorial**](https://stacspec.org/en/tutorials/intro-to-stac/) - Beginner-friendly introduction to STAC concepts
+-   [**STAC Datacube Extension**](https://github.com/stac-extensions/datacube) - Extension defining how datacube dimensions and variables are described in STAC metadata
 
 ### Additional Resources
 

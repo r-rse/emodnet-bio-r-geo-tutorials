@@ -1300,7 +1300,7 @@ Depth increases steadily across biozones as expected, from near-surface in the i
 
 ### Body Size Distributions by Biozone
 
-Finally, we examine how body size varies across biozones. Ridge plots (from `ggridges`) show kernel density estimates stacked vertically, with fill colour mapped to body size. `scale` controls how much adjacent ridges overlap (0.9 keeps them mostly separate), and `rel_min_height` trims density tails below 1% of the peak to avoid long, thin artefacts:
+Finally, we examine how body size varies across biozones. Ridge plots (from [`ggridges`](https://wilkelab.org/ggridges/)) show kernel density estimates stacked vertically, with fill colour mapped to body size. `scale` controls how much adjacent ridges overlap (0.9 keeps them mostly separate), and `rel_min_height` trims density tails below 1% of the peak to avoid long, thin artefacts:
 
 ```{r}
 #| label: fig-bodysize-by-biozone
@@ -1386,7 +1386,7 @@ Breaking body size down by taxonomic class within each biozone reveals which gro
 
 The plots above characterise each biozone in isolation. An interactive map brings these layers together spatially, letting you see where habitats, species occurrences, and body size classes are distributed across the Gulf of Lion. You can zoom into shelf features and submarine canyons, click individual occurrences for species details, and toggle habitat polygons on and off to explore spatial relationships that static plots cannot capture.
 
-In earlier tutorials we used `tmap` for interactive maps. Here we use the `leaflet` package, which provides a direct R interface to the [Leaflet.js](https://leafletjs.com/) library. While `tmap` is excellent for quick thematic maps, `leaflet` gives finer control over layer styling, pop-up content, and rendering behaviour, making it a valuable tool to have in your spatial analysis toolkit.
+In earlier tutorials we used `tmap` for interactive maps. Here we use the [`leaflet`](https://rstudio.github.io/leaflet/) package, which provides a direct R interface to the [Leaflet.js](https://leafletjs.com/) library. While `tmap` is excellent for quick thematic maps, `leaflet` gives finer control over layer styling, pop-up content, and rendering behaviour, making it a valuable tool to have in your spatial analysis toolkit.
 
 Unlike `tmap`, `leaflet` requires all data in WGS 84 (EPSG:4326), so both layers need reprojecting with `st_transform()`. The habitat polygons also contain very detailed coastline and boundary geometry that is unnecessary for an overview map and slows down interactive rendering, so we additionally repair any invalid geometries with `st_make_valid()` (common in complex polygon datasets from web services) and reduce vertex counts with `st_simplify()`. The `dTolerance` parameter sets the maximum deviation in CRS units (here metres for EPSG:3035):
 

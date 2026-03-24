@@ -8,7 +8,7 @@ Learn how to access and analyze marine biological and environmental data from [E
 
 Whether you're investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.
 
-::: {.callout-tip}
+::: callout-tip
 ## New to geospatial analysis?
 
 If you're unfamiliar with spatial data concepts, coordinate systems, or the difference between vector and raster data, start with our [**Geospatial Concepts**](concepts.qmd) page.
@@ -108,7 +108,7 @@ To get the most from these tutorials, you should have:
 -   Awareness of vector vs. raster data
 -   Familiarity with common spatial operations
 
-::: {.callout-note}
+::: callout-note
 If you're new to geospatial analysis, visit our [**Geospatial Concepts**](concepts.qmd) page for an introduction to key concepts before starting the tutorials.
 :::
 
@@ -124,16 +124,19 @@ Install the required packages using the following code:
 
 # Install packages from CRAN
 install.packages(c(
-    "emodnet.wfs",
-    "sf",
-    "terra",
-    "dplyr",
-    "ggplot2",
-    "tmap"
+  "emodnet.wfs",
+  "sf",
+  "terra",
+  "dplyr",
+  "ggplot2",
+  "tmap"
 ))
 
 # Install emodnet.wcs' latest version (not yet on CRAN)
-install.packages('emodnet.wcs', repos = c('https://emodnet.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages(
+  'emodnet.wcs',
+  repos = c('https://emodnet.r-universe.dev', 'https://cloud.r-project.org')
+)
 ```
 
 ### Quick Start
@@ -168,3 +171,4 @@ install.packages('emodnet.wcs', repos = c('https://emodnet.r-universe.dev', 'htt
 ## About This Project
 
 These tutorials are part of the [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) initiative. Learn more about the project, contributors, and funding on the [About](about.qmd) page.
+

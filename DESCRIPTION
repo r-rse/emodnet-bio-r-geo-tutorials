@@ -53,7 +53,9 @@ Config/Needs/website:
     patchwork,
     scales,
     skimr,
-    tmap
+    tmap,
+    leaflet,
+    htmlwidgets
 RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5)

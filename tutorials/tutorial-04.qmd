@@ -193,7 +193,7 @@ habitat_wfs <- emodnet_init_wfs_client(
 
 ### Exploring Habitat Layers
 
-We need habitat polygons from the [EUSeaMap](https://emodnet.ec.europa.eu/en/euseamap), the broad-scale predictive habitat map for European seas. The service contains many layers, so we filter by title to find the EUSeaMap products:
+We need habitat polygons from the [EUSeaMap](https://emodnet.ec.europa.eu/en/seabed-habitats), the broad-scale predictive habitat map for European seas. The service contains many layers, so we filter by title to find the EUSeaMap products:
 
 ```{r}
 #| label: explore-habitat-layers

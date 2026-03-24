@@ -14,7 +14,7 @@ format:
 
 ## Introduction
 
-The North Sea is one of Europe's most heavily industrialised marine regions. Beneath its waters lies a dense network of energy infrastructure, including oil and gas platforms, pipelines, and offshore wind installations, alongside a growing network of marine protected areas (MPAs) established under EU directives such as the [Marine Strategy Framework Directive](https://environment.ec.europa.eu/topics/marine-environment/marine-strategy-framework-directive_en) and the [Habitats Directive](https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive_en).
+The North Sea is one of Europe's most heavily industrialised marine regions. Beneath its waters lies a dense network of energy infrastructure, including oil and gas platforms, pipelines, and offshore wind installations, alongside a growing network of marine protected areas (MPAs) established under EU directives such as the [Marine Strategy Framework Directive](https://environment.ec.europa.eu/topics/marine-environment_en) and the [Habitats Directive](https://environment.ec.europa.eu/topics/nature-and-biodiversity/habitats-directive_en).
 
 Understanding where these features intersect is crucial for:
 

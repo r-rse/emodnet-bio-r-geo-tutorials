@@ -829,9 +829,10 @@ time_dim <- temp_yearly$properties[[1]]$`cube:dimensions`$time
 # Temporal extent (start and end dates)
 cat("Temporal extent:", time_dim$extent[[1]], "to", time_dim$extent[[2]])
 cat("Total time steps:", length(time_dim$values))
+cat("First 3 steps:", unlist(head(time_dim$values, 3)))
 ```
 
-The layer spans from 1987 to the present with yearly time steps. We now have all four pieces of information needed to download: the **product** ID (`MEDSEA_MULTIYEAR_PHY_006_004`), the **layer** ID (yearly means, `cmems_mod_med_phy-tem_my_4.2km_P1Y-m`), the **variable** ID (`bottomT`), and the available **time range**.
+The layer spans from 1987 to the present with yearly time steps indexed to January 1st of each year. We now have all four pieces of information needed to download: the **product** ID (`MEDSEA_MULTIYEAR_PHY_006_004`), the **layer** ID (yearly means, `cmems_mod_med_phy-tem_my_4.2km_P1Y-m`), the **variable** ID (`bottomT`), and the available **time range**.
 
 ### Choosing a Time Period
 
@@ -855,7 +856,7 @@ Sampling is concentrated in two periods: a large 1998 campaign and a main cluste
 
 ### Downloading Bottom Temperature
 
-`cms_download_subset()` returns a [`stars`](../concepts.qmd#stars---spatiotemporal-arrays) object (a multi-dimensional array):
+`cms_download_subset()` returns a [`stars`](../concepts.qmd#stars---spatiotemporal-arrays) object (a multi-dimensional array). Note that the `timerange` dates must match the layer's time steps, which as we saw above are indexed to January 1st of each year:
 
 ```{r}
 #| label: download-bottom-temperature
@@ -864,7 +865,7 @@ bottom_temp_stars <- cms_download_subset(
   layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
   variable = "bottomT",
   region = study_bbox,
-  timerange = c("1998-01-01", "2018-12-31")
+  timerange = c("1998-01-01", "2018-01-01")
 )
 ```
 

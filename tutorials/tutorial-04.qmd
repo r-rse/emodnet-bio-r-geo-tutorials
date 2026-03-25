@@ -36,3 +36,79 @@ This tutorial is currently under development.
 Aegean Sea
 
 Check back soon for the complete tutorial!
+
+## CI Debug: Copernicus Marine Download Tests
+
+```{r}
+library(CopernicusMarine)
+cat("CopernicusMarine version:", as.character(packageVersion("CopernicusMarine")), "\n")
+cat("sf version:", as.character(packageVersion("sf")), "\n")
+cat("R version:", R.version.string, "\n")
+cat("Timezone:", Sys.timezone(), "\n")
+cat("Locale:", Sys.getlocale("LC_TIME"), "\n")
+cat("blosc support:", CopernicusMarine:::has_blosc(), "\n")
+cat("sf capabilities:\n")
+print(sf::sf_extSoftVersion())
+```
+
+```{r}
+study_bbox <- sf::st_bbox(
+  c(xmin = 3, ymin = 42.5, xmax = 7, ymax = 44),
+  crs = 4326
+)
+```
+
+### Test 1: Yearly layer with timerange (failing on CI)
+
+```{r}
+#| error: true
+result1 <- cms_download_subset(
+  product = "MEDSEA_MULTIYEAR_PHY_006_004",
+  layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
+  variable = "bottomT",
+  region = study_bbox,
+  timerange = c("1998-01-01", "2018-12-31")
+)
+cat("Test 1 dims:", dim(result1), "\n")
+```
+
+### Test 2: Yearly layer with time steps matching Jan 1
+
+```{r}
+#| error: true
+result2 <- cms_download_subset(
+  product = "MEDSEA_MULTIYEAR_PHY_006_004",
+  layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
+  variable = "bottomT",
+  region = study_bbox,
+  timerange = c("1998-01-01", "2018-01-01")
+)
+cat("Test 2 dims:", dim(result2), "\n")
+```
+
+### Test 3: Yearly layer without timerange
+
+```{r}
+#| error: true
+result3 <- cms_download_subset(
+  product = "MEDSEA_MULTIYEAR_PHY_006_004",
+  layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
+  variable = "bottomT",
+  region = study_bbox
+)
+cat("Test 3 dims:", dim(result3), "\n")
+```
+
+### Test 4: Monthly layer with timerange (previously worked on CI)
+
+```{r}
+#| error: true
+result4 <- cms_download_subset(
+  product = "MEDSEA_MULTIYEAR_PHY_006_004",
+  layer = "cmems_mod_med_phy-temp_my_4.2km_P1M-m",
+  variable = "bottomT",
+  region = study_bbox,
+  timerange = c("1998-01-01", "2018-12-31")
+)
+cat("Test 4 dims:", dim(result4), "\n")
+```

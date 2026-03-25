@@ -1317,7 +1317,7 @@ biozone_plot_data <- benthos_joined |>
 
 ggplot(
   biozone_plot_data,
-  aes(x = max_body_size_mm, y = fct_rev(biozone))
+  aes(x = max_body_size_mm, y = factor(biozone, levels = rev(levels(biozone))))
 ) +
   geom_density_ridges_gradient(
     aes(fill = after_stat(x)),

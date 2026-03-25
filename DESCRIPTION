@@ -55,7 +55,9 @@ Config/Needs/website:
     skimr,
     tmap,
     leaflet,
-    htmlwidgets
+    htmlwidgets,
+    downlit,
+    xml2
 RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5)

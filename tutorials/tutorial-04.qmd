@@ -51,8 +51,20 @@ cat("R version:", R.version.string, "\n")
 cat("Timezone:", Sys.timezone(), "\n")
 cat("Locale:", Sys.getlocale("LC_TIME"), "\n")
 cat("blosc support:", CopernicusMarine:::has_blosc, "\n")
+cat("lubridate version:", as.character(packageVersion("lubridate")), "\n")
+cat("zoneinfo exists:", file.exists("/usr/share/zoneinfo"), "\n")
+cat("System:", Sys.info()[c("sysname", "release", "machine")], "\n")
 cat("sf capabilities:\n")
 print(sf::sf_extSoftVersion())
+
+# Test lubridate time parsing (used internally by CopernicusMarine)
+cat("\nlubridate parsing tests:\n")
+cat("ymd '1998-01-01':", format(lubridate::ymd("1998-01-01")), class(lubridate::ymd("1998-01-01")), "\n")
+cat("ymd '2018-12-31':", format(lubridate::ymd("2018-12-31")), class(lubridate::ymd("2018-12-31")), "\n")
+cat("as.numeric(ymd('1998-01-01')):", as.numeric(lubridate::ymd("1998-01-01")), "\n")
+cat("as.numeric(ymd('2018-12-31')):", as.numeric(lubridate::ymd("2018-12-31")), "\n")
+cat("as.numeric(ymd_hms('1998-01-01T00:00:00Z')):", as.numeric(lubridate::ymd_hms("1998-01-01T00:00:00Z")), "\n")
+cat("as.numeric(ymd_hms('2018-12-31T00:00:00Z')):", as.numeric(lubridate::ymd_hms("2018-12-31T00:00:00Z")), "\n")
 ```
 
 ```{r}
@@ -106,7 +118,7 @@ result3
 cat("Test 3 dims:", dim(result3), "\n")
 ```
 
-### Test 4: Monthly layer with timerange (previously worked on CI)
+### Test 4: Monthly layer with timerange
 
 ```{r}
 #| error: true

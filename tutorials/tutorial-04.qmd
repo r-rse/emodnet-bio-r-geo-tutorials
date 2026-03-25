@@ -41,12 +41,16 @@ Check back soon for the complete tutorial!
 
 ```{r}
 library(CopernicusMarine)
-cat("CopernicusMarine version:", as.character(packageVersion("CopernicusMarine")), "\n")
+cat(
+  "CopernicusMarine version:",
+  as.character(packageVersion("CopernicusMarine")),
+  "\n"
+)
 cat("sf version:", as.character(packageVersion("sf")), "\n")
 cat("R version:", R.version.string, "\n")
 cat("Timezone:", Sys.timezone(), "\n")
 cat("Locale:", Sys.getlocale("LC_TIME"), "\n")
-cat("blosc support:", CopernicusMarine:::has_blosc(), "\n")
+cat("blosc support:", CopernicusMarine:::has_blosc, "\n")
 cat("sf capabilities:\n")
 print(sf::sf_extSoftVersion())
 ```
@@ -69,6 +73,7 @@ result1 <- cms_download_subset(
   region = study_bbox,
   timerange = c("1998-01-01", "2018-12-31")
 )
+result1
 cat("Test 1 dims:", dim(result1), "\n")
 ```
 
@@ -83,6 +88,7 @@ result2 <- cms_download_subset(
   region = study_bbox,
   timerange = c("1998-01-01", "2018-01-01")
 )
+result2
 cat("Test 2 dims:", dim(result2), "\n")
 ```
 
@@ -96,6 +102,7 @@ result3 <- cms_download_subset(
   variable = "bottomT",
   region = study_bbox
 )
+result3
 cat("Test 3 dims:", dim(result3), "\n")
 ```
 
@@ -110,5 +117,6 @@ result4 <- cms_download_subset(
   region = study_bbox,
   timerange = c("1998-01-01", "2018-12-31")
 )
+result4
 cat("Test 4 dims:", dim(result4), "\n")
 ```

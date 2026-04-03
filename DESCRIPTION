@@ -31,7 +31,8 @@ Imports:
     yaml
 Remotes:
     EMODnet/emodnet.wfs,
-    EMODnet/emodnet.wcs
+    EMODnet/emodnet.wcs,
+    pepijn-devries/CopernicusMarine
 Config/Needs/website:
     CopernicusMarine,
     DT,

@@ -864,10 +864,8 @@ bottom_temp_stars <- cms_download_subset(
   product = "MEDSEA_MULTIYEAR_PHY_006_004",
   layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
   variable = "bottomT",
-  region = study_bbox
-  # TODO: restore timerange when
-  # https://github.com/pepijn-devries/CopernicusMarine/issues/164 is fixed
-  # timerange = c("1998-01-01", "2018-01-01")
+  region = study_bbox,
+  timerange = c("1998-01-01", "2018-01-01")
 )
 ```
 
@@ -892,9 +890,6 @@ Each yearly time step is a 2D spatial grid (longitude × latitude), and the full
 ```{r}
 #| label: inspect-stars-time
 time_vals <- stars::st_get_dimension_values(bottom_temp_stars, "time")
-# Ensure consistent POSIXct format (stars may use different time
-# reference systems depending on the data source and platform)
-time_vals <- as.POSIXct(time_vals)
 cat("Time steps:", length(time_vals))
 cat("First:", format(time_vals[1]))
 cat("Last:", format(time_vals[length(time_vals)]))

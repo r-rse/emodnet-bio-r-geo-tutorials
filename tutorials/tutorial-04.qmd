@@ -138,7 +138,7 @@ pak::pak("EMODnet/emodnet.wcs")
 
 We focus on the Gulf of Lion in the northwestern Mediterranean. This region offers good coverage across most data sources involved, with diverse substrate types (sand, mud, coarse sediments, seagrass meadows) and spatial sampling across 165 unique locations. The Gulf of Lion also spans multiple biozones from infralittoral to bathyal depths.
 
-We start by defining a bounding box for our study area in WGS 84 (longitude/latitude degrees), chosen to cover the continental shelf and slope of the Gulf of Lion from roughly Nice to Perpignan. We will use this to filter data downloads to this region. We also create an EPSG:3035 (ETRS89-extended / LAEA Europe) version, an equal-area projection that several of our data sources use (we discuss this CRS in more detail in the [spatial data integration](#spatial-data-integration) section):
+We start by defining a bounding box for our study area in WGS 84 (longitude/latitude degrees), chosen to cover the continental shelf and slope of the Gulf of Lion from roughly Nice to Perpignan. We will use this to filter data downloads to this region. We also create an EPSG:3035 (ETRS89-extended / LAEA Europe) version. This is an [equal-area projection](../concepts.qmd#why-this-matters-for-marine-spatial-analysis) well suited to European marine data: every cell and polygon covers the same ground area regardless of latitude, which is important for accurate zonal statistics and spatial joins. For this reason, we will be working in this CRS throughout the tutorial. Where possible, we will download data directly in EPSG:3035; where not, we will reproject to it before analysis (we discuss this in more detail in the [spatial data integration](#spatial-data-integration) section):
 
 ```{r}
 #| label: define-study-area-bbox
@@ -212,7 +212,7 @@ habitat_layers |>
   select(layer_name, title)
 ```
 
-The results show separate layers for energy, substrate, biozone, and two habitat classification systems (EUNIS 2007 and EUNIS 2019). We choose `eusm2025_eunis2019_full` because EUNIS 2019 is the current classification standard and this layer includes both the habitat code and the substrate and biozone attributes we need.
+The results show separate layers for energy, substrate, biozone, and two habitat classification systems (EUNIS 2007 and EUNIS 2019). We choose `eusm2025_eunis2019_full` because EUNIS 2019 is the more recent classification standard and this layer includes both the habitat code and the substrate and biozone attributes we need.
 
 ### Understanding Habitat Classifications
 
@@ -232,7 +232,7 @@ habitat_attrs
 
 Key attributes include:
 
--   **`geom`**: Geometry column (the only row with `geometry = TRUE`). WFS layers can use different names for this column, so we extract it programmatically below to construct CQL bounding box filters
+-   **`geom`**: Geometry column (the only row with `geometry = TRUE`). WFS layers can use different names for this column, so we extract it programmatically below to construct [CQL (Common Query Language)](tutorial-01.qmd#filtering-by-location-pre-download) bounding box filters
 -   **`eunis2019c`**: EUNIS 2019 habitat classification (level 3)
 -   **`eunis2019d`**: Human-readable EUNIS 2019 habitat description
 -   **`substrate`**: Seabed substrate type
@@ -300,7 +300,7 @@ The `<>` operator excludes polygons where `eunis2019c` is exactly `"Na"`, and `N
 
 ### Downloading Habitat Polygons
 
-Now we download with the combined spatial and attribute filter. We use [GeoJSON format](tutorial-01.qmd#why-use-geojson-format) (`outputFormat = "application/json"`) for faster downloads and simpler geometry types, and set `simplify = TRUE` to return a single `sf` data frame rather than a list of layers. The habitat layer's native CRS is Web Mercator (EPSG:3857), but we request **EPSG:3035** (ETRS89-extended / LAEA Europe) via `crs = 3035`. This is an [equal-area projection](../concepts.qmd#why-this-matters-for-marine-spatial-analysis) well suited to European marine data: every cell and polygon covers the same ground area regardless of latitude, which matters for zonal statistics and spatial joins later in the tutorial:
+Now we download with the combined spatial and attribute filter. We use [GeoJSON format](tutorial-01.qmd#why-use-geojson-format) (`outputFormat = "application/json"`) for faster downloads and simpler geometry types, and set `simplify = TRUE` to return a single `sf` data frame rather than a list of layers. The habitat layer's native CRS is Web Mercator (EPSG:3857), but we request **EPSG:3035** via `crs = 3035`, the equal-area projection introduced above:
 
 ```{r}
 #| label: download-habitat-polygons
@@ -741,7 +741,7 @@ Because the data is multi-dimensional, `cms_download_subset()` returns a [`stars
 
 The metadata returned by `CopernicusMarine` functions follows the STAC specification. For a general introduction to what STAC is and how catalogues, collections, and items relate, see the [STAC intro tutorial](https://stacspec.org/en/tutorials/intro-to-stac/). In practice, the deeply nested metadata structures can be challenging to navigate, but contain rich information about layers, variables, dimensions, and time ranges, as we explore below.
 
-The discovery workflow follows a similar pattern to EMODnet: list what is available, inspect metadata, then download a subset.
+The discovery workflow follows a similar pattern to EMODnet: list what is available, inspect metadata, then download a subset. For more on data discovery, see the CopernicusMarine vignettes on [product information](https://pepijn-devries.github.io/CopernicusMarine/articles/product-info.html) and [translating from the Copernicus Marine toolbox](https://pepijn-devries.github.io/CopernicusMarine/articles/translate.html).
 
 ### Choosing a Data Product
 
@@ -761,7 +761,7 @@ A Copernicus **product** plays the same role as an EMODnet **service** (like `"b
 
 ### Browsing Available Variables
 
-Unlike OGC services where each layer contains a single dataset, Copernicus products are built on a datacube architecture. A single product can bundle multiple physical variables (temperature, salinity, currents) across multiple layers. We can get a high-level overview of all variables available across the entire product using `cms_product_details()`:
+Unlike OGC services where each layer contains a single dataset, Copernicus products are built on a datacube architecture. A single product can bundle multiple physical variables (temperature, salinity, currents) across multiple layers, where each layer can have distinct dimensions. We can get a high-level overview of all variables available across the entire product using `cms_product_details()`:
 
 ```{r}
 #| label: explore-med-product-details
@@ -863,7 +863,7 @@ Sampling is concentrated in two periods: a large 1998 campaign and a main cluste
 
 ### Downloading Bottom Temperature
 
-`cms_download_subset()` returns a [`stars`](../concepts.qmd#stars---spatiotemporal-arrays) object (a multi-dimensional array). Note that the `timerange` dates must match the layer's time steps, which as we saw above are indexed to January 1st of each year:
+`cms_download_subset()` returns a [`stars`](../concepts.qmd#stars---spatiotemporal-arrays) object (a multi-dimensional array). The `timerange` specifies the date range to download; any time steps falling within this range will be included:
 
 ```{r}
 #| label: download-bottom-temperature
@@ -872,7 +872,7 @@ bottom_temp_stars <- cms_download_subset(
   layer = "cmems_mod_med_phy-tem_my_4.2km_P1Y-m",
   variable = "bottomT",
   region = study_bbox,
-  timerange = c("1998-01-01", "2018-01-01")
+  timerange = c("1998-01-01", "2018-12-31")
 )
 ```
 
@@ -933,18 +933,20 @@ bottom_temp_mean <- bottom_temp_sampled |>
 
 ### Converting Stars to Terra Raster
 
-The rest of our analysis uses `terra` for raster operations (zonal statistics, extraction). To convert from `stars` to a `terra` `SpatRaster`, we need to address a grid compatibility issue: the Copernicus Marine grid is **rectilinear** (cell spacing along longitude and latitude is not perfectly uniform), but `terra::rast()` requires a **regular** grid with uniform cell sizes.
+The rest of our analysis uses `terra` for raster operations (zonal statistics, extraction). To convert from `stars` to a `terra` `SpatRaster`, we need to regularise the grid: `stars` stores the Copernicus Marine grid as a list of cell boundaries rather than as a regular "start + step size" definition, and `terra::rast()` only accepts the latter.
 
-`stars::st_warp()` resamples a `stars` object onto a target grid. We build that target with `stars::st_as_stars()`, passing `sf::st_bbox(bottom_temp_mean)` to preserve the original spatial extent and setting `dx` and `dy` to 1/24° to match the native Copernicus Marine resolution (~4.2 km at this latitude):
+`stars::st_warp()` resamples onto a regular target grid. We build it with `stars::st_as_stars()`, which takes a bounding box and a cell size (`dx`, `dy`) and produces a regular grid. We derive the cell size from the data's extent and number of cells to preserve the native resolution. Note that the target grid inherits its CRS from the bounding box of the source data; the reprojection to our shared EPSG:3035 CRS happens later when we compute zonal statistics:
 
 ```{r}
 #| label: convert-to-terra
+# Derive native cell size from extent and number of cells
+dims <- stars::st_dimensions(bottom_temp_mean)
+temp_bbox <- sf::st_bbox(bottom_temp_mean)
+dx <- as.numeric((temp_bbox["xmax"] - temp_bbox["xmin"]) / dims[["longitude"]]$to)
+dy <- as.numeric((temp_bbox["ymax"] - temp_bbox["ymin"]) / dims[["latitude"]]$to)
+
 bottom_temp_mean <- bottom_temp_mean |>
-  stars::st_warp(stars::st_as_stars(
-    sf::st_bbox(bottom_temp_mean),
-    dx = 1 / 24,
-    dy = 1 / 24
-  )) |>
+  stars::st_warp(stars::st_as_stars(temp_bbox, dx = dx, dy = dy)) |>
   terra::rast()
 names(bottom_temp_mean) <- "bottom_temp_C"
 
@@ -1228,13 +1230,24 @@ Different EUNIS habitat types are distributed across biozones. Using the full se
 
 habitat_biozone_data <- seabed_habitats |>
   filter(!is.na(biozone), !is.na(eunis2019d)) |>
-  count(biozone, eunis2019d)
+  count(biozone, eunis2019c, eunis2019d) |>
+  group_by(biozone) |>
+  mutate(prop = n / sum(n)) |>
+  ungroup() |>
+  mutate(label = if_else(prop >= 0.08, eunis2019c, ""))
 
 ggplot(
   habitat_biozone_data,
   aes(x = biozone, y = n, fill = str_wrap(eunis2019d, width = 50))
 ) +
-  geom_bar(stat = "identity", position = "fill") +
+  geom_bar(stat = "identity", position = "fill", colour = "white", linewidth = 0.3) +
+  geom_text(
+    aes(label = label),
+    position = position_fill(vjust = 0.5),
+    colour = "white",
+    size = 3.5,
+    fontface = "bold"
+  ) +
   scale_fill_viridis_d(option = "turbo", direction = -1, name = NULL) +
   scale_y_continuous(labels = scales::percent) +
   labs(x = "Biozone", y = "Proportion of polygons") +
@@ -1435,7 +1448,7 @@ We build the map in layers. `addPolygons()` draws the habitat polygons, using `c
 #| eval: false
 
 # Colour palettes
-habitat_pal <- colorFactor("turbo", domain = habitats_leaflet$eunis2019c)
+habitat_pal <- colorFactor("turbo", domain = habitats_leaflet$eunis2019c, reverse = TRUE)
 size_pal <- colorFactor("viridis", domain = benthos_leaflet$size_class)
 
 leaflet() |>
@@ -1504,7 +1517,7 @@ leaflet() |>
 #| fig-cap: "Interactive map of benthic species occurrences coloured by body size class, overlaid on seabed habitat polygons. Click on features for details."
 
 # Colour palettes
-habitat_pal <- colorFactor("turbo", domain = habitats_leaflet$eunis2019c)
+habitat_pal <- colorFactor("turbo", domain = habitats_leaflet$eunis2019c, reverse = TRUE)
 size_pal <- colorFactor("viridis", domain = benthos_leaflet$size_class)
 
 interactive_map <- leaflet() |>
@@ -1580,6 +1593,12 @@ The `popup` arguments use HTML strings to format the pop-up content. Tags like `
 
 Note the `smoothFactor = 0` argument in `addPolygons()`. By default, Leaflet applies its own Douglas-Peucker simplification to polygon coordinates at render time to improve performance. For complex or concave polygons this can cause the simplified outline to cross itself, producing visible line artifacts across the polygon fill. Since we have already simplified the geometry server-side with `st_simplify()`, setting `smoothFactor = 0` disables this additional client-side step and avoids these artifacts.
 
+::: {.callout-tip collapse="true"}
+## Adding Copernicus Marine tile layers
+
+The `CopernicusMarine` package can add WMTS tile layers directly to leaflet maps using [`addCmsWMTSTiles()`](https://pepijn-devries.github.io/CopernicusMarine/reference/addCmsWMTSTiles.html). This is useful for overlaying Copernicus Marine data (e.g. sea surface temperature, chlorophyll) as background layers without downloading the data first.
+:::
+
 ## Discussion
 
 ### Key Findings
@@ -1631,5 +1650,8 @@ These skills enable complex marine ecological analyses that draw on the full bre
 -   [Copernicus Marine Service](https://marine.copernicus.eu/): Oceanographic data
 -   [World Register of Marine Species (WoRMS)](https://www.marinespecies.org/): Taxonomic backbone
 -   [MOBS Database](https://github.com/crmcclain/MOBS_OPEN): Marine body size data
+-   [`sf` package](https://r-spatial.github.io/sf/): Simple features for R
+-   [`terra` package](https://rspatial.github.io/terra/): Spatial data analysis with rasters and vectors
+-   [`stars` package](https://r-spatial.github.io/stars/): Spatiotemporal arrays
 
 ## References

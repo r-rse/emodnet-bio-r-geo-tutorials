@@ -783,7 +783,7 @@ The tutorials demonstrate when and how to specify output formats to optimize you
 
 **Zarr** (.zarr)
 
--   Cloud-native, chunked array format for multi-dimensional data
+-   Cloud-native, chunked (often compressed) array format for multi-dimensional data
 -   Designed for efficient remote access: clients can read spatial or temporal subsets without downloading the entire dataset
 -   Increasingly used by ocean data providers including the Copernicus Marine Service, which stores data in both NetCDF and zarr formats
 -   Stores arrays alongside metadata (dimensions, units, coordinate reference systems) in a directory or object-store structure

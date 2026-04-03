@@ -16,7 +16,7 @@ format:
 
 ## Introduction
 
-The Gulf of Lion, located in the northwestern Mediterranean off the coast of southern France, hosts a rich diversity of benthic communities shaped by the Rhône River delta, diverse substrates from sandy beaches to deep canyons, and strong environmental gradients. Characterising the biozones of this region, from the sunlit infralittoral to the deep bathyal, requires bringing together habitat maps, environmental data, species occurrences, and functional traits such as body size.
+The [Gulf of Lion](https://en.wikipedia.org/wiki/Gulf_of_Lion), located in the northwestern Mediterranean off the coast of southern France, hosts a rich diversity of benthic communities shaped by the Rhône River delta, diverse substrates from sandy beaches to deep canyons, and strong environmental gradients. Characterising the biozones of this region, from the sunlit infralittoral to the deep bathyal, requires bringing together habitat maps, environmental data, species occurrences, and functional traits such as body size.
 
 In this tutorial, we demonstrate how to **integrate multiple EU marine data infrastructures** to characterise benthic biozones in the Gulf of Lion. We combine:
 
@@ -81,19 +81,24 @@ This tutorial uses a broader set of packages than previous tutorials, reflecting
 ```{r}
 #| label: load-packages
 #| message: false
+# Data access
 library(emodnet.wfs)
 library(emodnet.wcs)
 library(CopernicusMarine)
+# Spatial data wrangling
 library(terra)
 library(sf)
+# Data wrangling
 library(dplyr)
 library(tidyr)
 library(purrr)
 library(stringr)
+# Data visualization
 library(ggplot2)
 library(ggridges)
 library(patchwork)
 library(tidyterra)
+# Interactive maps
 library(leaflet)
 library(htmlwidgets)
 
@@ -120,6 +125,7 @@ install.packages(c(
 ))
 ```
 
+<!-- TODO: update once emodnet.wcs is available from CRAN -->
 The `emodnet.wcs` package is not yet on CRAN; install the development version from GitHub:
 
 ``` r
@@ -132,7 +138,7 @@ pak::pak("EMODnet/emodnet.wcs")
 
 We focus on the Gulf of Lion in the northwestern Mediterranean. This region offers good coverage across most data sources involved, with diverse substrate types (sand, mud, coarse sediments, seagrass meadows) and spatial sampling across 165 unique locations. The Gulf of Lion also spans multiple biozones from infralittoral to bathyal depths.
 
-We start by defining a bounding box for our study area in WGS 84 (longitude/latitude degrees), which we will use to filter data downloads to this region. We also create an EPSG:3035 version, an equal-area projection that several of our data sources use (we discuss this CRS in more detail in the [spatial data integration](#spatial-data-integration) section):
+We start by defining a bounding box for our study area in WGS 84 (longitude/latitude degrees), chosen to cover the continental shelf and slope of the Gulf of Lion from roughly Nice to Perpignan. We will use this to filter data downloads to this region. We also create an EPSG:3035 (ETRS89-extended / LAEA Europe) version, an equal-area projection that several of our data sources use (we discuss this CRS in more detail in the [spatial data integration](#spatial-data-integration) section):
 
 ```{r}
 #| label: define-study-area-bbox
@@ -215,6 +221,7 @@ Let's examine the attribute structure of the habitat layer:
 ```{r}
 #| label: inspect-habitat-attributes
 #| cache: true
+#| rows.print: 11
 habitat_attrs <- layer_attribute_descriptions(
   wfs = habitat_wfs,
   layer = "eusm2025_eunis2019_full"
@@ -225,7 +232,7 @@ habitat_attrs
 
 Key attributes include:
 
--   **`geom`**: Geometry column. WFS layers can use different names for this column, so we extract it programmatically below to construct CQL bounding box filters
+-   **`geom`**: Geometry column (the only row with `geometry = TRUE`). WFS layers can use different names for this column, so we extract it programmatically below to construct CQL bounding box filters
 -   **`eunis2019c`**: EUNIS 2019 habitat classification (level 3)
 -   **`eunis2019d`**: Human-readable EUNIS 2019 habitat description
 -   **`substrate`**: Seabed substrate type
@@ -390,14 +397,14 @@ We can confirm the CQL filter worked by checking the unique `eunis2019c` values 
 sort(unique(seabed_habitats$eunis2019c))
 ```
 
-All clean EUNIS codes, with no `"Na"` or `"or"` values. Let's see which habitat types are most common in our study area:
+All clean EUNIS codes, with no `"Na"` or `"or"` values. Let's see which habitat types are most common in our study area, using the human-readable `eunis2019d` descriptions:
 
 ```{r}
 #| label: habitat-type-summary
 # Summarise habitat types present
 seabed_habitats |>
   st_drop_geometry() |>
-  count(eunis2019c, sort = TRUE) |>
+  count(eunis2019d, sort = TRUE) |>
   head(10)
 ```
 
@@ -428,7 +435,7 @@ ggplot() +
       study_bbox_3035["ymax"]
     )
   ) +
-  scale_fill_viridis_d(option = "turbo", name = NULL) +
+  scale_fill_viridis_d(option = "turbo", direction = -1, name = NULL) +
   labs(title = "Seabed Habitats (EUNIS 2019)") +
   theme_minimal() +
   theme(
@@ -447,7 +454,7 @@ Next, we retrieve benthic species occurrence records from EMODnet Biology. These
 ::: {.callout-tip collapse="true"}
 ## Taxonomic matching with the `worrms` package
 
-The data we use here are already matched to WoRMS, but if you need to match your own species lists to the WoRMS taxonomic backbone, the [`worrms`](https://cran.r-project.org/package=worrms) R package provides a programmatic interface to WoRMS. It supports fuzzy name matching, retrieval of accepted names and synonyms, and lookup of taxonomic hierarchies, useful for standardising species names across datasets.
+The data we use here are already matched to WoRMS, but if you need to match your own species lists to the WoRMS taxonomic backbone, the [`worrms`](https://docs.ropensci.org/worrms/) R package provides a programmatic interface to WoRMS. It supports fuzzy name matching, retrieval of accepted names and synonyms, and lookup of taxonomic hierarchies, useful for standardising species names across datasets.
 :::
 
 ### Connecting to EMODnet Biology WFS
@@ -928,7 +935,7 @@ bottom_temp_mean <- bottom_temp_sampled |>
 
 The rest of our analysis uses `terra` for raster operations (zonal statistics, extraction). To convert from `stars` to a `terra` `SpatRaster`, we need to address a grid compatibility issue: the Copernicus Marine grid is **rectilinear** (cell spacing along longitude and latitude is not perfectly uniform), but `terra::rast()` requires a **regular** grid with uniform cell sizes.
 
-`st_warp()` resamples a `stars` object onto a target grid. We build that target with `st_as_stars()`, passing `st_bbox(bottom_temp_mean)` to preserve the original spatial extent and setting `dx` and `dy` to 1/24° to match the native Copernicus Marine resolution (~4.2 km at this latitude):
+`stars::st_warp()` resamples a `stars` object onto a target grid. We build that target with `stars::st_as_stars()`, passing `sf::st_bbox(bottom_temp_mean)` to preserve the original spatial extent and setting `dx` and `dy` to 1/24° to match the native Copernicus Marine resolution (~4.2 km at this latitude):
 
 ```{r}
 #| label: convert-to-terra
@@ -1176,7 +1183,7 @@ Although the occurrence data already contains pre-matched EUNIS codes, we use a 
 
 We perform spatial joins with `sf::st_join()` which works differently from a standard `dplyr` join: instead of matching values in columns, it matches on **geometry**. For each point in the left dataset (occurrences), `st_join()` finds which polygon in the right dataset (habitat polygons) contains that point, and appends that polygon's attributes. The default spatial predicate is `st_intersects`, meaning a point is matched to any polygon it touches or falls inside. This is the spatial equivalent of `left_join()`: all rows from the left dataset are kept, and unmatched rows get `NA` for the joined columns. Because both datasets are in EPSG:3035, the spatial join uses planar geometry directly (no geographic coordinate warnings).
 
-We `select()` only `substrate` and `biozone` from the habitat polygons before joining, so only those columns are appended. Finally, we filter out any occurrences without a biozone value, keeping only records we can assign to a biozone for our characterisation:
+We `select()` only `substrate` and `biozone` from the habitat polygons before joining, so only those columns are appended. Finally, we filter out any occurrences without a biozone value (these fall outside habitat polygon coverage, e.g. in areas excluded by our CQL filter or gaps in the seabed map), keeping only records we can assign to a biozone for our characterisation:
 
 ```{r}
 #| label: join-occurrences-habitats-traits
@@ -1207,6 +1214,8 @@ benthos_joined |>
 
 Biozones represent the vertical zonation of the seabed, from the sunlit infralittoral through the circalittoral to the deep bathyal and abyssal zones. This depth gradient is the primary ecological axis structuring benthic communities, influencing light availability, temperature, pressure, and food supply. The EUSeaMap habitat layer encodes biozone alongside habitat type and substrate for each polygon, giving us a natural framework to bring together all our data sources.
 
+![Profile view of oceanic divisions showing both pelagic (water column) and benthic (seafloor) zonation. The benthic zones (labelled along the seafloor) correspond to the biozones used in our analysis. Source: [K. Aainsqatsi / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Oceanic_divisions.svg), public domain.](/assets/images/oceanic-divisions.svg){#fig-oceanic-divisions}
+
 ### Habitat Composition by Biozone
 
 Different EUNIS habitat types are distributed across biozones. Using the full set of habitat polygons in the study area, this stacked bar chart shows which habitat types occur in each zone:
@@ -1226,7 +1235,7 @@ ggplot(
   aes(x = biozone, y = n, fill = str_wrap(eunis2019d, width = 50))
 ) +
   geom_bar(stat = "identity", position = "fill") +
-  scale_fill_viridis_d(option = "turbo", name = NULL) +
+  scale_fill_viridis_d(option = "turbo", direction = -1, name = NULL) +
   scale_y_continuous(labels = scales::percent) +
   labs(x = "Biozone", y = "Proportion of polygons") +
   theme_minimal() +

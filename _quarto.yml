@@ -32,7 +32,7 @@ website:
             href: tutorials/tutorial-02.qmd
           - text: "Tutorial 3: Biodiversity Change and Depth"
             href: tutorials/tutorial-03.qmd
-          - text: "Tutorial 4: Functional Traits Across Habitats"
+          - text: "Tutorial 4: Characterising Benthic Biozones"
             href: tutorials/tutorial-04.qmd
       - about.qmd
     right:

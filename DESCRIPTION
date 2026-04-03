@@ -19,6 +19,7 @@ URL: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
 BugReports: https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues
 Imports:
     cli,
+    CopernicusMarine,
     emodnet.wfs,
     emodnet.wcs,
     pins,
@@ -31,13 +32,19 @@ Imports:
     yaml
 Remotes:
     EMODnet/emodnet.wfs,
-    EMODnet/emodnet.wcs
+    EMODnet/emodnet.wcs,
+    pepijn-devries/CopernicusMarine
 Config/Needs/website:
     DT,
+    ggridges,
+    janitor,
     knitr,
     pkgload,
     purrr,
+    readr,
     rmarkdown,
+    stars,
+    stringr,
     tibble,
     tidyr,
     tidyterra,
@@ -45,8 +52,13 @@ Config/Needs/website:
     rnaturalearth,
     rnaturalearthdata,
     patchwork,
+    scales,
     skimr,
-    tmap
+    tmap,
+    leaflet,
+    htmlwidgets,
+    downlit,
+    xml2
 RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5)

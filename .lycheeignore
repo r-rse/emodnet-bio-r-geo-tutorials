@@ -1,0 +1,2 @@
+# DOI resolvers often block automated link checkers with 403
+https://doi.org/.*

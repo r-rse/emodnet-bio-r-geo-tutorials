@@ -70,7 +70,7 @@ By the end of this tutorial, you will be able to:
 | Source | Description |
 |----------------------------|--------------------------------------------|
 | [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from [MEDSEA_MULTIYEAR_PHY_006_004](https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description) reanalysis |
-| [MOBS Database](https://github.com/crmcclain/MOBS_OPEN) | Marine Organism Body Size database [@mccallum2025] |
+| [MOBS Database](https://github.com/crmcclain/MOBS_OPEN) | Marine Organism Body Size database [@mcclain2025] |
 
 ## Setup
 
@@ -979,7 +979,7 @@ The Marine Organism Body Size (MOBS) database provides body size measurements fo
 
 ### About MOBS
 
-The MOBS database [@mccallum2025] compiles body size measurements (length, diameter/width, height) from literature sources for marine species, linked via WoRMS AphiaIDs. This makes it ideal for linking to occurrence data like ours.
+The MOBS database [@mcclain2025] compiles body size measurements (length, diameter/width, height) from literature sources for marine species, linked via WoRMS AphiaIDs. This makes it ideal for linking to occurrence data like ours.
 
 ### Loading MOBS Data
 

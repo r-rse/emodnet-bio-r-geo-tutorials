@@ -63,7 +63,7 @@ Note: EMODnet also provides telecommunication cable datasets (e.g., `sigcables`,
 
 ### Packages
 
-We'll use [`emodnet.wfs`](https://emodnet.github.io/emodnet.wcs/) to access EMODnet WFS services, [`sf`](https://r-spatial.github.io/sf/) for spatial data handling, [`rnaturalearth`](http://docs.ropensci.org/rnaturalearth/) to get European coastlines, [`dplyr`](https://dplyr.tidyverse.org/) and [`purrr`](https://purrr.tidyverse.org/) for data manipulation, and [`ggplot2`](https://ggplot2.tidyverse.org/) and [`tmap`](https://r-tmap.github.io/tmap/) for visualisation.
+We'll use [`emodnet.wfs`](https://emodnet.github.io/emodnet.wfs/) to access EMODnet WFS services, [`sf`](https://r-spatial.github.io/sf/) for spatial data handling, [`rnaturalearth`](http://docs.ropensci.org/rnaturalearth/) to get European coastlines, [`dplyr`](https://dplyr.tidyverse.org/) and [`purrr`](https://purrr.tidyverse.org/) for data manipulation, and [`ggplot2`](https://ggplot2.tidyverse.org/) and [`tmap`](https://r-tmap.github.io/tmap/) for visualisation.
 
 ```{r}
 #| label: load-packages

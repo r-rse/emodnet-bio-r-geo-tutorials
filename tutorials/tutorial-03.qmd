@@ -6,35 +6,921 @@ time: "~60 minutes"
 data-type: "WFS + WCS (vector + raster)"
 description: "Combine vector and raster data to investigate environmental drivers of biodiversity change. Extract bathymetric values at biodiversity sampling points and explore relationships between depth and species turnover across the North Sea."
 datasets: "Biodiversity change metrics, bathymetric depth models, vector-raster integration"
+df-print: paged
+format:
+  html:
+    embed-resources: false
 ---
 
-## Tutorial Content
+## Introduction
 
-This tutorial is currently under development.
+Marine biodiversity is not static. Species distributions shift over time in response to environmental change, and the resulting patterns of species loss and gain vary across habitats and conditions. A central question in marine ecology is: **where are communities changing most, and what environmental factors are associated with that change?**
 
-### What You'll Learn
+Water depth is one of the strongest environmental gradients in the ocean, shaping light availability, temperature, pressure, and food supply. Shallow coastal waters, the continental shelf, and the deep sea support fundamentally different communities. If depth influences community stability, we might expect to see different rates of species turnover across depth zones: perhaps shallow communities exposed to warming and human activity are changing faster, or perhaps deep-sea communities with narrow environmental tolerances are more sensitive to perturbation.
 
-- Using `emdn_get_features()` to access spatiotemporal diversity metrics from EMODnet Biology (WFS)
-- Using `emdn_get_coverage()` to retrieve raster bathymetry from EMODnet Bathymetry (WCS)
-- Performing spatial joins and point-based extraction from raster datasets
-- Visualising and summarising patterns of species gain/loss across depth gradients
+In this tutorial, we combine two types of EMODnet data to investigate this question across the North Sea:
+
+- **Vector data** from EMODnet Biology: gridded metrics of biodiversity change between time periods (species gained, species lost, overall turnover)
+- **Raster data** from EMODnet Bathymetry: a continuous surface of mean water depth
+
+By extracting depth values at each biodiversity grid cell and examining how species turnover varies across the depth gradient, we can begin to characterize which depth zones are experiencing the most change.
+
+This tutorial bridges the [WFS](../concepts.qmd#wfs-web-feature-service) techniques from [Tutorial 1](tutorial-01.qmd) and the [WCS](../concepts.qmd#wcs-web-coverage-service) techniques from [Tutorial 2](tutorial-02.qmd), combining vector and raster data in a single analysis. It introduces a key spatial operation not covered in previous tutorials: **polygon-based raster extraction**, where we compute mean raster values within each polygon feature.
+
+### Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- Discover and retrieve biodiversity change metrics from EMODnet Biology WFS
+- Discover and retrieve bathymetry raster data from EMODnet Bathymetry WCS
+- Extract mean raster values within polygon features using `terra::extract()`
+- Create depth bands from continuous depth values for categorical analysis
+- Visualise and interpret patterns of species turnover across depth gradients
 
 ### Data Sources
 
-**WFS (vector):**
-- **Layer ID:** `all_diversity_measures`
-- **Source:** EMODnet Biology
-- **Key variables:** Species loss, species gain, β-diversity, time periods
+**WFS (Vector Data):**
 
-**WCS (raster):**
-- **Layer ID:** `emodnet__mean_2020`
-- **Source:** EMODnet Bathymetry
-- **Description:** Mean depth (m), regularly gridded
+| Layer | Service | Description |
+|-------|---------|-------------|
+| `all_diversity_measures` | biology | Gridded biodiversity change metrics comparing species composition between time periods |
+
+**WCS (Raster Data):**
+
+| Coverage | Service | Description |
+|----------|---------|-------------|
+| `emodnet__mean` | bathymetry | Mean water depth (m), regularly gridded |
+
+## Setup
+
+### Packages
+
+We use [`emodnet.wfs`](https://emodnet.github.io/emodnet.wfs/) for WFS vector data, [`emodnet.wcs`](https://emodnet.github.io/emodnet.wcs/) for WCS raster data, [`terra`](https://rspatial.github.io/terra/) for raster operations, [`sf`](https://r-spatial.github.io/sf/) for spatial data handling, [`dplyr`](https://dplyr.tidyverse.org/) and [`tidyr`](https://tidyr.tidyverse.org/) for data wrangling, [`ggplot2`](https://ggplot2.tidyverse.org/) with [`tidyterra`](https://dieghernan.github.io/tidyterra/) for visualisation, and [`patchwork`](https://patchwork.data-imaginist.com/) for combining plots.
+
+```{r}
+#| label: load-packages
+#| message: false
+library(emodnet.wfs)
+library(emodnet.wcs)
+library(terra)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tidyterra)
+library(patchwork)
+```
+
+```{r}
+#| label: setup
+#| include: false
+# Load package data and helper functions
+library(emodnet.bio.r.geo.tutorials)
+```
+
+::: {.callout-tip collapse="true"}
+## Package installation
+If you haven't installed these packages, run:
+
+```r
+install.packages(c(
+  "emodnet.wfs", "terra", "sf", "dplyr", "tidyr",
+  "ggplot2", "tidyterra", "patchwork", "rnaturalearth"
+))
+```
+
+For the EMODnet WCS package (development version from GitHub):
+
+```r
+# install.packages("pak")
+pak::pak("EMODnet/emodnet.wcs")
+```
+:::
 
 ### Study Area
 
-North Sea
+We focus on the North Sea, a well-sampled region where we can expect good coverage from the EMODnet Biology diversity products. The bounding box spans from the UK coast to the Danish and German coasts:
 
-**Bounding box (WGS84):** xmin = 1.5, ymin = 53, xmax = 6.5, ymax = 58
+```{r}
+#| label: define-study-area-bbox
+# Geographic bbox for data queries (EPSG:4326)
+north_sea_bbox <- c(xmin = -4, ymin = 51, xmax = 9, ymax = 62)
 
-Check back soon for the complete tutorial!
+# Create bbox polygon for visualisation
+bbox_polygon <- sf::st_as_sfc(sf::st_bbox(north_sea_bbox, crs = 4326))
+```
+
+```{r}
+#| label: fig-study-area
+#| echo: false
+#| fig-cap: "Study area: North Sea"
+
+# Get European coastlines
+europe <- rnaturalearth::ne_countries(
+  scale = "medium",
+  continent = "Europe",
+  returnclass = "sf"
+)
+
+# Expand bbox slightly for context
+plot_bbox <- c(xmin = -10, ymin = 48, xmax = 15, ymax = 65)
+
+ggplot() +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(data = bbox_polygon, fill = NA, color = "#004494", linewidth = 1.5) +
+  coord_sf(
+    xlim = c(plot_bbox["xmin"], plot_bbox["xmax"]),
+    ylim = c(plot_bbox["ymin"], plot_bbox["ymax"])
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+```
+
+## Exploring EMODnet Biology WFS
+
+Before downloading any data, we need to discover what the EMODnet Biology WFS offers and understand the structure of the diversity layer.
+
+### Discovering Available Services
+
+In [Tutorial 1](tutorial-01.qmd#discovering-available-services), we used `emodnet_wfs()` to list all available WFS services. Here we connect directly to the Biology service, which hosts species occurrence data and derived products like biodiversity change metrics:
+
+```{r}
+#| label: init-biology-wfs
+bio_wfs <- emodnet_init_wfs_client(service = "biology")
+```
+
+### Discovering Available Layers
+
+What layers does the Biology WFS provide? We use `emodnet_get_wfs_info()` to retrieve the full catalogue:
+
+```{r}
+#| label: explore-biology-layers
+#| cache: true
+bio_layers <- emodnet_get_wfs_info(bio_wfs)
+
+bio_layers |>
+  select(layer_name, title)
+```
+
+The Biology service contains several layers. We are interested in `all_diversity_measures`, which contains gridded biodiversity change metrics. Let's explore its structure.
+
+### Understanding the Diversity Layer
+
+What attributes does this layer contain? We use `layer_attribute_descriptions()` to inspect the schema without downloading any data:
+
+```{r}
+#| label: inspect-diversity-attributes
+#| cache: true
+diversity_attrs <- layer_attribute_descriptions(
+  wfs = bio_wfs,
+  layer = "all_diversity_measures"
+)
+
+diversity_attrs
+```
+
+The layer has several columns. To understand what values each attribute holds, we inspect the key categorical attributes using `layer_attribute_inspect()`:
+
+```{r}
+#| label: explore-diversity-vars
+#| cache: true
+# What diversity variables are available?
+layer_attribute_inspect(
+  wfs = bio_wfs,
+  layer = "all_diversity_measures",
+  attribute = "var"
+)
+```
+
+This shows us the different biodiversity metrics available. The metrics we're interested in relate to **beta diversity**: the change in species composition between two time periods:
+
+- **`sp_lost_beta_repl`**: Number of species lost (species present in the earlier period but absent in the later one)
+- **`sp_gained_beta_repl`**: Number of species gained (species present in the later period but absent in the earlier one)
+- **`beta_total`**: Overall beta-diversity, a measure of total compositional change
+
+```{r}
+#| label: explore-diversity-periods
+#| cache: true
+# What time periods are compared?
+layer_attribute_inspect(
+  wfs = bio_wfs,
+  layer = "all_diversity_measures",
+  attribute = "period_verbose"
+)
+```
+
+Each record represents a comparison between two time periods. The `period_verbose` attribute contains human-readable labels like `pre1990_v_post2015`. We want the comparison that captures the longest-term change to maximise the signal of biodiversity shifts.
+
+::: {.callout-note collapse="true"}
+## About beta-diversity metrics
+
+Beta diversity quantifies differences in species composition between communities or, as in this case, between time periods at the same location. The "replacement" component (`beta_repl`) specifically captures species turnover: species being replaced by others, rather than simple gains or losses due to changes in sampling effort. This makes it a more robust measure of ecological change than raw species richness differences.
+
+The metrics in this layer are derived from EMODnet Biology occurrence records, aggregated to a regular grid and compared across defined time windows.
+:::
+
+### Planning the Download
+
+Now that we understand the layer structure, we can plan what to download. We need:
+
+1. **Spatial filter**: Our North Sea bounding box
+2. **Attribute filter**: A specific time period comparison
+3. **Measures**: `sp_lost_beta_repl`, `sp_gained_beta_repl`, and `beta_total`
+
+First, let's identify the geometry column name for the CQL bounding box filter:
+
+```{r}
+#| label: diversity-geom-col
+diversity_geom_col <- diversity_attrs$name[diversity_attrs$geometry]
+diversity_geom_col
+```
+
+Now we build the CQL filter. We combine a spatial BBOX filter with an attribute filter to select only the time period we want. For CQL syntax details, see [Tutorial 1](tutorial-01.qmd#defining-the-spatial-filter):
+
+```{r}
+#| label: build-diversity-filter
+# Spatial filter: bounding box
+bbox_filter <- sprintf(
+  "BBOX(%s, %s, %s, %s, %s, 'EPSG:4326')",
+  diversity_geom_col,
+  north_sea_bbox["xmin"],
+  north_sea_bbox["ymin"],
+  north_sea_bbox["xmax"],
+  north_sea_bbox["ymax"]
+)
+
+# Attribute filter: select a specific time period
+period_filter <- "period_verbose = 'pre1990_v_post2015'"
+
+# Combine spatial and attribute filters
+diversity_cql_filter <- paste(bbox_filter, period_filter, sep = " AND ")
+diversity_cql_filter
+```
+
+::: {.callout-tip collapse="true"}
+## Why filter server-side?
+
+We could download all data and filter locally, but the `all_diversity_measures` layer contains records for multiple time periods and measures across all of European seas. Filtering server-side with CQL reduces the download size substantially and avoids transferring data we won't use. This is especially important for large WFS layers.
+:::
+
+### Downloading Biodiversity Data
+
+We download the filtered data using `emodnet_get_layers()` and set `simplify = TRUE` to return a single `sf` data frame rather than a named list (see [Tutorial 1](tutorial-01.qmd#downloading-multiple-layers) for details):
+
+```{r}
+#| label: download-diversity-data
+#| cache: true
+diversity_raw <- emodnet_get_layers(
+  wfs = bio_wfs,
+  layers = "all_diversity_measures",
+  cql_filter = diversity_cql_filter,
+  simplify = TRUE
+)
+
+nrow(diversity_raw)
+```
+
+### Inspecting Downloaded Data
+
+Let's preview the data:
+
+```{r}
+#| label: preview-diversity-data
+diversity_raw |>
+  head(10)
+```
+
+Each row represents a grid cell polygon with a single biodiversity variable (`var`) and its `value` for the selected time period comparison. The geometry column contains polygon boundaries for each 1-degree grid cell.
+
+Let's check which variables we received and their value ranges:
+
+```{r}
+#| label: summarise-diversity-vars
+diversity_raw |>
+  st_drop_geometry() |>
+  group_by(var) |>
+  summarise(
+    n = n(),
+    min_value = min(value, na.rm = TRUE),
+    median_value = median(value, na.rm = TRUE),
+    max_value = max(value, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+### Restructuring for Analysis
+
+The data arrives in long format (one row per grid cell per variable). For our analysis, it's more convenient to have each variable as its own column, with one row per grid cell. We pivot wider using the `longitude` and `latitude` columns (grid cell centres) to group rows belonging to the same cell:
+
+```{r}
+#| label: pivot-diversity-data
+# Keep one geometry per grid cell
+cell_geom <- diversity_raw |>
+  distinct(longitude, latitude, .keep_all = TRUE) |>
+  select(longitude, latitude)
+
+# Pivot to wide format (drops geometry)
+diversity_wide <- diversity_raw |>
+  st_drop_geometry() |>
+  pivot_wider(
+    id_cols = c(longitude, latitude),
+    names_from = var,
+    values_from = value
+  )
+
+# Rejoin geometry
+diversity <- cell_geom |>
+  left_join(diversity_wide, by = c("longitude", "latitude"))
+
+nrow(diversity)
+```
+
+```{r}
+#| label: preview-diversity-wide
+diversity |>
+  head(10)
+```
+
+Each row now represents a single grid cell with columns for each beta-diversity metric.
+
+### Quick Visualisation
+
+Let's map the total beta-diversity to see the spatial pattern of biodiversity change:
+
+```{r}
+#| label: fig-beta-diversity-map
+#| code-fold: true
+#| fig-cap: "Total beta-diversity (species turnover) across the study area, comparing pre-1990 and post-2015 periods"
+
+ggplot() +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(
+    data = diversity,
+    aes(fill = beta_total),
+    color = NA
+  ) +
+  scale_fill_viridis_c(
+    option = "inferno",
+    name = "Beta-diversity\n(total turnover)"
+  ) +
+  coord_sf(
+    xlim = c(north_sea_bbox["xmin"] - 1, north_sea_bbox["xmax"] + 1),
+    ylim = c(north_sea_bbox["ymin"] - 0.5, north_sea_bbox["ymax"] + 0.5)
+  ) +
+  labs(
+    x = NULL, y = NULL,
+    title = "Biodiversity change: pre-1990 vs post-2015"
+  ) +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+```
+
+The map shows spatial variation in species turnover across the study area. But what drives these patterns? Let's bring in depth data to investigate.
+
+## Exploring EMODnet Bathymetry WCS
+
+To relate biodiversity change to depth, we need a bathymetric surface. EMODnet Bathymetry provides gridded depth data through a [WCS](../concepts.qmd#wcs-web-coverage-service). For an introduction to working with the `emodnet.wcs` package, see [Tutorial 2](tutorial-02.qmd).
+
+### Connecting to the Service
+
+```{r}
+#| label: init-bathymetry-wcs
+bathy_wcs <- emdn_init_wcs_client(service = "bathymetry")
+```
+
+### Discovering Available Coverages
+
+What coverages does the Bathymetry WCS provide?
+
+```{r}
+#| label: list-bathymetry-coverages
+bathy_coverage_ids <- emdn_get_coverage_ids(bathy_wcs)
+bathy_coverage_ids
+```
+
+The coverage IDs encode the product type and reference year. Some are depth data products (plain `emodnet__mean` and year-suffixed versions like `emodnet__mean_2022`), while others are visualisation products (`multicolour`, `rainbowcolour`, `atlas_land`). The year-suffixed coverages represent specific data releases. Let's get metadata for the depth coverages:
+
+```{r}
+#| label: explore-bathymetry-coverages
+# Filter for mean depth coverages (year-suffixed releases)
+depth_coverages <- bathy_coverage_ids[grepl("^emodnet__mean(_\\d{4})?$", bathy_coverage_ids)]
+depth_coverages
+
+bathy_info <- emdn_get_coverage_info(
+  wcs = bathy_wcs,
+  coverage_ids = depth_coverages
+)
+
+bathy_info
+```
+
+We select the most recent year-specific release. The metadata shows the spatial resolution, extent, and [CRS](../concepts.qmd#coordinate-reference-systems-crs). Let's examine the coverage properties in more detail:
+
+```{r}
+#| label: select-bathymetry-coverage
+# Use the most recent dated release
+bathy_coverage_id <- tail(depth_coverages, 1)
+bathy_coverage_id
+```
+
+```{r}
+#| label: bathymetry-details
+bathy_summary <- emdn_get_coverage_summaries(
+  bathy_wcs,
+  bathy_coverage_id
+)[[1]]
+
+# Spatial resolution
+emdn_get_resolution(bathy_summary)
+
+# Geographic extent
+emdn_get_WGS84bbox(bathy_summary)
+```
+
+The bathymetry data covers a large area at high resolution. Our bounding box will subset it to just the North Sea study area.
+
+::: {.callout-tip collapse="true"}
+## How WCS subsetting differs from WFS filtering
+
+With WFS (vector data), the server returns complete features (points, polygons) that fall within the bounding box. With WCS (raster data), the server clips the raster grid to the requested bounding box and returns only those cells. This means WCS requests are inherently spatial subsets: you always get exactly the area you ask for, with no need for post-download cropping.
+:::
+
+### Downloading Bathymetry
+
+We download the bathymetry raster for our study area using `emdn_get_coverage()`. The `bbox` argument takes a named numeric vector in WGS84 coordinates.
+
+Because the bathymetry data is very high resolution (~0.001 degrees per cell), our full study area exceeds the server's download limit. We split the request into a grid of smaller tiles and merge them:
+
+```{r}
+#| label: download-bathymetry
+# Split bbox into tiles (3 columns x 4 rows) to stay within
+# the server's per-request size limit
+x_breaks <- seq(north_sea_bbox["xmin"], north_sea_bbox["xmax"], length.out = 4)
+y_breaks <- seq(north_sea_bbox["ymin"], north_sea_bbox["ymax"], length.out = 5)
+
+tiles <- list()
+for (i in seq_len(length(x_breaks) - 1)) {
+  for (j in seq_len(length(y_breaks) - 1)) {
+    tile_bbox <- c(
+      xmin = x_breaks[i], ymin = y_breaks[j],
+      xmax = x_breaks[i + 1], ymax = y_breaks[j + 1]
+    )
+    tiles <- c(tiles, list(
+      emdn_get_coverage(
+        wcs = bathy_wcs,
+        coverage_id = bathy_coverage_id,
+        bbox = tile_bbox
+      )
+    ))
+  }
+}
+
+# Merge tiles into a single raster
+bathymetry <- do.call(merge, tiles)
+bathymetry
+```
+
+::: {.callout-tip collapse="true"}
+## Handling WCS download limits
+
+EMODnet WCS services impose a maximum download size per request. When your study area is too large for the raster resolution, you can split it into tiles, download each separately, and merge them with `terra::merge()`. The tiles share the same resolution and CRS (they come from the same coverage), so merging is seamless. The number of tiles you need depends on the area and resolution: here, twelve tiles (3x4 grid) keeps each request well under the limit.
+:::
+
+### Inspecting and Processing Depth Values
+
+EMODnet bathymetry uses the convention of **negative values for depth below sea level** and positive values for elevation above it. Since our bounding box may include some coastal land cells, let's check the value range:
+
+```{r}
+#| label: check-bathymetry-range
+terra::global(bathymetry, range, na.rm = TRUE)
+```
+
+For our analysis, we only need marine cells (negative values). We mask land cells and convert to positive depth values for easier interpretation:
+
+```{r}
+#| label: process-bathymetry
+# Remove land cells (elevation >= 0)
+bathymetry[bathymetry >= 0] <- NA
+
+# Convert to positive depth values
+depth <- -1 * bathymetry
+names(depth) <- "depth_m"
+```
+
+### Visualising Bathymetry
+
+```{r}
+#| label: fig-bathymetry
+#| code-fold: true
+#| fig-cap: "Bathymetry of the North Sea (depth in metres)"
+
+ggplot() +
+  geom_spatraster(data = depth) +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  scale_fill_viridis_c(
+    option = "mako",
+    direction = -1,
+    na.value = "transparent",
+    name = "Depth (m)"
+  ) +
+  coord_sf(
+    xlim = c(north_sea_bbox["xmin"] - 0.5, north_sea_bbox["xmax"] + 0.5),
+    ylim = c(north_sea_bbox["ymin"] - 0.5, north_sea_bbox["ymax"] + 0.5)
+  ) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+```
+
+The bathymetry reveals the topography of the North Sea: relatively shallow shelf waters with some deeper areas. Now we can link these depth values to our biodiversity change data.
+
+## Extracting Depth at Biodiversity Grid Cells
+
+This is the core spatial operation of this tutorial: extracting raster values within polygon features. Each biodiversity record is a 1-degree grid cell polygon, and we want to compute the mean depth across the bathymetry raster cells that fall within each polygon.
+
+### Preparing the Data
+
+The depth raster and biodiversity polygons may be in different [coordinate reference systems](../concepts.qmd#coordinate-reference-systems-crs). `terra::extract()` handles CRS differences internally, but let's verify what we're working with:
+
+```{r}
+#| label: check-crs
+# CRS of the depth raster
+cat("Depth raster CRS:", crs(depth, describe = TRUE)$code, "\n")
+
+# CRS of the biodiversity polygons
+cat("Biodiversity polygons CRS:", st_crs(diversity)$epsg, "\n")
+```
+
+### Extracting Mean Depth
+
+We use `terra::extract()` with `fun = mean` to compute the mean depth across all raster cells within each biodiversity polygon. This aggregates the high-resolution bathymetry to match the coarser biodiversity grid:
+
+```{r}
+#| label: extract-depth
+# Convert sf polygons to terra vector format for extraction
+diversity_vect <- vect(diversity)
+
+# Extract mean depth within each biodiversity polygon
+depth_values <- terra::extract(depth, diversity_vect, fun = mean, na.rm = TRUE)
+
+head(depth_values)
+```
+
+The result contains an `ID` column (matching the row order of our polygons) and the mean `depth_m` value for each grid cell. Some cells may have `NA` values if they fall entirely on land or outside the raster extent.
+
+::: {.callout-note collapse="true"}
+## How polygon-based `terra::extract()` works
+
+When extracting with polygons, `terra::extract()` identifies all raster cells whose centres fall within each polygon, then applies the summary function (`mean` here) to their values. This effectively downscales the high-resolution bathymetry to the coarser biodiversity grid. Because the bathymetry raster has much finer resolution than the 1-degree biodiversity polygons, each polygon contains many raster cells, giving a robust mean depth estimate.
+
+For point-based extraction (single cell lookup), you would omit the `fun` argument.
+:::
+
+### Joining Depth to Biodiversity Data
+
+We bind the extracted depth values to the biodiversity data frame:
+
+```{r}
+#| label: join-depth
+diversity_depth <- diversity |>
+  bind_cols(depth_values |> select(depth_m))
+
+# Remove cells without depth data (land or outside raster)
+n_before <- nrow(diversity_depth)
+diversity_depth <- diversity_depth |>
+  filter(!is.na(depth_m))
+n_after <- nrow(diversity_depth)
+```
+
+```{r}
+#| label: report-na
+#| echo: false
+if (n_before > n_after) {
+  cat(sprintf(
+    "Removed %d cells without depth values (%d remaining).\n",
+    n_before - n_after, n_after
+  ))
+}
+```
+
+```{r}
+#| label: preview-joined-data
+diversity_depth |>
+  head(10)
+```
+
+We now have a single data frame with biodiversity change metrics and mean depth for each grid cell.
+
+### Creating Depth Bands
+
+Continuous depth is useful for scatterplots and regression, but for summary statistics and boxplots it helps to bin depth into discrete categories. We create depth bands that reflect ecologically meaningful zones:
+
+```{r}
+#| label: create-depth-bands
+diversity_depth <- diversity_depth |>
+  mutate(
+    depth_band = cut(
+      depth_m,
+      breaks = c(0, 20, 50, 100, 200, Inf),
+      labels = c("0-20m", "20-50m", "50-100m", "100-200m", ">200m"),
+      include.lowest = TRUE
+    )
+  )
+
+# How many points in each depth band?
+diversity_depth |>
+  st_drop_geometry() |>
+  count(depth_band)
+```
+
+::: {.callout-tip collapse="true"}
+## Choosing depth band boundaries
+
+The breaks at 20m, 50m, 100m, and 200m roughly correspond to ecological transitions in the North Sea: the shallow subtidal zone (0-20m), the mid-shelf (20-50m), the deeper shelf (50-100m), the shelf edge (100-200m), and beyond. These are pragmatic choices. Different research questions might use different breakpoints, or avoid binning altogether in favour of continuous modelling.
+:::
+
+## Analysing Biodiversity Change Across Depth
+
+With our combined dataset, we can now explore how species turnover relates to depth.
+
+### Depth Distribution of Sampling Points
+
+First, let's understand the depth distribution of our data:
+
+```{r}
+#| label: fig-depth-distribution
+#| code-fold: true
+#| fig-cap: "Distribution of depths across biodiversity sampling grid cells"
+
+ggplot(diversity_depth, aes(x = depth_m)) +
+  geom_histogram(
+    binwidth = 10,
+    fill = "#2c7fb8",
+    color = "white",
+    alpha = 0.8
+  ) +
+  labs(
+    x = "Depth (m)",
+    y = "Number of grid cells",
+    title = "Depth distribution of biodiversity sampling points"
+  ) +
+  theme_minimal()
+```
+
+This histogram reveals how our sampling points are distributed across depth. The North Sea is predominantly a shallow shelf sea, so we expect most points to fall in shallower depth bands.
+
+### Species Turnover by Depth Band
+
+How do species gains and losses differ across depth zones? We use boxplots to compare the distribution of each metric across depth bands:
+
+```{r}
+#| label: prepare-long-format
+# Pivot to long format for faceted plotting
+diversity_long <- diversity_depth |>
+  st_drop_geometry() |>
+  pivot_longer(
+    cols = c(sp_lost_beta_repl, sp_gained_beta_repl, beta_total),
+    names_to = "metric",
+    values_to = "value"
+  ) |>
+  mutate(
+    metric = case_match(
+      metric,
+      "sp_lost_beta_repl" ~ "Species lost",
+      "sp_gained_beta_repl" ~ "Species gained",
+      "beta_total" ~ "Total beta-diversity"
+    ),
+    metric = factor(
+      metric,
+      levels = c("Species lost", "Species gained", "Total beta-diversity")
+    )
+  )
+```
+
+```{r}
+#| label: fig-turnover-by-depth
+#| fig-cap: "Species turnover metrics across depth bands. Each point is one grid cell. Boxplots show median and interquartile range."
+#| fig-height: 8
+
+ggplot(diversity_long, aes(x = depth_band, y = value, fill = depth_band)) +
+  geom_boxplot(outlier.alpha = 0.3, outlier.size = 0.8) +
+  facet_wrap(~metric, ncol = 1, scales = "free_y") +
+  scale_fill_viridis_d(option = "mako", direction = -1, guide = "none") +
+  labs(
+    x = "Depth band",
+    y = "Value",
+    title = "Biodiversity change metrics by depth zone"
+  ) +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold", size = 11))
+```
+
+The boxplots show how each biodiversity change metric is distributed within each depth band. Look for differences in median values (the central line), spread (box width), and outliers across depth zones. Are shallow communities showing more turnover than deep ones, or vice versa?
+
+### Net Species Change by Depth Band
+
+We can also compute the net change (species gained minus lost) to see whether depth zones are gaining or losing species on balance:
+
+```{r}
+#| label: fig-net-change
+#| fig-cap: "Net species change (gained minus lost) by depth band. Positive values indicate net species gain; negative values indicate net species loss."
+
+diversity_depth |>
+  st_drop_geometry() |>
+  mutate(net_change = sp_gained_beta_repl - sp_lost_beta_repl) |>
+  ggplot(aes(x = depth_band, y = net_change, fill = depth_band)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_boxplot(outlier.alpha = 0.3, outlier.size = 0.8) +
+  scale_fill_viridis_d(option = "mako", direction = -1, guide = "none") +
+  labs(
+    x = "Depth band",
+    y = "Net species change (gained - lost)",
+    title = "Are depth zones gaining or losing species?"
+  ) +
+  theme_minimal()
+```
+
+A net change of zero means gains and losses are balanced; positive values suggest the community is diversifying, while negative values suggest simplification.
+
+### Continuous Relationship: Beta-Diversity vs Depth
+
+Depth bands are useful for summary statistics, but they hide within-bin variation. Let's examine the continuous relationship between total beta-diversity and depth using scatterplots with smoothed trend lines:
+
+```{r}
+#| label: fig-beta-vs-depth
+#| fig-cap: "Relationship between total beta-diversity and depth. The blue line shows a LOESS smooth with 95% confidence interval. Each point is one grid cell."
+
+ggplot(
+  diversity_depth |> st_drop_geometry(),
+  aes(x = depth_m, y = beta_total)
+) +
+  geom_point(alpha = 0.3, size = 1, color = "gray40") +
+  geom_smooth(
+    method = "loess",
+    color = "#2c7fb8",
+    fill = "#2c7fb8",
+    alpha = 0.2
+  ) +
+  labs(
+    x = "Depth (m)",
+    y = "Total beta-diversity",
+    title = "Species turnover across the depth gradient"
+  ) +
+  theme_minimal()
+```
+
+The LOESS smooth reveals any non-linear trend in species turnover with depth. Look for peaks (depth zones with elevated turnover) and troughs (more stable communities).
+
+We can examine gains and losses separately to see whether the depth signal differs:
+
+```{r}
+#| label: fig-gains-losses-vs-depth
+#| fig-cap: "Species gains and losses across the depth gradient. LOESS smooths show separate trends for species gained (blue) and lost (red)."
+
+diversity_depth |>
+  st_drop_geometry() |>
+  pivot_longer(
+    cols = c(sp_gained_beta_repl, sp_lost_beta_repl),
+    names_to = "metric",
+    values_to = "value"
+  ) |>
+  mutate(
+    metric = case_match(
+      metric,
+      "sp_gained_beta_repl" ~ "Species gained",
+      "sp_lost_beta_repl" ~ "Species lost"
+    )
+  ) |>
+  ggplot(aes(x = depth_m, y = value, color = metric, fill = metric)) +
+  geom_point(alpha = 0.15, size = 0.8) +
+  geom_smooth(method = "loess", alpha = 0.2) +
+  scale_color_manual(
+    values = c("Species gained" = "#2c7fb8", "Species lost" = "#d7301f")
+  ) +
+  scale_fill_manual(
+    values = c("Species gained" = "#2c7fb8", "Species lost" = "#d7301f")
+  ) +
+  labs(
+    x = "Depth (m)",
+    y = "Value",
+    color = NULL,
+    fill = NULL,
+    title = "Species gains vs losses across depth"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+Separating gains and losses reveals whether depth zones are experiencing primarily immigration (gains exceeding losses), emigration (losses exceeding gains), or balanced turnover.
+
+### Summary Statistics by Depth Band
+
+Let's compute summary statistics to accompany the visualisations:
+
+```{r}
+#| label: depth-band-summary
+depth_summary <- diversity_depth |>
+  st_drop_geometry() |>
+  group_by(depth_band) |>
+  summarise(
+    n_cells = n(),
+    median_beta_total = round(median(beta_total, na.rm = TRUE), 3),
+    median_gained = round(median(sp_gained_beta_repl, na.rm = TRUE), 1),
+    median_lost = round(median(sp_lost_beta_repl, na.rm = TRUE), 1),
+    median_net = round(
+      median(sp_gained_beta_repl - sp_lost_beta_repl, na.rm = TRUE), 1
+    ),
+    .groups = "drop"
+  )
+
+depth_summary
+```
+
+## Spatial Patterns
+
+Finally, let's create a map that combines the depth and biodiversity change information to see whether the spatial patterns align:
+
+```{r}
+#| label: fig-spatial-overview
+#| code-fold: true
+#| fig-cap: "Biodiversity change and bathymetry across the study area. Left: total beta-diversity by grid cell. Right: bathymetry (depth in metres)."
+#| fig-height: 6
+#| fig-width: 12
+
+p_beta <- ggplot() +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(
+    data = diversity_depth,
+    aes(fill = beta_total),
+    color = "gray30",
+    linewidth = 0.3
+  ) +
+  scale_fill_viridis_c(option = "inferno", name = "Beta-diversity") +
+  coord_sf(
+    xlim = c(north_sea_bbox["xmin"] - 0.5, north_sea_bbox["xmax"] + 0.5),
+    ylim = c(north_sea_bbox["ymin"] - 0.5, north_sea_bbox["ymax"] + 0.5)
+  ) +
+  labs(x = NULL, y = NULL, title = "Biodiversity change") +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+
+p_depth <- ggplot() +
+  geom_spatraster(data = depth) +
+  geom_sf(data = europe, fill = "gray90", color = "gray60", linewidth = 0.3) +
+  geom_sf(
+    data = diversity_depth,
+    fill = NA,
+    color = "gray30",
+    linewidth = 0.3
+  ) +
+  scale_fill_viridis_c(
+    option = "mako",
+    direction = -1,
+    na.value = "transparent",
+    name = "Depth (m)"
+  ) +
+  coord_sf(
+    xlim = c(north_sea_bbox["xmin"] - 0.5, north_sea_bbox["xmax"] + 0.5),
+    ylim = c(north_sea_bbox["ymin"] - 0.5, north_sea_bbox["ymax"] + 0.5)
+  ) +
+  labs(x = NULL, y = NULL, title = "Bathymetry") +
+  theme_minimal() +
+  theme(panel.grid = element_line(color = "gray85", linewidth = 0.2))
+
+library(patchwork)
+p_beta + p_depth
+```
+
+This map allows visual inspection of whether areas of high biodiversity change coincide with particular depth zones or bathymetric features.
+
+## Discussion
+
+This analysis provides a first look at how marine biodiversity change relates to water depth in the North Sea. There are several important considerations when interpreting these results:
+
+**What we can and cannot conclude:** This is an exploratory analysis showing patterns of association, not causal relationships. Depth itself does not directly drive species turnover; rather, it correlates with temperature, light, substrate type, and human pressure, all of which influence community composition. A finding that shallow communities show more turnover could reflect warming, habitat disturbance, or simply better sampling effort in shallower waters.
+
+**Sampling considerations:** The EMODnet Biology diversity metrics are derived from occurrence records that vary in density across space and time. Areas with more sampling effort may show more detected species changes, regardless of actual ecological change. The beta-diversity metrics used here attempt to account for this by focusing on replacement rather than richness differences, but sampling artefacts remain a concern.
+
+**Depth as a proxy:** We used a single bathymetric surface (mean depth), but the relationship between biodiversity and depth is mediated by many factors. Future analyses could incorporate additional environmental layers (temperature, substrate, productivity) to disentangle the effects of depth from its correlates.
+
+## What You've Learned
+
+In this tutorial, you:
+
+- **Discovered and filtered WFS data** from EMODnet Biology using attribute and spatial CQL filters
+- **Discovered and downloaded WCS raster data** from EMODnet Bathymetry
+- **Combined vector and raster data** using `terra::extract()` to compute mean depth within grid cell polygons
+- **Created depth bands** from continuous depth values for categorical summaries
+- **Visualised patterns** of biodiversity change across the depth gradient using boxplots, scatterplots, and spatial maps
+
+These techniques for combining vector features with raster surfaces are widely applicable. Any analysis that needs environmental context for biological observations (temperature at sampling sites, substrate type at occurrence records, productivity at survey stations) follows the same pattern: retrieve the vector data, retrieve the raster surface, extract, and join.
+
+## Further Resources
+
+- [EMODnet Biology](https://www.emodnet-biology.eu/): Source portal for the biodiversity data used here
+- [EMODnet Bathymetry](https://www.emodnet-bathymetry.eu/): Source portal for the depth data
+- [emodnet.wfs documentation](https://emodnet.github.io/emodnet.wfs/): Full package reference for WFS access
+- [emodnet.wcs documentation](https://emodnet.github.io/emodnet.wcs/): Full package reference for WCS access
+- [terra::extract() documentation](https://rspatial.github.io/terra/reference/extract.html): Details on raster value extraction methods
+- [Geocomputation with R](https://r.geocompx.org/): Comprehensive guide to spatial data analysis in R

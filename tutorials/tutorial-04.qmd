@@ -890,6 +890,9 @@ Each yearly time step is a 2D spatial grid (longitude × latitude), and the full
 ```{r}
 #| label: inspect-stars-time
 time_vals <- stars::st_get_dimension_values(bottom_temp_stars, "time")
+# Ensure consistent POSIXct format (stars may return units objects
+# depending on the data source and platform)
+time_vals <- as.POSIXct(time_vals)
 cat("Time steps:", length(time_vals))
 cat("First:", format(time_vals[1]))
 cat("Last:", format(time_vals[length(time_vals)]))

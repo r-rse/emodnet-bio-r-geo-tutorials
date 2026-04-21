@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: main
+  push:
+    branches: main
+  schedule:
+    # Run every Monday at 10am UTC
+    - cron: '0 10 * * 1'
+
+name: Link Check
+
+permissions:
+  contents: read
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check links with Lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress '**/*.qmd' '**/*.md'
+          fail: true
+          jobSummary: true

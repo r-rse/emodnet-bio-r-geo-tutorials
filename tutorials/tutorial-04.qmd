@@ -797,7 +797,7 @@ Each layer carries rich variable metadata in its `cube:variables` property. The 
 str(med_services$properties[[1]]$`cube:variables`[[1]], max.level = 2)
 ```
 
-The standard STAC datacube fields include `dimensions` (which axes the variable spans), `type` (`"data"` for measured values), and `unit`. In standard STAC, each variable is identified by its key name in the `cube:variables` map. Copernicus Marine also stores this as an explicit `id` field inside each variable object, along with other Copernicus-specific additions: `name$en` (a human-readable description), `standardName` (the [CF convention](https://cfconventions.org/Data/cf-standard-names/current/build/cf-standard-name-table.html) name), and visualisation hints like `colormapId` and value ranges.
+The standard STAC datacube fields include `dimensions` (which axes the variable spans), `type` (`"data"` for measured values), and `unit`. In standard STAC, each variable is identified by its key name in the `cube:variables` map. Copernicus Marine also stores this as an explicit `id` field inside each variable object, along with other Copernicus-specific additions: `name$en` (a human-readable description), `standardName` (the [CF convention](https://cf-convention.github.io/cf-conventions/cf-conventions.html#_description_of_the_data) name), and visualisation hints like `colormapId` and value ranges.
 
 We can use these fields to build a clear mapping of layers to their variables. Since we need bottom temperature, we filter to the temperature layers:
 

@@ -242,16 +242,6 @@ Before downloading data, WCS services provide metadata about available coverages
 -   Habitat suitability models
 -   Gridded biodiversity metrics
 
-### Advantages of Web Services
-
-Compared to direct file downloads, web services offer:
-
--   **On-demand access** - Get only the data you need, when you need it
--   **Spatial filtering** - Request data for specific regions using bounding boxes
--   **Temporal subsetting** - Extract data for particular time periods
--   **Always current** - Access the latest data without managing downloads
--   **Reproducibility** - Script your data access for transparent, repeatable workflows
-
 ## Coordinate Reference Systems (CRS)
 
 A **Coordinate Reference System** defines how coordinates relate to locations on Earth's surface. Understanding CRS is essential for accurate spatial analysis.

@@ -63,7 +63,7 @@ By the end of this tutorial, you will be able to:
 
 | Coverage             | Service    | Description                   |
 |----------------------|------------|-------------------------------|
-| `emodnet__mean_2022` | bathymetry | Mean water depth (bathymetry) |
+| [`emodnet__mean_2022`](https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search#/metadata/18ff0d48-b203-4a65-94a9-5fd8b0ec35f6) | bathymetry | Mean water depth (bathymetry) |
 
 **External Sources:**
 

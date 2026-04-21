@@ -43,19 +43,19 @@ All data comes from the **EMODnet Human Activities** portal:
 | Layer | Description |
 |-------|-------------|
 | `cddaareas` | CDDA (Common Database on Designated Areas), the European inventory of nationally designated protected areas including nature reserves, national parks, and other site types |
-| `natura2000areas` | Natura 2000 network, the EU-wide network of protected areas established under the Birds and Habitats Directives to protect Europe's most valuable species and habitats |
-| `marineprotectedareas` | Other marine protected areas, sites designated under regional sea conventions (OSPAR, HELCOM, Barcelona Convention) and other international frameworks |
+| [`natura2000areas`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/ac911c34-1692-4642-a031-87bcb5822158) | Natura 2000 network, the EU-wide network of protected areas established under the Birds and Habitats Directives to protect Europe's most valuable species and habitats |
+| [`marineprotectedareas`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/f727edd7-87b8-4b02-b173-14ca13025f6f) | Other marine protected areas, sites designated under regional sea conventions (OSPAR, HELCOM, Barcelona Convention) and other international frameworks |
 
 **Energy Infrastructure:**
 
 | Layer | Description |
 |-------|-------------|
 | `platforms` | Offshore platforms, including oil, gas, and wind energy installations such as production platforms, substations, and support structures |
-| `pipelines` | Subsea pipelines for oil, gas, and chemical transport on the seabed |
-| `pcablesbshcontis` | Power cables from BSH (German Federal Maritime and Hydrographic Agency) and CONTIS database |
-| `pcablesshom` | Power cables from SHOM (French Naval Hydrographic and Oceanographic Service) |
-| `pcablesrijks` | Power cables from Rijkswaterstaat (Dutch Directorate-General for Public Works and Water Management) |
-| `pcablesnve` | Power cables from Norwegian sources |
+| [`pipelines`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/aca3dd01-77ac-47fe-8291-6ca916daaa6d) | Subsea pipelines for oil, gas, and chemical transport on the seabed |
+| [`pcablesbshcontis`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/41b339f8-b29c-4550-b787-3d68f08fdbcc) | Power cables from BSH (German Federal Maritime and Hydrographic Agency) and CONTIS database |
+| [`pcablesshom`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/41b339f8-b29c-4550-b787-3d68f08fdbcc) | Power cables from SHOM (French Naval Hydrographic and Oceanographic Service) |
+| [`pcablesrijks`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/41b339f8-b29c-4550-b787-3d68f08fdbcc) | Power cables from Rijkswaterstaat (Dutch Directorate-General for Public Works and Water Management) |
+| [`pcablesnve`](https://emodnet.ec.europa.eu/geonetwork/srv/api/records/41b339f8-b29c-4550-b787-3d68f08fdbcc) | Power cables from Norwegian sources |
 
 Note: EMODnet also provides telecommunication cable datasets (e.g., `sigcables`, `ukfibrecables`), but we focus on energy infrastructure in this tutorial.
 

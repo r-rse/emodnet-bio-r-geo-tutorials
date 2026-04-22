@@ -40,6 +40,11 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          # Pin to 1.9.36: 1.9.37 regresses htmlwidget embedding and hangs
+          # during render of the interactive tmap maps. Unpin once upstream
+          # fixes it. See issue for tracking.
+          version: "1.9.36"
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2

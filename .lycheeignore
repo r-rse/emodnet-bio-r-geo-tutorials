@@ -1,2 +1,7 @@
 # DOI resolvers often block automated link checkers with 403
 https://doi.org/.*
+
+# Forward-looking EMODnet URLs: the repo still lives at r-rse/.
+# Remove these entries once the repo is transferred to the EMODnet org.
+https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues
+https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/discussions

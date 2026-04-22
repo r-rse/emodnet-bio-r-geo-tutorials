@@ -69,7 +69,7 @@ By the end of this tutorial, you will be able to:
 
 | Source | Description |
 |----------------------------|--------------------------------------------|
-| [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from [MEDSEA_MULTIYEAR_PHY_006_004](https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description) reanalysis |
+| [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from [MEDSEA_MULTIYEAR_PHY_006_004](https://doi.org/10.48670/mds-00375) reanalysis |
 | [MOBS Database](https://github.com/crmcclain/MOBS_OPEN) | Marine Organism Body Size database [@mcclain2025] |
 
 ## Setup
@@ -757,7 +757,7 @@ cms_products_list() |>
   knitr::kable()
 ```
 
-A Copernicus **product** plays the same role as an EMODnet **service** (like `"biology"` or `"bathymetry"`): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product ([MEDSEA_MULTIYEAR_PHY_006_004](https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description)) provides \~4.2 km resolution compared to \~8 km for the global product.
+A Copernicus **product** plays the same role as an EMODnet **service** (like `"biology"` or `"bathymetry"`): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product ([MEDSEA_MULTIYEAR_PHY_006_004](https://doi.org/10.48670/mds-00375)) provides \~4.2 km resolution compared to \~8 km for the global product.
 
 ### Browsing Available Variables
 

@@ -64,6 +64,10 @@ jobs:
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
+        timeout-minutes: 45
+        env:
+          QUARTO_LOG_LEVEL: INFO
+          R_DEFAULT_INTERNET_TIMEOUT: 600
 
       - name: Publish to GitHub Pages (Production)
         if: contains(env.PUBLISH, 'true')

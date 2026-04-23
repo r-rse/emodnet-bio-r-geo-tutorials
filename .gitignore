@@ -20,6 +20,7 @@ lib/
 
 # Cached data
 data-cache/
+.ci-bathymetry/
 
 /.quarto/
 Rplots.pdf

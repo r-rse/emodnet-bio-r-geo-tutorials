@@ -580,15 +580,15 @@ for (i in seq_len(n_x)) {
   }
 }
 
-bathymetry <- do.call(
-  terra::merge,
-  c(
-    lapply(tile_files, terra::rast),
-    list(filename = tempfile(fileext = ".tif"), overwrite = TRUE)
-  )
+bathy_col <- terra::sprc(lapply(tile_files, terra::rast))
+bathymetry <- terra::merge(
+  bathy_col,
+  filename = tempfile(fileext = ".tif"),
+  overwrite = TRUE
 )
-
-file.remove(tile_files)
+# Keep tile_files on disk for the rest of the session; they'll be cleaned
+# up automatically when R exits. Removing them here breaks downstream reads
+# if `bathymetry` still holds lazy references to them.
 ```
 
 ::: {.callout-tip collapse="true"}

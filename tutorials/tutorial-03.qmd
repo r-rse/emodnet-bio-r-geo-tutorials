@@ -540,6 +540,19 @@ bathymetry <- do.call(merge, tiles)
 bathymetry
 ```
 
+```{r}
+#| include: false
+# CI-only: the merged SpatRaster holds lazy references to per-tile
+# tempfiles which can be garbage collected between chunks under the
+# runner's memory pressure. Write to a persistent .tif so subsequent
+# chunks read from a stable file.
+if (Sys.getenv("CI") == "true") {
+  bathy_path <- tempfile(fileext = ".tif")
+  terra::writeRaster(bathymetry, bathy_path, overwrite = TRUE)
+  bathymetry <- terra::rast(bathy_path)
+}
+```
+
 ::: {.callout-tip collapse="true"}
 ## Handling WCS download limits
 

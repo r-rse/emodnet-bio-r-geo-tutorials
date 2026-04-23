@@ -34,6 +34,11 @@ jobs:
       PUBLISH: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
       # Flush EMODnet data cache on scheduled builds to ensure fresh data
       EMODNET_CACHE_FLUSH: ${{ github.event_name == 'schedule' }}
+      # Pin R package resolution to the 2026-04-20 RSPM snapshot (the last
+      # known-green CI date) to dodge an upstream tmap 4.3 render hang.
+      # Remove this override once upstream tmap ships a fix.
+      # https://pak.r-lib.org/reference/get-started.html#time-travel-using-rspm
+      RSPM: https://packagemanager.posit.co/cran/__linux__/noble/2026-04-20
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

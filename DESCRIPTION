@@ -31,6 +31,7 @@ Imports:
     ggplot2,
     yaml
 Remotes:
+    tmap@4.2,
     EMODnet/emodnet.wfs,
     EMODnet/emodnet.wcs,
     pepijn-devries/CopernicusMarine

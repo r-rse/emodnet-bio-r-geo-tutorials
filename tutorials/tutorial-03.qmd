@@ -508,6 +508,7 @@ Because the bathymetry data is very high resolution (~0.001°, so roughly one mi
 
 ```{r}
 #| label: download-bathymetry
+#| eval: !expr 'Sys.getenv("CI") != "true"'
 # Split bbox into tiles (6 columns x 5 rows = 30 tiles)
 x_breaks <- seq(study_bbox["xmin"], study_bbox["xmax"], length.out = 7)
 y_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 6)
@@ -541,16 +542,53 @@ bathymetry
 ```
 
 ```{r}
+#| label: ci-download-bathymetry
+#| eval: !expr 'Sys.getenv("CI") == "true"'
 #| include: false
-# CI-only: the merged SpatRaster holds lazy references to per-tile
-# tempfiles which can be garbage collected between chunks under the
-# runner's memory pressure. Write to a persistent .tif so subsequent
-# chunks read from a stable file.
-if (Sys.getenv("CI") == "true") {
-  bathy_path <- tempfile(fileext = ".tif")
-  terra::writeRaster(bathymetry, bathy_path, overwrite = TRUE)
-  bathymetry <- terra::rast(bathy_path)
+# CI-only substitute for the download-bathymetry chunk above.
+# The in-memory list-of-rasters + lazy merge pattern used in the
+# visible chunk fails on the GitHub runner (tile tempfiles get
+# garbage collected between chunks under memory pressure). Here we
+# write each tile to a named .tif, merge to another named .tif, and
+# remove the tile files once the merge has materialised.
+x_breaks <- seq(study_bbox["xmin"], study_bbox["xmax"], length.out = 7)
+y_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 6)
+
+n_x <- length(x_breaks) - 1
+n_y <- length(y_breaks) - 1
+
+tile_files <- character(n_x * n_y)
+k <- 1
+for (i in seq_len(n_x)) {
+  for (j in seq_len(n_y)) {
+    tile_bbox <- c(
+      xmin = x_breaks[i],
+      ymin = y_breaks[j],
+      xmax = x_breaks[i + 1],
+      ymax = y_breaks[j + 1]
+    )
+    tile_files[k] <- tempfile(fileext = ".tif")
+    terra::writeRaster(
+      emdn_get_coverage(
+        wcs = bathy_wcs,
+        coverage_id = bathy_coverage_id,
+        bbox = tile_bbox
+      ),
+      tile_files[k]
+    )
+    k <- k + 1
+  }
 }
+
+bathymetry <- do.call(
+  terra::merge,
+  c(
+    lapply(tile_files, terra::rast),
+    list(filename = tempfile(fileext = ".tif"), overwrite = TRUE)
+  )
+)
+
+file.remove(tile_files)
 ```
 
 ::: {.callout-tip collapse="true"}

@@ -1330,7 +1330,7 @@ For a more detailed exploration, let's create an interactive map with `tmap`. Se
 
 ```{r}
 #| label: fig-interactive-final
-#| eval: false
+#| fig-cap: "Interactive map of protected areas and subsea infrastructure. Click on features for details."
 
 tmap_mode("view")
 
@@ -1370,6 +1370,7 @@ tm_shape(mpa_simple) +
 
 ```{r}
 #| label: fig-interactive-final-render
+#| eval: false
 #| echo: false
 #| fig-cap: "Interactive map of protected areas and subsea infrastructure. Click on features for details."
 

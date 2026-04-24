@@ -508,7 +508,6 @@ Because the bathymetry data is very high resolution (~0.001°, so roughly one mi
 
 ```{r}
 #| label: download-bathymetry
-#| eval: !expr 'Sys.getenv("CI") != "true"'
 # Split bbox into tiles (6 columns x 5 rows = 30 tiles)
 x_breaks <- seq(study_bbox["xmin"], study_bbox["xmax"], length.out = 7)
 y_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 6)
@@ -539,52 +538,6 @@ for (i in seq_len(n_x)) {
 # Merge tiles into a single raster
 bathymetry <- do.call(merge, tiles)
 bathymetry
-```
-
-```{r}
-#| label: ci-download-bathymetry
-#| eval: !expr 'Sys.getenv("CI") == "true"'
-#| include: false
-# CI-only substitute for the download-bathymetry chunk above.
-# Writes tiles and the merged raster to a project-local directory on the
-# runner's working disk to sidestep /tmp cleanup that was breaking reads
-# between chunks on GitHub Actions.
-x_breaks <- seq(study_bbox["xmin"], study_bbox["xmax"], length.out = 7)
-y_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 6)
-
-n_x <- length(x_breaks) - 1
-n_y <- length(y_breaks) - 1
-
-bathy_dir <- here::here(".ci-bathymetry")
-dir.create(bathy_dir, showWarnings = FALSE)
-
-tile_files <- character(n_x * n_y)
-k <- 1
-for (i in seq_len(n_x)) {
-  for (j in seq_len(n_y)) {
-    tile_bbox <- c(
-      xmin = x_breaks[i],
-      ymin = y_breaks[j],
-      xmax = x_breaks[i + 1],
-      ymax = y_breaks[j + 1]
-    )
-    tile_files[k] <- file.path(bathy_dir, sprintf("tile_%02d_%02d.tif", i, j))
-    emdn_get_coverage(
-      wcs = bathy_wcs,
-      coverage_id = bathy_coverage_id,
-      bbox = tile_bbox,
-      filename = tile_files[k]
-    )
-    k <- k + 1
-  }
-}
-
-bathy_col <- terra::sprc(lapply(tile_files, terra::rast))
-bathymetry <- terra::merge(
-  bathy_col,
-  filename = file.path(bathy_dir, "bathymetry.tif"),
-  overwrite = TRUE
-)
 ```
 
 ::: {.callout-tip collapse="true"}

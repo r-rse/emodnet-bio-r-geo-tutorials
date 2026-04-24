@@ -10,7 +10,6 @@ claude.md
 # Quarto
 _site/
 .quarto/
-_freeze/
 *_cache/
 *_files/
 
@@ -20,7 +19,6 @@ lib/
 
 # Cached data
 data-cache/
-.ci-bathymetry/
 
 /.quarto/
 Rplots.pdf

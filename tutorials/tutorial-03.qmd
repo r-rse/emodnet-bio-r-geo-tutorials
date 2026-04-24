@@ -555,7 +555,7 @@ y_breaks <- seq(study_bbox["ymin"], study_bbox["ymax"], length.out = 6)
 n_x <- length(x_breaks) - 1
 n_y <- length(y_breaks) - 1
 
-bathy_dir <- ".ci-bathymetry"
+bathy_dir <- here::here(".ci-bathymetry")
 dir.create(bathy_dir, showWarnings = FALSE)
 
 tile_files <- character(n_x * n_y)

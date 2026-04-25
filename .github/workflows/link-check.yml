@@ -34,5 +34,9 @@ jobs:
             --retry-wait-time 5
             '**/*.qmd'
             '**/*.md'
-          fail: true
+          # Advisory on PRs: GHA runners hit transient CDN/network failures
+          # on perfectly healthy URLs (quarto.org, stacspec.org, etc.). The
+          # weekly scheduled run on main is the authoritative link-rot
+          # signal; PR runs post a job summary but do not block merge.
+          fail: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
           jobSummary: true

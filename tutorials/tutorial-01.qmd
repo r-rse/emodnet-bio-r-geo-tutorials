@@ -1176,7 +1176,7 @@ knitr::kable(summary_table)
 
 ### Preparing Geometries for Visualisation
 
-To visualise the results, we need to combine the intersection flags with the MPA geometries. We also simplify the geometries because marine protected area boundaries often contain highly detailed coastlines with thousands of vertices, which slows down plotting.
+To visualise the results, we need to combine the intersection flags with the MPA geometries. We also simplify the geometries because marine protected area boundaries often contain highly detailed coastlines with thousands of vertices, which slows down plotting. The same applies to the pipeline and cable layers, which are typically digitised at very high resolution and can carry hundreds of thousands of coordinate points.
 
 We temporarily disable [`s2` (spherical geometry)](../concepts.qmd#the-geospatial-software-stack) because `st_simplify()` uses the GEOS library, which expects planar coordinates. Since our data is already in a projected CRS (EPSG:3035), this is safe:
 
@@ -1189,10 +1189,20 @@ mpa_simple <- mpa_combined |>
   bind_cols(intersections) |>
   st_simplify(dTolerance = 2000, preserveTopology = TRUE)
 
+# Simplify pipeline and cable geometries for the same reason
+infra_by_type$pipelines <- st_simplify(
+  infra_by_type$pipelines,
+  dTolerance = 50, preserveTopology = TRUE
+)
+infra_by_type$cables <- st_simplify(
+  infra_by_type$cables,
+  dTolerance = 50, preserveTopology = TRUE
+)
+
 sf_use_s2(TRUE)
 ```
 
-The `dTolerance` parameter specifies the simplification tolerance in CRS units. Since we're using EPSG:3035 (metric), `dTolerance = 2000` means 2 km, imperceptible at our map scale but dramatically faster to render.
+The `dTolerance` parameter specifies the simplification tolerance in CRS units. Since we're using EPSG:3035 (metric), `dTolerance = 2000` means 2 km for the MPA polygons (imperceptible at the map scale but dramatically faster to render) and `dTolerance = 50` means 50 m for the pipeline and cable lines, fine enough to keep their shape recognisable at deep zoom but coarse enough to drop the bulk of redundant sub-metre digitisation.
 
 ```{r}
 #| label: compare-simplification

@@ -1582,11 +1582,11 @@ interactive_map <- leaflet() |>
 # Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
 htmlwidgets::saveWidget(
   interactive_map,
-  get_output_path("biozone_bodysize_map.html", "tutorials"),
+  get_output_path("biozone_bodysize_map.html", "tutorials/maps"),
   selfcontained = TRUE
 )
 
-knitr::include_url("biozone_bodysize_map.html", height = "600px")
+knitr::include_url("maps/biozone_bodysize_map.html", height = "600px")
 ```
 
 The `popup` arguments use HTML strings to format the pop-up content. Tags like `<b>...</b>` for bold text and `<br>` for line breaks give control over how information is presented when a user clicks a feature. This is a key advantage of `leaflet` over `tmap`: full HTML support in pop-ups means you can style text, add links, or even embed images. See the [Leaflet for R documentation on popups and labels](https://rstudio.github.io/leaflet/articles/popups.html) for more examples.

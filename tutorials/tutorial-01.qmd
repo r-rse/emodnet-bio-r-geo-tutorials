@@ -1409,9 +1409,9 @@ interactive_map <- tm_shape(mpa_simple) +
   )
 
 # Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
-tmap_save(interactive_map, get_output_path("interactive_map.html", "tutorials"))
+tmap_save(interactive_map, get_output_path("interactive_map.html", "tutorials/maps"))
 
-knitr::include_url("interactive_map.html", height = "600px")
+knitr::include_url("maps/interactive_map.html", height = "600px")
 ```
 
 ## Interpretation and Conclusion

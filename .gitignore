@@ -15,6 +15,10 @@ _site/
 
 # Generated during render
 tutorials/*.html
+!tutorials/maps/
+# Maps too large for GitHub (>100MB) — see follow-up issue
+tutorials/maps/interactive_map.html
+tutorials/maps/trait_habitat_map.html
 lib/
 
 # Cached data

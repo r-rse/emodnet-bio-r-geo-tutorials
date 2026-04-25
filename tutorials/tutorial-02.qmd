@@ -1031,10 +1031,10 @@ interactive_map <- tm_basemap("Esri.WorldGrayCanvas", group.control = "none") +
 # Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
 tmap_save(
   interactive_map,
-  get_output_path("copepod_spawning_map.html", "tutorials")
+  get_output_path("copepod_spawning_map.html", "tutorials/maps")
 )
 
-knitr::include_url("copepod_spawning_map.html", height = "600px")
+knitr::include_url("maps/copepod_spawning_map.html", height = "600px")
 ```
 
 ::: {.callout-tip}

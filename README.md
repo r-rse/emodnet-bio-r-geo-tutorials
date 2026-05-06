@@ -181,8 +181,6 @@ Krystalli, A. (2025). EMODnet Biology R Geospatial Tutorials [Data set].
 https://github.com/EMODnet/emodnet-bio-r-geo-tutorials
 ```
 
-_Note: A DOI will be added once the tutorials are archived on Zenodo._
-
 ## Links
 
 -   **EMODnet:** [emodnet.eu](https://emodnet.eu)
@@ -204,7 +202,3 @@ Copyright © 2025 European Climate, Infrastructure and Environment Executive Age
 ### Reviewers
 
 Thanks to Maëlle Salmon ([@maelle](https://github.com/maelle)) and Joana Beja ([@JoBeja](https://github.com/JoBeja)) for thorough review of the tutorials and supporting documentation.
-
-------------------------------------------------------------------------
-
-**Status:** This project is in active development. Tutorials and documentation are being added incrementally.

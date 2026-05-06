@@ -1,7 +1,13 @@
 # DOI resolvers often block automated link checkers with 403
 https://doi.org/.*
 
-# Forward-looking EMODnet URLs: the repo still lives at r-rse/.
-# Remove these entries once the repo is transferred to the EMODnet org.
-https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues
-https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/discussions
+# Forward-looking EMODnet URLs.
+# The repo and rendered site still live at r-rse/* until the planned
+# transfer to the EMODnet GitHub org. Until then, every link to
+# github.com/EMODnet/emodnet-bio-r-geo-tutorials and to the future
+# emodnet.github.io site (workflow badges, repo-url, edit/issue links,
+# CITATION.cff, README, about page, etc.) will 404.
+# Tracked in https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/45
+# Remove these entries once the repo is transferred.
+https://github.com/EMODnet/emodnet-bio-r-geo-tutorials.*
+https://emodnet.github.io/emodnet-bio-r-geo-tutorials.*

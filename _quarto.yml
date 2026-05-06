@@ -8,8 +8,8 @@ project:
 website:
   title: "EMODnet Biology Geospatial R Tutorials"
   description: "Geospatial R tutorials for accessing and analyzing marine biological data from EMODnet (European Marine Observation and Data Network)"
-  site-url: https://r-rse.github.io/emodnet-bio-r-geo-tutorials
-  repo-url: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+  site-url: https://emodnet.github.io/emodnet-bio-r-geo-tutorials
+  repo-url: https://github.com/EMODnet/emodnet-bio-r-geo-tutorials
   repo-actions: [edit, issue]
   page-navigation: true
   favicon: assets/favicons/favicon.ico
@@ -17,8 +17,8 @@ website:
     [![](/assets/images/emodnet-logo.png)](https://emodnet.ec.europa.eu/)
   navbar:
     pinned: true
-    logo: assets/images/eu-logo-inverted.png
-    logo-alt: "European Commission Logo"
+    logo: assets/images/emodnet-logo.png
+    logo-alt: "EMODnet Logo"
     left:
       - href: index.qmd
         text: Home
@@ -37,7 +37,7 @@ website:
       - about.qmd
     right:
       - icon: github
-        href: https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+        href: https://github.com/EMODnet/emodnet-bio-r-geo-tutorials
   sidebar:
     style: "floating"
     search: true
@@ -45,10 +45,10 @@ website:
     left: |
       ![](assets/images/emodnet-logo.png){height=60px}
     center: |
-      © 2025 [COPYRIGHT HOLDER / PROJECT FUNDER]
+      © 2025 CINEA
     right: |
       [EMODnet Portal](https://emodnet.ec.europa.eu/en) |
-      [Biology Data](https://emodnet.ec.europa.eu/en/biology)
+      [Biology Data](https://emodnet.ec.europa.eu/geoviewer/?layers=6d617269-6e65-696e-666f-000000001510:1:1&basemap=ebwbl&active=12639&bounds=-7305078.789731367,3082466.8149999995,10259119.945731366,11459766.29&filters=&projection=EPSG:3857)
 
 format:
   html:

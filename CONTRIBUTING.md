@@ -29,41 +29,20 @@ git clone https://github.com/YOUR-USERNAME/emodnet-bio-r-geo-tutorials.git
 cd emodnet-bio-r-geo-tutorials
 ```
 
-2. **Install R dependencies**
+2. **Install the local package and all dependencies**
 
-Open R or RStudio in the project directory and run:
+The repository includes an R package with helper functions and cached data used by the tutorials. From the project root, install it together with every dependency (Imports + Suggests from `DESCRIPTION`, plus the website-only extras under `Config/Needs/website`) in one command:
 
 ```r
-# EMODnet packages are not on CRAN yet:
+# install pak if you don't have it
 install.packages("pak")
-# install emodnet.wfs
-# from ropensci r-universe
-install.packages("emodnet.wfs", repos = c("https://ropensci.r-universe.dev", "https://cloud.r-project.org"))
-# or dev version from GitHub
-pak::pak("EMODnet/emodnet.wfs")
-# install emodnet.wcs
-# dev version from GitHub
-pak::pak("EMODnet/emodnet.wcs")
 
-# Install required packages manually
-pak::pak(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
-
-# For Tutorial 4, also install:
-pak::pak(c("CopernicusMarine", "worrms"))
-
-# Optional: Use renv for reproducible environment (when available)
-# renv::restore()
+pak::local_install(
+  dependencies = c("all", "Config/Needs/website")
+)
 ```
 
-3. **Install the local package**
-
-The repository includes an R package with helper functions and cached data used by tutorials. Install it with:
-
-```r
-pak::local_install()
-```
-
-Re-run this command after pulling changes that modify files in `R/`, `data/`, or `DESCRIPTION`.
+Re-run after pulling changes that modify `R/`, `data/`, or `DESCRIPTION`.
 
 4. **Install Quarto**
 
@@ -639,7 +618,7 @@ Describe:
 
 - [Tidyverse Style Guide](https://style.tidyverse.org/)
 - [Quarto Documentation](https://quarto.org/docs/guide/)
-- [EMODnet Data Portal](https://emodnet.eu)
+- [EMODnet](https://emodnet.eu)
 - [emodnet.wfs Documentation](https://github.com/EMODnet/emodnet.wfs)
 - [emodnet.wcs Documentation](https://github.com/EMODnet/emodnet.wcs)
 

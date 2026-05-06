@@ -36,7 +36,7 @@ By the end of this tutorial, you will be able to:
 
 ### Data Sources
 
-All data comes from the **EMODnet Human Activities** portal:
+All data comes from **EMODnet Human Activities**:
 
 **Protected Areas:**
 
@@ -144,7 +144,7 @@ Before downloading data, it's good practice to explore what's available. The `em
 
 ### Discovering Available Services
 
-EMODnet provides data through several thematic portals. Let's see what [WFS services](../concepts.qmd#wfs-web-feature-service) are available:
+EMODnet provides data through several thematic services. Let's see what [WFS services](../concepts.qmd#wfs-web-feature-service) are available:
 
 ```{r}
 #| label: list-emodnet-services-code
@@ -1490,8 +1490,8 @@ These skills form the foundation for marine spatial analysis and can be applied 
 
 ## Further Resources
 
-- [EMODnet Seabed Habitats Portal](https://emodnet.ec.europa.eu/en/seabed-habitats): Explore more protected area and habitat data
-- [EMODnet Human Activities Portal](https://emodnet.ec.europa.eu/en/human-activities): Access additional infrastructure datasets
+- [EMODnet Seabed Habitats](https://emodnet.ec.europa.eu/en/seabed-habitats): Explore more protected area and habitat data
+- [EMODnet Human Activities](https://emodnet.ec.europa.eu/en/human-activities): Access additional infrastructure datasets
 - [emodnet.wfs package documentation](https://emodnet.github.io/emodnet.wfs/): Full function reference
 - [sf package vignettes](https://r-spatial.github.io/sf/articles/): Deep dive into spatial operations
 - [Geocomputation with R](https://r.geocompx.org/): Comprehensive spatial analysis guide

@@ -1071,6 +1071,6 @@ These skills transfer to many marine spatial analyses where you need to characte
 
 - **Continuous Plankton Recorder Survey**: [www.cprsurvey.org](https://www.cprsurvey.org/) for long-term plankton monitoring with raw data access
 - **ICES**: [ices.dk](https://www.ices.dk/) for stock assessments and biological data for North Sea fish
-- **EMODnet Biology Portal**: [emodnet.ec.europa.eu/en/biology](https://emodnet.ec.europa.eu/en/biology) for additional species distribution products
+- **EMODnet Biology**: [emodnet.ec.europa.eu/en/biology](https://emodnet.ec.europa.eu/en/biology) for additional species distribution products
 
 Ready for more? Continue to [Tutorial 3](tutorial-03.qmd) to learn how to combine WFS vector data with WCS raster data for integrated analyses.

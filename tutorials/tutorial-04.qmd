@@ -1644,8 +1644,8 @@ These skills enable complex marine ecological analyses that draw on the full bre
 
 ## Further Resources
 
--   [EMODnet Seabed Habitats Portal](https://emodnet.ec.europa.eu/en/seabed-habitats): Habitat maps
--   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology): Species occurrence data
+-   [EMODnet Seabed Habitats](https://emodnet.ec.europa.eu/en/seabed-habitats): Habitat maps
+-   [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology): Species occurrence data
 -   [Copernicus Marine Service](https://marine.copernicus.eu/): Oceanographic data
 -   [World Register of Marine Species (WoRMS)](https://www.marinespecies.org/): Taxonomic backbone
 -   [MOBS Database](https://github.com/crmcclain/MOBS_OPEN): Marine body size data

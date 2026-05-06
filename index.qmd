@@ -4,7 +4,7 @@ title: "EMODnet Biology Geospatial R Tutorials"
 
 ## Welcome
 
-Learn how to access and analyze marine biological and environmental data from [EMODnet](https://emodnet.ec.europa.eu/en/biology) using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.
+Learn how to access and analyze marine biological and environmental data from [EMODnet](https://emodnet.ec.europa.eu/) using R. These hands-on tutorials guide you through real-world marine spatial analysis workflows, from accessing data via web services to creating publication-ready visualizations.
 
 Whether you're investigating marine protected areas, exploring species distributions, or analyzing biodiversity change, these tutorials provide reproducible code and practical examples you can adapt to your own research questions.
 
@@ -150,7 +150,7 @@ install.packages(
 
 ### EMODnet Resources
 
--   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology) - Access marine biological data
+-   [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) - Access marine biological data
 -   [EMODnet Seabed Habitats](https://emodnet.ec.europa.eu/en/seabed-habitats) - Habitat maps and classifications
 -   [EMODnet Bathymetry](https://emodnet.ec.europa.eu/en/bathymetry) - Depth data and terrain models
 -   [EMODnet Human Activities](https://emodnet.ec.europa.eu/en/human-activities) - Infrastructure and activity data
@@ -170,5 +170,5 @@ install.packages(
 
 ## About This Project
 
-These tutorials are part of the [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) initiative. Learn more about the project, contributors, and funding on the [About](about.qmd) page.
+These tutorials are part of the [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology) service. Learn more about the project, contributors, and funding on the [About](about.qmd) page.
 

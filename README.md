@@ -1,10 +1,10 @@
 # EMODnet Biology R Geospatial Tutorials
 
-[![Quarto Publish](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
+[![Quarto Publish](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
 [![License: CC BY 4.0](https://img.shields.io/badge/License%20(content)-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![License: MIT](https://img.shields.io/badge/License%20(code)-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A collection of R-based geospatial tutorials demonstrating how to access and analyze marine biological and environmental data from EMODnet Biology and other EMODnet thematic portals using the `emodnet.wfs` and `emodnet.wcs` R packages.
+A collection of R-based geospatial tutorials demonstrating how to access and analyze marine biological and environmental data from EMODnet Biology and other EMODnet thematic services using the `emodnet.wfs` and `emodnet.wcs` R packages.
 
 ## Overview
 
@@ -24,15 +24,7 @@ These tutorials provide practical, reproducible workflows for working with EMODn
 
 ### Online Access
 
-<!--
-TODO: When moving to EMODnet GitHub organization, update:
-- This URL
-- _quarto.yml (website.site-url and website.repo-url)
-- Workflow badges above
-- NETLIFY_SITE_ID if keeping PR previews
--->
-
-The tutorials are available as an interactive website at: **https://r-rse.github.io/emodnet-bio-r-geo-tutorials/**
+The tutorials are available as an interactive website at: **https://emodnet.github.io/emodnet-bio-r-geo-tutorials/**
 
 ### Prerequisites
 
@@ -49,27 +41,21 @@ To follow along with the tutorials, you'll need:
 
 ### R Package Installation
 
-Install the required packages to run the tutorial code:
+The tutorials are bundled as an R package with helper functions and cached data. Installing the package from GitHub also pulls in every R dependency the tutorials need (including `emodnet.wfs` and `emodnet.wcs`, plus website-only extras), so this is a single one-liner:
 
-*Note:** EMODnet packages are not yet on CRAN, install from GitHub:
 ``` r
-# EMODnet packages are not on CRAN yet:
+# install pak if you don't have it
 install.packages("pak")
-# install emodnet.wfs
-# from ropensci r-universe
-install.packages("emodnet.wfs", repos = c("https://ropensci.r-universe.dev", "https://cloud.r-project.org"))
-# or dev version from GitHub
-pak::pak("EMODnet/emodnet.wfs")
-# install emodnet.wcs
-# dev version from GitHub
-pak::pak("EMODnet/emodnet.wcs")
 
-# Install required packages manually
-pak::pak(c("sf", "terra", "dplyr", "tidyr", "ggplot2", "tmap"))
-
-# For Tutorial 4, also install:
-pak::pak(c("CopernicusMarine", "worrms"))
+# install the tutorials package and ALL dependencies
+# (Imports + Suggests from DESCRIPTION, plus website-only deps)
+pak::pak(
+  "EMODnet/emodnet-bio-r-geo-tutorials",
+  dependencies = c("all", "Config/Needs/website")
+)
 ```
+
+`emodnet.wfs` is on [CRAN](https://cran.r-project.org/package=emodnet.wfs); `emodnet.wcs` is installed from the `EMODnet/emodnet.wcs` GitHub repository via the `Remotes:` field in `DESCRIPTION`. `pak` resolves both transparently.
 
 ## Working With the Tutorials
 
@@ -79,7 +65,7 @@ If you want to work through the tutorials in your own R environment:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/r-rse/emodnet-bio-r-geo-tutorials.git
+   git clone https://github.com/EMODnet/emodnet-bio-r-geo-tutorials.git
    cd emodnet-bio-r-geo-tutorials
    ```
 
@@ -103,7 +89,7 @@ If you want to preview the full website or contribute changes:
 
 2. **Clone and setup:**
    ```bash
-   git clone https://github.com/r-rse/emodnet-bio-r-geo-tutorials.git
+   git clone https://github.com/EMODnet/emodnet-bio-r-geo-tutorials.git
    cd emodnet-bio-r-geo-tutorials
    ```
 
@@ -137,20 +123,20 @@ If you want to preview the full website or contribute changes:
 
 ### Troubleshooting Workflow Failures
 
-If the [CI/CD workflow](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml) fails:
+If the [CI/CD workflow](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml) fails:
 
 **1. Check the workflow run:**
-   - Click the badge: [![Quarto Publish](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
+   - Click the badge: [![Quarto Publish](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml/badge.svg)](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/actions/workflows/publish.yml)
    - Review error messages in failed steps
 
 **2. Common issues:**
    - **R package errors**: Package versions may have changed - update `DESCRIPTION`
-   - **EMODnet service issues**: WFS/WCS endpoints may be temporarily down - check [EMODnet status](https://emodnet.ec.europa.eu/)
+   - **EMODnet service issues**: WFS/WCS endpoints may be temporarily down - check [EMODnet status](https://monitor.emodnet.eu/)
    - **Broken links**: Check the "Check links with Lychee" step job summary
    - **Render errors**: Test locally with `quarto render` to reproduce
 
 **3. Broken links (scheduled runs):**
-   - Weekly checks create [issues with label `scheduled-check`](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/labels/scheduled-check)
+   - Weekly checks create [issues with label `scheduled-check`](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/labels/scheduled-check)
    - Review and fix broken external links or update exclusions
    - Internal links usually indicate missing files or incorrect paths
 
@@ -162,7 +148,7 @@ If the [CI/CD workflow](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/act
    ```
 
 **5. Need help?**
-   - [Open an issue](https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues)
+   - [Open an issue](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues)
    - Tag maintainers if urgent
 
 ## Contributing
@@ -191,29 +177,33 @@ If you use these tutorials in your research or teaching, please cite them using 
 
 **Manual citation format:**
 ```
-[Authors] (2025). EMODnet Biology R Geospatial Tutorials [Data set].
-https://github.com/r-rse/emodnet-bio-r-geo-tutorials
+Krystalli, A. (2025). EMODnet Biology R Geospatial Tutorials [Data set].
+https://github.com/EMODnet/emodnet-bio-r-geo-tutorials
 ```
 
 _Note: A DOI will be added once the tutorials are archived on Zenodo._
 
 ## Links
 
--   **EMODnet Portal:** [emodnet.eu](https://emodnet.eu)
+-   **EMODnet:** [emodnet.eu](https://emodnet.eu)
 -   **emodnet.wfs Package:** [github.com/EMODnet/emodnet.wfs](https://github.com/EMODnet/emodnet.wfs)
 -   **emodnet.wcs Package:** [github.com/EMODnet/emodnet.wcs](https://github.com/EMODnet/emodnet.wcs)
--   **Tutorial Website:** [r-rse.github.io/emodnet-bio-r-geo-tutorials](https://r-rse.github.io/emodnet-bio-r-geo-tutorials/)
+-   **Tutorial Website:** [emodnet.github.io/emodnet-bio-r-geo-tutorials](https://emodnet.github.io/emodnet-bio-r-geo-tutorials/)
 
 ## Contact & Support
 
 -   **Report issues:** [GitHub Issues](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues)
 -   **Questions:** Open a [Discussion](https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/discussions)
 
-## Acknowledgments
+## Acknowledgements
 
-These tutorials were developed as part of the EMODnet Biology project. EMODnet is funded by the European Commission's Directorate-General for Maritime Affairs and Fisheries (DG MARE).
+The European Marine Observation and Data Network (EMODnet) is financed by the European Union under Regulation (EU) 2021/1139 of the European Parliament and of the Council of 7 July 2021 establishing the European Maritime, Fisheries and Aquaculture Fund. Ref: CINEA/EMFAF/2022/3.5.2/SI2.895681
 
-*(Additional funding and copyright information to be added)*
+Copyright © 2025 European Climate, Infrastructure and Environment Executive Agency (CINEA).
+
+### Reviewers
+
+Thanks to Maëlle Salmon ([@maelle](https://github.com/maelle)) and Joana Beja ([@JoBeja](https://github.com/JoBeja)) for thorough review of the tutorials and supporting documentation.
 
 ------------------------------------------------------------------------
 

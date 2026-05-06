@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Geospatial Concepts &amp; Glossary – EMODnet Biology Geospatial R Tutorials</title>
 <style>
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-609ca30faa80df1221f835c29f89fac6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-b6558560b06fd5d34033016ac99cc94a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -208,7 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ogc-standards-and-spatial-data-types" id="toc-ogc-standards-and-spatial-data-types" class="nav-link" data-scroll-target="#ogc-standards-and-spatial-data-types">OGC Standards and Spatial Data Types</a></li>
   <li><a href="#wfs-web-feature-service" id="toc-wfs-web-feature-service" class="nav-link" data-scroll-target="#wfs-web-feature-service">WFS (Web Feature Service)</a></li>
   <li><a href="#wcs-web-coverage-service" id="toc-wcs-web-coverage-service" class="nav-link" data-scroll-target="#wcs-web-coverage-service">WCS (Web Coverage Service)</a></li>
-  <li><a href="#advantages-of-web-services" id="toc-advantages-of-web-services" class="nav-link" data-scroll-target="#advantages-of-web-services">Advantages of Web Services</a></li>
+  <li><a href="#finding-authoritative-product-documentation" id="toc-finding-authoritative-product-documentation" class="nav-link" data-scroll-target="#finding-authoritative-product-documentation">Finding Authoritative Product Documentation</a></li>
   </ul>
 </li>
   <li>
@@ -428,20 +428,18 @@ Figure&nbsp;2: Web service request flow from R to EMODnet data services
 <li>Species abundance and diversity grids</li>
 <li>Habitat suitability models</li>
 <li>Gridded biodiversity metrics</li>
-</ul></section><section id="advantages-of-web-services" class="level3"><h3 class="anchored" data-anchor-id="advantages-of-web-services">Advantages of Web Services</h3>
-<p>Compared to direct file downloads, web services offer:</p>
+</ul></section><section id="finding-authoritative-product-documentation" class="level3"><h3 class="anchored" data-anchor-id="finding-authoritative-product-documentation">Finding Authoritative Product Documentation</h3>
+<p>The metadata exposed by WFS <code>GetCapabilities</code> and WCS <code>DescribeCoverage</code> (titles, abstracts, attributes) is publisher-dependent: sometimes it carries full product descriptions, often it carries only a short summary. For the authoritative, scientifically detailed account of an EMODnet data product (methodology, formulas, source datasets, units, version history), the canonical references live elsewhere:</p>
 <ul>
 <li>
-<strong>On-demand access</strong> - Get only the data you need, when you need it</li>
+<strong><a href="https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search">EMODnet Data Product Catalogue (Geonetwork)</a></strong> – Each EMODnet data product has a metadata record describing how it was built and where the underlying data came from. Searchable by keyword, organisation, and theme.</li>
 <li>
-<strong>Spatial filtering</strong> - Request data for specific regions using bounding boxes</li>
+<strong>GitHub product repositories</strong> – Many EMODnet products (especially in Biology and Seabed Habitats) publish their full processing code openly under the <a href="https://github.com/EMODnet">EMODnet GitHub organisation</a>. These contain the methods, parameters, and references behind the gridded products.</li>
 <li>
-<strong>Temporal subsetting</strong> - Extract data for particular time periods</li>
-<li>
-<strong>Always current</strong> - Access the latest data without managing downloads</li>
-<li>
-<strong>Reproducibility</strong> - Script your data access for transparent, repeatable workflows</li>
-</ul></section></section><section id="coordinate-reference-systems-crs" class="level2"><h2 class="anchored" data-anchor-id="coordinate-reference-systems-crs">Coordinate Reference Systems (CRS)</h2>
+<strong>EMODnet thematic portal pages</strong> – <a href="https://emodnet.ec.europa.eu/en/biology">Biology</a>, <a href="https://emodnet.ec.europa.eu/en/bathymetry">Bathymetry</a>, <a href="https://emodnet.ec.europa.eu/en/seabed-habitats">Seabed Habitats</a>, <a href="https://emodnet.ec.europa.eu/en/human-activities">Human Activities</a>, etc., each maintain product index and news pages with user-facing descriptions.</li>
+</ul>
+<p>When working with a layer or coverage in R, start with the in-API metadata for quick orientation; then consult the catalogue or product repository for definitions you can rely on for analysis.</p>
+</section></section><section id="coordinate-reference-systems-crs" class="level2"><h2 class="anchored" data-anchor-id="coordinate-reference-systems-crs">Coordinate Reference Systems (CRS)</h2>
 <p>A <strong>Coordinate Reference System</strong> defines how coordinates relate to locations on Earth’s surface. Understanding CRS is essential for accurate spatial analysis.</p>
 <section id="the-challenge-from-3d-earth-to-2d-maps" class="level3"><h3 class="anchored" data-anchor-id="the-challenge-from-3d-earth-to-2d-maps">The Challenge: From 3D Earth to 2D Maps</h3>
 <p>Earth is a three-dimensional sphere, but maps and computer screens are two-dimensional. Think of trying to peel an orange and flatten the peel completely - you can’t do it without distorting, stretching, tearing, or overlapping parts of it. This is the fundamental challenge of cartography.</p>

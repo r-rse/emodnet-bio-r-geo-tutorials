@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Learn to integrate EMODnet WFS and WCS services with external data sources including the Copernicus Marine Service and trait databases. Characterise benthic biozones in the Gulf of Lion using habitat composition, substrate type, environmental conditions, and body size distributions.">
 <title>4: Characterising Benthic Biozones – EMODnet Biology Geospatial R Tutorials</title>
@@ -90,10 +90,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-609ca30faa80df1221f835c29f89fac6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../site_libs/bootstrap/bootstrap-b6558560b06fd5d34033016ac99cc94a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -408,7 +408,7 @@ div.csl-indent {
 <th>Description</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td><code>emodnet__mean_2022</code></td>
+<td><a href="https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search#/metadata/18ff0d48-b203-4a65-94a9-5fd8b0ec35f6"><code>emodnet__mean_2022</code></a></td>
 <td>bathymetry</td>
 <td>Mean water depth (bathymetry)</td>
 </tr></tbody>
@@ -422,7 +422,7 @@ div.csl-indent {
 <tbody>
 <tr class="odd">
 <td><a href="https://marine.copernicus.eu/">Copernicus Marine Service</a></td>
-<td>Bottom temperature from <a href="https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description">MEDSEA_MULTIYEAR_PHY_006_004</a> reanalysis</td>
+<td>Bottom temperature from <a href="https://doi.org/10.48670/mds-00375">MEDSEA_MULTIYEAR_PHY_006_004</a> reanalysis</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/crmcclain/MOBS_OPEN">MOBS Database</a></td>
@@ -599,7 +599,7 @@ Figure&nbsp;1: Study area: Gulf of Lion in the northwestern Mediterranean
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["."],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MB11","2":"39","3":"0.000039"},{"1":"MB12","2":"88257","3":"0.088257"},{"1":"MB13","2":"1073","3":"0.001073"},{"1":"MB14","2":"49","3":"0.000049"},{"1":"MB15","2":"4709","3":"0.004709"},{"1":"MB152","2":"33","3":"0.000033"},{"1":"MB22","2":"34","3":"0.000034"},{"1":"MB221","2":"18","3":"0.000018"},{"1":"MB2211","2":"386","3":"0.000386"},{"1":"MB2212","2":"1","3":"0.000001"},{"1":"MB222","2":"401","3":"0.000401"},{"1":"MB2221","2":"33","3":"0.000033"},{"1":"MB2222","2":"21","3":"0.000021"},{"1":"MB2223","2":"519","3":"0.000519"},{"1":"MB23","2":"67","3":"0.000067"},{"1":"MB252","2":"8448","3":"0.008448"},{"1":"MB2522","2":"3","3":"0.000003"},{"1":"MB2523","2":"1786","3":"0.001786"},{"1":"MB31","2":"14","3":"0.000014"},{"1":"MB32","2":"20334","3":"0.020334"},{"1":"MB33","2":"2448","3":"0.002448"},{"1":"MB34","2":"295","3":"0.000295"},{"1":"MB35","2":"7625","3":"0.007625"},{"1":"MB41","2":"1","3":"0.000001"},{"1":"MB42","2":"3509","3":"0.003509"},{"1":"MB43","2":"4794","3":"0.004794"},{"1":"MB44","2":"18","3":"0.000018"},{"1":"MB51","2":"18","3":"0.000018"},{"1":"MB52","2":"23793","3":"0.023793"},{"1":"MB53","2":"4857","3":"0.004857"},{"1":"MB53 or MB63","2":"1315","3":"0.001315"},{"1":"MB54","2":"236","3":"0.000236"},{"1":"MB54 or MB64","2":"192","3":"0.000192"},{"1":"MB55","2":"18415","3":"0.018415"},{"1":"MB554","2":"66","3":"0.000066"},{"1":"MB554 or MB652","2":"17","3":"0.000017"},{"1":"MB61","2":"68","3":"0.000068"},{"1":"MB62","2":"10510","3":"0.010510"},{"1":"MB63","2":"739","3":"0.000739"},{"1":"MB64","2":"116","3":"0.000116"},{"1":"MB65","2":"4797","3":"0.004797"},{"1":"MB65 or MB55","2":"114","3":"0.000114"},{"1":"MB652","2":"327","3":"0.000327"},{"1":"MC11","2":"442","3":"0.000442"},{"1":"MC12","2":"69997","3":"0.069997"},{"1":"MC13","2":"759","3":"0.000759"},{"1":"MC14","2":"76","3":"0.000076"},{"1":"MC151","2":"1649","3":"0.001649"},{"1":"MC22","2":"10","3":"0.000010"},{"1":"MC221","2":"60","3":"0.000060"},{"1":"MC2211","2":"57","3":"0.000057"},{"1":"MC223","2":"77","3":"0.000077"},{"1":"MC2235","2":"123","3":"0.000123"},{"1":"MC23","2":"4","3":"0.000004"},{"1":"MC251","2":"157","3":"0.000157"},{"1":"MC31","2":"325","3":"0.000325"},{"1":"MC32","2":"28058","3":"0.028058"},{"1":"MC33","2":"1025","3":"0.001025"},{"1":"MC34","2":"9","3":"0.000009"},{"1":"MC35","2":"7487","3":"0.007487"},{"1":"MC41","2":"2","3":"0.000002"},{"1":"MC42","2":"2131","3":"0.002131"},{"1":"MC43","2":"2758","3":"0.002758"},{"1":"MC44","2":"31","3":"0.000031"},{"1":"MC45","2":"249","3":"0.000249"},{"1":"MC451","2":"1879","3":"0.001879"},{"1":"MC51","2":"13","3":"0.000013"},{"1":"MC52","2":"27823","3":"0.027823"},{"1":"MC53","2":"2596","3":"0.002596"},{"1":"MC53 or MC63","2":"875","3":"0.000875"},{"1":"MC54","2":"96","3":"0.000096"},{"1":"MC54 or MC64","2":"3","3":"0.000003"},{"1":"MC55","2":"49","3":"0.000049"},{"1":"MC61","2":"64","3":"0.000064"},{"1":"MC62","2":"9766","3":"0.009766"},{"1":"MC63","2":"649","3":"0.000649"},{"1":"MC64","2":"362","3":"0.000362"},{"1":"MC651","2":"676","3":"0.000676"},{"1":"MC651 or MC451 or MC35","2":"108","3":"0.000108"},{"1":"MD11","2":"53","3":"0.000053"},{"1":"MD12","2":"64791","3":"0.064791"},{"1":"MD13","2":"24","3":"0.000024"},{"1":"MD151","2":"287","3":"0.000287"},{"1":"MD22","2":"269","3":"0.000269"},{"1":"MD2211","2":"4","3":"0.000004"},{"1":"MD25","2":"3","3":"0.000003"},{"1":"MD31","2":"567","3":"0.000567"},{"1":"MD32","2":"83183","3":"0.083183"},{"1":"MD33","2":"136","3":"0.000136"},{"1":"MD34","2":"4","3":"0.000004"},{"1":"MD41","2":"232","3":"0.000232"},{"1":"MD42","2":"4501","3":"0.004501"},{"1":"MD43","2":"309","3":"0.000309"},{"1":"MD44","2":"8","3":"0.000008"},{"1":"MD451","2":"4784","3":"0.004784"},{"1":"MD51","2":"15","3":"0.000015"},{"1":"MD52","2":"90211","3":"0.090211"},{"1":"MD53","2":"485","3":"0.000485"},{"1":"MD53 or MD63","2":"33","3":"0.000033"},{"1":"MD54","2":"26","3":"0.000026"},{"1":"MD54 or MD64","2":"2","3":"0.000002"},{"1":"MD61","2":"462","3":"0.000462"},{"1":"MD62","2":"26936","3":"0.026936"},{"1":"MD63","2":"73","3":"0.000073"},{"1":"MD64","2":"93","3":"0.000093"},{"1":"MD651","2":"691","3":"0.000691"},{"1":"MD651 or MD451","2":"120","3":"0.000120"},{"1":"ME11","2":"695","3":"0.000695"},{"1":"ME12","2":"10951","3":"0.010951"},{"1":"ME15","2":"220","3":"0.000220"},{"1":"ME21","2":"1","3":"0.000001"},{"1":"ME221","2":"382","3":"0.000382"},{"1":"ME25","2":"6","3":"0.000006"},{"1":"ME31","2":"486","3":"0.000486"},{"1":"ME32","2":"5280","3":"0.005280"},{"1":"ME34 or MF34","2":"1","3":"0.000001"},{"1":"ME35","2":"82","3":"0.000082"},{"1":"ME41","2":"1239","3":"0.001239"},{"1":"ME42","2":"3184","3":"0.003184"},{"1":"ME44 or MF44","2":"2","3":"0.000002"},{"1":"ME45","2":"49","3":"0.000049"},{"1":"ME51","2":"233","3":"0.000233"},{"1":"ME52","2":"3661","3":"0.003661"},{"1":"ME54 or MF54","2":"2","3":"0.000002"},{"1":"ME55","2":"840","3":"0.000840"},{"1":"ME61","2":"2200","3":"0.002200"},{"1":"ME62","2":"20623","3":"0.020623"},{"1":"ME64 or MF64","2":"17","3":"0.000017"},{"1":"ME65","2":"1014","3":"0.001014"},{"1":"ME65 or ME55","2":"35","3":"0.000035"},{"1":"MF11","2":"166","3":"0.000166"},{"1":"MF12","2":"25","3":"0.000025"},{"1":"MF15","2":"114","3":"0.000114"},{"1":"MF221","2":"5","3":"0.000005"},{"1":"MF31","2":"2","3":"0.000002"},{"1":"MF32","2":"38","3":"0.000038"},{"1":"MF35","2":"15","3":"0.000015"},{"1":"MF41","2":"402","3":"0.000402"},{"1":"MF42","2":"136","3":"0.000136"},{"1":"MF45","2":"17","3":"0.000017"},{"1":"MF52","2":"203","3":"0.000203"},{"1":"MF55","2":"171","3":"0.000171"},{"1":"MF61","2":"288","3":"0.000288"},{"1":"MF62","2":"1828","3":"0.001828"},{"1":"MF65","2":"766","3":"0.000766"},{"1":"MF65 or MF55","2":"47","3":"0.000047"},{"1":"MG11","2":"56","3":"0.000056"},{"1":"MG12","2":"20","3":"0.000020"},{"1":"MG15","2":"11","3":"0.000011"},{"1":"MG41","2":"188","3":"0.000188"},{"1":"MG42","2":"3","3":"0.000003"},{"1":"MG52","2":"588","3":"0.000588"},{"1":"MG61","2":"116","3":"0.000116"},{"1":"MG62","2":"2745","3":"0.002745"},{"1":"MG65","2":"55","3":"0.000055"},{"1":"MG65 or MG55","2":"3","3":"0.000003"},{"1":"Na","2":"291547","3":"0.291547"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["."],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MB11","2":"222","3":"0.000222"},{"1":"MB12","2":"94192","3":"0.094192"},{"1":"MB13","2":"7984","3":"0.007984"},{"1":"MB14","2":"21","3":"0.000021"},{"1":"MB15","2":"3149","3":"0.003149"},{"1":"MB152","2":"3","3":"0.000003"},{"1":"MB22","2":"76","3":"0.000076"},{"1":"MB221","2":"332","3":"0.000332"},{"1":"MB2211","2":"137","3":"0.000137"},{"1":"MB2212","2":"38","3":"0.000038"},{"1":"MB222","2":"2826","3":"0.002826"},{"1":"MB2221","2":"143","3":"0.000143"},{"1":"MB2222","2":"195","3":"0.000195"},{"1":"MB2223","2":"787","3":"0.000787"},{"1":"MB252","2":"3063","3":"0.003063"},{"1":"MB2523","2":"816","3":"0.000816"},{"1":"MB31","2":"173","3":"0.000173"},{"1":"MB32","2":"28298","3":"0.028298"},{"1":"MB33","2":"2555","3":"0.002555"},{"1":"MB34","2":"41","3":"0.000041"},{"1":"MB35","2":"1710","3":"0.001710"},{"1":"MB41","2":"43","3":"0.000043"},{"1":"MB42","2":"5190","3":"0.005190"},{"1":"MB43","2":"16743","3":"0.016743"},{"1":"MB44","2":"13","3":"0.000013"},{"1":"MB51","2":"319","3":"0.000319"},{"1":"MB52","2":"26126","3":"0.026126"},{"1":"MB53","2":"1773","3":"0.001773"},{"1":"MB53 or MB63","2":"7995","3":"0.007995"},{"1":"MB54","2":"105","3":"0.000105"},{"1":"MB54 or MB64","2":"64","3":"0.000064"},{"1":"MB55","2":"9282","3":"0.009282"},{"1":"MB554","2":"15","3":"0.000015"},{"1":"MB61","2":"576","3":"0.000576"},{"1":"MB62","2":"22652","3":"0.022652"},{"1":"MB63","2":"4087","3":"0.004087"},{"1":"MB64","2":"42","3":"0.000042"},{"1":"MB65","2":"1689","3":"0.001689"},{"1":"MB65 or MB55","2":"92","3":"0.000092"},{"1":"MB652","2":"80","3":"0.000080"},{"1":"MC11","2":"2237","3":"0.002237"},{"1":"MC12","2":"64032","3":"0.064032"},{"1":"MC13","2":"9671","3":"0.009671"},{"1":"MC14","2":"19","3":"0.000019"},{"1":"MC151","2":"1247","3":"0.001247"},{"1":"MC22","2":"54","3":"0.000054"},{"1":"MC221","2":"278","3":"0.000278"},{"1":"MC2211","2":"335","3":"0.000335"},{"1":"MC2212","2":"1","3":"0.000001"},{"1":"MC223","2":"65","3":"0.000065"},{"1":"MC2235","2":"131","3":"0.000131"},{"1":"MC31","2":"1331","3":"0.001331"},{"1":"MC32","2":"33949","3":"0.033949"},{"1":"MC33","2":"2639","3":"0.002639"},{"1":"MC34","2":"14","3":"0.000014"},{"1":"MC35","2":"2325","3":"0.002325"},{"1":"MC41","2":"15","3":"0.000015"},{"1":"MC42","2":"3308","3":"0.003308"},{"1":"MC43","2":"12020","3":"0.012020"},{"1":"MC44","2":"23","3":"0.000023"},{"1":"MC45","2":"136","3":"0.000136"},{"1":"MC451","2":"703","3":"0.000703"},{"1":"MC51","2":"154","3":"0.000154"},{"1":"MC52","2":"26197","3":"0.026197"},{"1":"MC53","2":"2219","3":"0.002219"},{"1":"MC53 or MC63","2":"4748","3":"0.004748"},{"1":"MC54","2":"36","3":"0.000036"},{"1":"MC54 or MC64","2":"1","3":"0.000001"},{"1":"MC55","2":"15","3":"0.000015"},{"1":"MC61","2":"329","3":"0.000329"},{"1":"MC62","2":"13125","3":"0.013125"},{"1":"MC63","2":"2734","3":"0.002734"},{"1":"MC64","2":"140","3":"0.000140"},{"1":"MC651","2":"245","3":"0.000245"},{"1":"MC651 or MC451 or MC35","2":"93","3":"0.000093"},{"1":"MD11","2":"136","3":"0.000136"},{"1":"MD12","2":"67316","3":"0.067316"},{"1":"MD13","2":"9","3":"0.000009"},{"1":"MD151","2":"285","3":"0.000285"},{"1":"MD22","2":"1974","3":"0.001974"},{"1":"MD2211","2":"9","3":"0.000009"},{"1":"MD31","2":"1725","3":"0.001725"},{"1":"MD32","2":"59958","3":"0.059958"},{"1":"MD33","2":"4","3":"0.000004"},{"1":"MD34","2":"3","3":"0.000003"},{"1":"MD41","2":"39","3":"0.000039"},{"1":"MD42","2":"8989","3":"0.008989"},{"1":"MD43","2":"73","3":"0.000073"},{"1":"MD44","2":"12","3":"0.000012"},{"1":"MD451","2":"2021","3":"0.002021"},{"1":"MD51","2":"47","3":"0.000047"},{"1":"MD52","2":"46733","3":"0.046733"},{"1":"MD53","2":"38","3":"0.000038"},{"1":"MD53 or MD63","2":"30","3":"0.000030"},{"1":"MD54","2":"31","3":"0.000031"},{"1":"MD61","2":"1970","3":"0.001970"},{"1":"MD62","2":"27181","3":"0.027181"},{"1":"MD63","2":"59","3":"0.000059"},{"1":"MD64","2":"113","3":"0.000113"},{"1":"MD651","2":"286","3":"0.000286"},{"1":"MD651 or MD451","2":"197","3":"0.000197"},{"1":"ME11","2":"971","3":"0.000971"},{"1":"ME12","2":"14073","3":"0.014073"},{"1":"ME15","2":"191","3":"0.000191"},{"1":"ME221","2":"51","3":"0.000051"},{"1":"ME31","2":"416","3":"0.000416"},{"1":"ME32","2":"5991","3":"0.005991"},{"1":"ME35","2":"29","3":"0.000029"},{"1":"ME41","2":"1270","3":"0.001270"},{"1":"ME42","2":"3793","3":"0.003793"},{"1":"ME44 or MF44","2":"9","3":"0.000009"},{"1":"ME45","2":"22","3":"0.000022"},{"1":"ME51","2":"108","3":"0.000108"},{"1":"ME52","2":"5411","3":"0.005411"},{"1":"ME54 or MF54","2":"17","3":"0.000017"},{"1":"ME54 or MF54 or ME64 or MF64","2":"2","3":"0.000002"},{"1":"ME55","2":"461","3":"0.000461"},{"1":"ME61","2":"2463","3":"0.002463"},{"1":"ME62","2":"20682","3":"0.020682"},{"1":"ME64 or MF64","2":"50","3":"0.000050"},{"1":"ME65","2":"316","3":"0.000316"},{"1":"ME65 or ME55","2":"48","3":"0.000048"},{"1":"MF11","2":"81","3":"0.000081"},{"1":"MF12","2":"2185","3":"0.002185"},{"1":"MF15","2":"50","3":"0.000050"},{"1":"MF31","2":"16","3":"0.000016"},{"1":"MF32","2":"43","3":"0.000043"},{"1":"MF35","2":"21","3":"0.000021"},{"1":"MF41","2":"165","3":"0.000165"},{"1":"MF42","2":"1660","3":"0.001660"},{"1":"MF45","2":"14","3":"0.000014"},{"1":"MF52","2":"1967","3":"0.001967"},{"1":"MF55","2":"79","3":"0.000079"},{"1":"MF61","2":"472","3":"0.000472"},{"1":"MF62","2":"4178","3":"0.004178"},{"1":"MF65","2":"204","3":"0.000204"},{"1":"MF65 or MF55","2":"61","3":"0.000061"},{"1":"MG11","2":"38","3":"0.000038"},{"1":"MG12","2":"333","3":"0.000333"},{"1":"MG31","2":"1","3":"0.000001"},{"1":"MG32","2":"3","3":"0.000003"},{"1":"MG35","2":"1","3":"0.000001"},{"1":"MG41","2":"75","3":"0.000075"},{"1":"MG42","2":"139","3":"0.000139"},{"1":"MG44","2":"1","3":"0.000001"},{"1":"MG52","2":"251","3":"0.000251"},{"1":"MG54 or MG64","2":"1","3":"0.000001"},{"1":"MG55","2":"2","3":"0.000002"},{"1":"MG61","2":"65","3":"0.000065"},{"1":"MG62","2":"3648","3":"0.003648"},{"1":"MG64","2":"3","3":"0.000003"},{"1":"MG65","2":"19","3":"0.000019"},{"1":"Na","2":"280396","3":"0.280396"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -611,7 +611,7 @@ Figure&nbsp;1: Study area: Gulf of Lion in the northwestern Mediterranean
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["."],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MB53 or MB63","2":"1315","3":"0.001315"},{"1":"MB54 or MB64","2":"192","3":"0.000192"},{"1":"MB554 or MB652","2":"17","3":"0.000017"},{"1":"MB65 or MB55","2":"114","3":"0.000114"},{"1":"MC53 or MC63","2":"875","3":"0.000875"},{"1":"MC54 or MC64","2":"3","3":"0.000003"},{"1":"MC651 or MC451 or MC35","2":"108","3":"0.000108"},{"1":"MD53 or MD63","2":"33","3":"0.000033"},{"1":"MD54 or MD64","2":"2","3":"0.000002"},{"1":"MD651 or MD451","2":"120","3":"0.000120"},{"1":"ME34 or MF34","2":"1","3":"0.000001"},{"1":"ME44 or MF44","2":"2","3":"0.000002"},{"1":"ME54 or MF54","2":"2","3":"0.000002"},{"1":"ME64 or MF64","2":"17","3":"0.000017"},{"1":"ME65 or ME55","2":"35","3":"0.000035"},{"1":"MF65 or MF55","2":"47","3":"0.000047"},{"1":"MG65 or MG55","2":"3","3":"0.000003"},{"1":"Na","2":"291547","3":"0.291547"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["."],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"MB53 or MB63","2":"7995","3":"0.007995"},{"1":"MB54 or MB64","2":"64","3":"0.000064"},{"1":"MB65 or MB55","2":"92","3":"0.000092"},{"1":"MC53 or MC63","2":"4748","3":"0.004748"},{"1":"MC54 or MC64","2":"1","3":"0.000001"},{"1":"MC651 or MC451 or MC35","2":"93","3":"0.000093"},{"1":"MD53 or MD63","2":"30","3":"0.000030"},{"1":"MD651 or MD451","2":"197","3":"0.000197"},{"1":"ME44 or MF44","2":"9","3":"0.000009"},{"1":"ME54 or MF54","2":"17","3":"0.000017"},{"1":"ME54 or MF54 or ME64 or MF64","2":"2","3":"0.000002"},{"1":"ME64 or MF64","2":"50","3":"0.000050"},{"1":"ME65 or ME55","2":"48","3":"0.000048"},{"1":"MF65 or MF55","2":"61","3":"0.000061"},{"1":"MG54 or MG64","2":"1","3":"0.000001"},{"1":"Na","2":"280396","3":"0.280396"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -1144,10 +1144,9 @@ Figure&nbsp;3: Benthic species occurrence records in the Gulf of Lion
 </div>
 </div>
 </div>
-<p>The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We set land and sea-level cells (values &gt;= 0) to <code>NA</code>, then negate the remaining values so that depth is expressed as a positive number (deeper = larger):</p>
+<p>The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We want to mask land and sea-level cells (values &gt;= 0) to <code>NA</code> and negate the remaining values so that depth is expressed as a positive number (deeper = larger). We can do both in a single step using <code><a href="https://rspatial.github.io/terra/reference/ifelse.html">terra::ifel()</a></code>, the terra equivalent of <code><a href="https://dplyr.tidyverse.org/reference/if_else.html">dplyr::if_else()</a></code>: it takes a logical raster and returns a new raster with one value where the condition is <code>TRUE</code> and another where it is <code>FALSE</code>. Here the <code>TRUE</code> branch becomes <code>NA</code> (masking land) and the <code>FALSE</code> branch flips the sign of marine cells:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bathymetry</span><span class="op">[</span><span class="va">bathymetry</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span><span class="va">depth</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span> <span class="op">*</span> <span class="va">bathymetry</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">depth</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/ifelse.html">ifel</a></span><span class="op">(</span><span class="va">bathymetry</span> <span class="op">&gt;=</span> <span class="fl">0</span>, <span class="cn">NA</span>, <span class="op">-</span><span class="va">bathymetry</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html">names</a></span><span class="op">(</span><span class="va">depth</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"depth_m"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="visualising-bathymetry" class="level3"><h3 class="anchored" data-anchor-id="visualising-bathymetry">Visualising Bathymetry</h3>
@@ -1296,7 +1295,7 @@ Figure&nbsp;4: Bathymetry of the Gulf of Lion (depth in metres)
 </table>
 </div>
 </div>
-<p>A Copernicus <strong>product</strong> plays the same role as an EMODnet <strong>service</strong> (like <code>"biology"</code> or <code>"bathymetry"</code>): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product (<a href="https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description">MEDSEA_MULTIYEAR_PHY_006_004</a>) provides ~4.2 km resolution compared to ~8 km for the global product.</p>
+<p>A Copernicus <strong>product</strong> plays the same role as an EMODnet <strong>service</strong> (like <code>"biology"</code> or <code>"bathymetry"</code>): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product (<a href="https://doi.org/10.48670/mds-00375">MEDSEA_MULTIYEAR_PHY_006_004</a>) provides ~4.2 km resolution compared to ~8 km for the global product.</p>
 </section><section id="browsing-available-variables" class="level3"><h3 class="anchored" data-anchor-id="browsing-available-variables">Browsing Available Variables</h3>
 <p>Unlike OGC services where each layer contains a single dataset, Copernicus products are built on a datacube architecture. A single product can bundle multiple physical variables (temperature, salinity, currents) across multiple layers, where each layer can have distinct dimensions. We can get a high-level overview of all variables available across the entire product using <code><a href="https://pepijn-devries.github.io/CopernicusMarine/reference/cms_product_details.html">cms_product_details()</a></code>:</p>
 <div class="cell" data-layout-align="center">
@@ -1338,29 +1337,46 @@ Figure&nbsp;4: Bathymetry of the Gulf of Lion (depth in metres)
 <span><span class="co">#&gt;  [2] "cmems_mod_med_phy_my_4.2km_static_202211--ext--coords"</span></span>
 <span><span class="co">#&gt;  [3] "cmems_mod_med_phy_my_4.2km_static_202211--ext--bathy" </span></span>
 <span><span class="co">#&gt;  [4] "cmems_mod_med_phy_my_4.2km_static_202211--ext--mdt"   </span></span>
-<span><span class="co">#&gt;  [5] "cmems_mod_med_phy-sal_my_4.2km_P1Y-m_202211"          </span></span>
-<span><span class="co">#&gt;  [6] "cmems_mod_med_phy-cur_my_4.2km_P1Y-m_202211"          </span></span>
-<span><span class="co">#&gt;  [7] "cmems_mod_med_phy-mld_my_4.2km_P1Y-m_202211"          </span></span>
-<span><span class="co">#&gt;  [8] "cmems_mod_med_phy-ssh_my_4.2km_P1Y-m_202211"          </span></span>
-<span><span class="co">#&gt;  [9] "cmems_mod_med_phy-tem_my_4.2km_P1Y-m_202211"          </span></span>
-<span><span class="co">#&gt; [10] "cmems_mod_med_phy-hflux_my_4.2km_P1D-m_202411"        </span></span>
-<span><span class="co">#&gt; [11] "cmems_mod_med_phy-hflux_my_4.2km_P1M-m_202411"        </span></span>
-<span><span class="co">#&gt; [12] "cmems_mod_med_phy-mflux_my_4.2km_P1D-m_202411"        </span></span>
-<span><span class="co">#&gt; [13] "cmems_mod_med_phy-mflux_my_4.2km_P1M-m_202411"        </span></span>
-<span><span class="co">#&gt; [14] "cmems_mod_med_phy-wflux_my_4.2km_P1D-m_202411"        </span></span>
-<span><span class="co">#&gt; [15] "cmems_mod_med_phy-wflux_my_4.2km_P1M-m_202411"        </span></span>
-<span><span class="co">#&gt; [16] "cmems_mod_med_phy-cur_my_4.2km_P1D-m_202511"          </span></span>
-<span><span class="co">#&gt; [17] "cmems_mod_med_phy-cur_my_4.2km_P1M-m_202511"          </span></span>
-<span><span class="co">#&gt; [18] "cmems_mod_med_phy-cur_my_4.2km_PT1H-m_202511"         </span></span>
-<span><span class="co">#&gt; [19] "cmems_mod_med_phy-mld_my_4.2km_P1D-m_202511"          </span></span>
-<span><span class="co">#&gt; [20] "cmems_mod_med_phy-mld_my_4.2km_P1M-m_202511"          </span></span>
-<span><span class="co">#&gt; [21] "cmems_mod_med_phy-sal_my_4.2km_P1D-m_202511"          </span></span>
-<span><span class="co">#&gt; [22] "cmems_mod_med_phy-sal_my_4.2km_P1M-m_202511"          </span></span>
-<span><span class="co">#&gt; [23] "cmems_mod_med_phy-ssh_my_4.2km_P1D-m_202511"          </span></span>
-<span><span class="co">#&gt; [24] "cmems_mod_med_phy-ssh_my_4.2km_P1M-m_202511"          </span></span>
-<span><span class="co">#&gt; [25] "cmems_mod_med_phy-ssh_my_4.2km_PT1H-m_202511"         </span></span>
-<span><span class="co">#&gt; [26] "cmems_mod_med_phy-temp_my_4.2km_P1D-m_202511"         </span></span>
-<span><span class="co">#&gt; [27] "cmems_mod_med_phy-temp_my_4.2km_P1M-m_202511"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="co">#&gt;  [5] "med-cmcc-cur-int-m_202112"                            </span></span>
+<span><span class="co">#&gt;  [6] "med-cmcc-cur-rean-d_202012"                           </span></span>
+<span><span class="co">#&gt;  [7] "med-cmcc-cur-rean-h_202012"                           </span></span>
+<span><span class="co">#&gt;  [8] "med-cmcc-cur-rean-m_202012"                           </span></span>
+<span><span class="co">#&gt;  [9] "med-cmcc-mld-int-m_202112"                            </span></span>
+<span><span class="co">#&gt; [10] "med-cmcc-mld-rean-d_202012"                           </span></span>
+<span><span class="co">#&gt; [11] "med-cmcc-mld-rean-m_202012"                           </span></span>
+<span><span class="co">#&gt; [12] "med-cmcc-sal-int-m_202112"                            </span></span>
+<span><span class="co">#&gt; [13] "med-cmcc-sal-rean-d_202012"                           </span></span>
+<span><span class="co">#&gt; [14] "med-cmcc-sal-rean-m_202012"                           </span></span>
+<span><span class="co">#&gt; [15] "med-cmcc-ssh-int-m_202112"                            </span></span>
+<span><span class="co">#&gt; [16] "med-cmcc-ssh-rean-d_202012"                           </span></span>
+<span><span class="co">#&gt; [17] "med-cmcc-ssh-rean-h_202012"                           </span></span>
+<span><span class="co">#&gt; [18] "med-cmcc-ssh-rean-m_202012"                           </span></span>
+<span><span class="co">#&gt; [19] "med-cmcc-tem-int-m_202112"                            </span></span>
+<span><span class="co">#&gt; [20] "med-cmcc-tem-rean-d_202012"                           </span></span>
+<span><span class="co">#&gt; [21] "med-cmcc-tem-rean-m_202012"                           </span></span>
+<span><span class="co">#&gt; [22] "cmems_mod_med_phy-sal_my_4.2km_P1Y-m_202211"          </span></span>
+<span><span class="co">#&gt; [23] "cmems_mod_med_phy-cur_my_4.2km_P1Y-m_202211"          </span></span>
+<span><span class="co">#&gt; [24] "cmems_mod_med_phy-mld_my_4.2km_P1Y-m_202211"          </span></span>
+<span><span class="co">#&gt; [25] "cmems_mod_med_phy-ssh_my_4.2km_P1Y-m_202211"          </span></span>
+<span><span class="co">#&gt; [26] "cmems_mod_med_phy-tem_my_4.2km_P1Y-m_202211"          </span></span>
+<span><span class="co">#&gt; [27] "cmems_mod_med_phy-hflux_my_4.2km_P1D-m_202411"        </span></span>
+<span><span class="co">#&gt; [28] "cmems_mod_med_phy-hflux_my_4.2km_P1M-m_202411"        </span></span>
+<span><span class="co">#&gt; [29] "cmems_mod_med_phy-mflux_my_4.2km_P1D-m_202411"        </span></span>
+<span><span class="co">#&gt; [30] "cmems_mod_med_phy-mflux_my_4.2km_P1M-m_202411"        </span></span>
+<span><span class="co">#&gt; [31] "cmems_mod_med_phy-wflux_my_4.2km_P1D-m_202411"        </span></span>
+<span><span class="co">#&gt; [32] "cmems_mod_med_phy-wflux_my_4.2km_P1M-m_202411"        </span></span>
+<span><span class="co">#&gt; [33] "cmems_mod_med_phy-cur_my_4.2km_P1D-m_202511"          </span></span>
+<span><span class="co">#&gt; [34] "cmems_mod_med_phy-cur_my_4.2km_P1M-m_202511"          </span></span>
+<span><span class="co">#&gt; [35] "cmems_mod_med_phy-cur_my_4.2km_PT1H-m_202511"         </span></span>
+<span><span class="co">#&gt; [36] "cmems_mod_med_phy-mld_my_4.2km_P1D-m_202511"          </span></span>
+<span><span class="co">#&gt; [37] "cmems_mod_med_phy-mld_my_4.2km_P1M-m_202511"          </span></span>
+<span><span class="co">#&gt; [38] "cmems_mod_med_phy-sal_my_4.2km_P1D-m_202511"          </span></span>
+<span><span class="co">#&gt; [39] "cmems_mod_med_phy-sal_my_4.2km_P1M-m_202511"          </span></span>
+<span><span class="co">#&gt; [40] "cmems_mod_med_phy-ssh_my_4.2km_P1D-m_202511"          </span></span>
+<span><span class="co">#&gt; [41] "cmems_mod_med_phy-ssh_my_4.2km_P1M-m_202511"          </span></span>
+<span><span class="co">#&gt; [42] "cmems_mod_med_phy-ssh_my_4.2km_PT1H-m_202511"         </span></span>
+<span><span class="co">#&gt; [43] "cmems_mod_med_phy-temp_my_4.2km_P1D-m_202511"         </span></span>
+<span><span class="co">#&gt; [44] "cmems_mod_med_phy-temp_my_4.2km_P1M-m_202511"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The layer <code>id</code>s encode the variable group and temporal resolution (e.g., <code>temp</code> for temperature, <code>P1M-m</code> for monthly means, <code>P1D-m</code> for daily). Version suffixes (e.g., <code>_202511</code>) can be omitted when downloading.</p>
 <p>Each layer carries rich variable metadata in its <code>cube:variables</code> property. The <a href="https://github.com/stac-extensions/datacube">STAC datacube extension</a> defines a base set of fields (<code>dimensions</code>, <code>type</code>, <code>unit</code>, <code>description</code>), and Copernicus Marine adds its own fields on top. Let’s examine the structure by drilling into the first variable of the first layer. <code>med_services</code> is a data frame with list-columns, where each row is a layer. <code>properties[[1]]</code> accesses the STAC metadata for the first layer, <code>cube:variables</code> is a named list of that layer’s variables, and <code>[[1]]</code> selects the first variable entry:</p>
@@ -1396,7 +1412,7 @@ Figure&nbsp;4: Bathymetry of the Gulf of Lion (depth in metres)
 <span><span class="co">#&gt;  $ colormapDiffInvert: logi FALSE</span></span>
 <span><span class="co">#&gt;  $ valueColor        : logi FALSE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The standard STAC datacube fields include <code>dimensions</code> (which axes the variable spans), <code>type</code> (<code>"data"</code> for measured values), and <code>unit</code>. In standard STAC, each variable is identified by its key name in the <code>cube:variables</code> map. Copernicus Marine also stores this as an explicit <code>id</code> field inside each variable object, along with other Copernicus-specific additions: <code>name$en</code> (a human-readable description), <code>standardName</code> (the <a href="https://cfconventions.org/Data/cf-standard-names/current/build/cf-standard-name-table.html">CF convention</a> name), and visualisation hints like <code>colormapId</code> and value ranges.</p>
+<p>The standard STAC datacube fields include <code>dimensions</code> (which axes the variable spans), <code>type</code> (<code>"data"</code> for measured values), and <code>unit</code>. In standard STAC, each variable is identified by its key name in the <code>cube:variables</code> map. Copernicus Marine also stores this as an explicit <code>id</code> field inside each variable object, along with other Copernicus-specific additions: <code>name$en</code> (a human-readable description), <code>standardName</code> (the <a href="https://cf-convention.github.io/cf-conventions/cf-conventions.html#_description_of_the_data">CF convention</a> name), and visualisation hints like <code>colormapId</code> and value ranges.</p>
 <p>We can use these fields to build a clear mapping of layers to their variables. Since we need bottom temperature, we filter to the temperature layers:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Extract variable details from each temperature layer</span></span>
@@ -1425,6 +1441,42 @@ Figure&nbsp;4: Bathymetry of the Gulf of Lion (depth in metres)
 <th style="text-align: left;">unit</th>
 </tr></thead>
 <tbody>
+<tr class="odd">
+<td style="text-align: left;">med-cmcc-tem-int-m_202112</td>
+<td style="text-align: left;">bottomT</td>
+<td style="text-align: left;">Sea floor potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">med-cmcc-tem-int-m_202112</td>
+<td style="text-align: left;">thetao</td>
+<td style="text-align: left;">Potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">med-cmcc-tem-rean-d_202012</td>
+<td style="text-align: left;">bottomT</td>
+<td style="text-align: left;">Sea floor potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">med-cmcc-tem-rean-d_202012</td>
+<td style="text-align: left;">thetao</td>
+<td style="text-align: left;">Potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">med-cmcc-tem-rean-m_202012</td>
+<td style="text-align: left;">bottomT</td>
+<td style="text-align: left;">Sea floor potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">med-cmcc-tem-rean-m_202012</td>
+<td style="text-align: left;">thetao</td>
+<td style="text-align: left;">Potential temperature</td>
+<td style="text-align: left;">degrees_C</td>
+</tr>
 <tr class="odd">
 <td style="text-align: left;">cmems_mod_med_phy-tem_my_4.2km_P1Y-m_202211</td>
 <td style="text-align: left;">bottomT</td>
@@ -2180,7 +2232,7 @@ Figure&nbsp;14: Body size distributions by taxonomic class within each biozone (
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<iframe src="biozone_bodysize_map.html" width="100%" height="600px" data-external="1">
+<iframe src="maps/biozone_bodysize_map.html" width="100%" height="600px" data-external="1">
 </iframe>
 </div>
 <p>The <code>popup</code> arguments use HTML strings to format the pop-up content. Tags like <code>&lt;b&gt;...&lt;/b&gt;</code> for bold text and <code>&lt;br&gt;</code> for line breaks give control over how information is presented when a user clicks a feature. This is a key advantage of <code>leaflet</code> over <code>tmap</code>: full HTML support in pop-ups means you can style text, add links, or even embed images. See the <a href="https://rstudio.github.io/leaflet/articles/popups.html">Leaflet for R documentation on popups and labels</a> for more examples.</p>

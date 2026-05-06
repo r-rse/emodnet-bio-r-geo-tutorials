@@ -62,5 +62,7 @@ For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 -   [EMODnet Biology Portal](https://emodnet.ec.europa.eu/en/biology)
 -   [EMODnet Main Portal](https://emodnet.ec.europa.eu/en)
+-   [EMODnet Data Product Catalogue (Geonetwork)](https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search)
+-   [EMODnet GitHub organisation](https://github.com/EMODnet)
 -   [emodnet.wfs Package](https://github.com/EMODnet/emodnet.wfs)
 -   [emodnet.wcs Package](https://github.com/EMODnet/emodnet.wcs)

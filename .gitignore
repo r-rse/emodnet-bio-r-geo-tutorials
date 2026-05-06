@@ -10,12 +10,12 @@ claude.md
 # Quarto
 _site/
 .quarto/
-_freeze/
 *_cache/
 *_files/
 
 # Generated during render
 tutorials/*.html
+!tutorials/maps/
 lib/
 
 # Cached data

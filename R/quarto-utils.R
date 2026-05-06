@@ -1,41 +1,24 @@
-#' Get Quarto project output directory
-#'
-#' Reads the `output-dir` setting from `_quarto.yml` if it exists.
-#' Returns NULL if not in a Quarto project or if `output-dir` is not set.
-#'
-#' @return Character string with output directory path, or NULL
-#' @export
-get_quarto_output_dir <- function() {
-  project_root <- quarto::find_project_root()
-  if (is.null(project_root)) {
-    return(NULL)
-  }
-  quarto_yml <- file.path(project_root, "_quarto.yml")
-  yaml::read_yaml(quarto_yml)$project$`output-dir`
-}
-
 #' Build output path for rendered artifacts
 #'
-#' Constructs the appropriate output path for files that need to be saved
-#' alongside rendered HTML (e.g., interactive widgets saved as standalone HTML).
-#' When rendering as a Quarto project, saves to the output directory; otherwise
-#' saves to the current directory.
+#' Constructs an absolute path anchored at the Quarto project root, so files
+#' written from inside a chunk (e.g. standalone htmlwidgets saved via
+#' `tmap_save()`) land in a stable location regardless of the chunk's working
+#' directory. Falls back to the bare filename when not inside a Quarto project.
 #'
 #' @param filename The filename to save (e.g., "interactive_map.html")
-#' @param subdir Optional subdirectory within the output dir (e.g., "tutorials")
+#' @param subdir Optional subdirectory relative to the project root
+#'   (e.g., "tutorials/maps"). Created if it does not already exist.
 #' @return Full path to save the file
 #' @export
 get_output_path <- function(filename, subdir = NULL) {
-  output_dir <- get_quarto_output_dir()
-
-  if (!is.null(output_dir)) {
-    project_root <- quarto::find_project_root()
-    if (!is.null(subdir)) {
-      file.path(project_root, output_dir, subdir, filename)
-    } else {
-      file.path(project_root, output_dir, filename)
-    }
-  } else {
-    filename
+  project_root <- quarto::find_project_root()
+  if (is.null(project_root)) {
+    return(filename)
   }
+
+  dir <- if (is.null(subdir)) project_root else file.path(project_root, subdir)
+  if (!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE)
+  }
+  file.path(dir, filename)
 }

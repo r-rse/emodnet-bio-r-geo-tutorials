@@ -63,13 +63,13 @@ By the end of this tutorial, you will be able to:
 
 | Coverage             | Service    | Description                   |
 |----------------------|------------|-------------------------------|
-| `emodnet__mean_2022` | bathymetry | Mean water depth (bathymetry) |
+| [`emodnet__mean_2022`](https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search#/metadata/18ff0d48-b203-4a65-94a9-5fd8b0ec35f6) | bathymetry | Mean water depth (bathymetry) |
 
 **External Sources:**
 
 | Source | Description |
 |----------------------------|--------------------------------------------|
-| [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from [MEDSEA_MULTIYEAR_PHY_006_004](https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description) reanalysis |
+| [Copernicus Marine Service](https://marine.copernicus.eu/) | Bottom temperature from [MEDSEA_MULTIYEAR_PHY_006_004](https://doi.org/10.48670/mds-00375) reanalysis |
 | [MOBS Database](https://github.com/crmcclain/MOBS_OPEN) | Marine Organism Body Size database [@mcclain2025] |
 
 ## Setup
@@ -677,12 +677,11 @@ EMODnet bathymetry uses the convention of **negative values for depth below sea 
 terra::global(bathymetry, range, na.rm = TRUE)
 ```
 
-The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We set land and sea-level cells (values >= 0) to `NA`, then negate the remaining values so that depth is expressed as a positive number (deeper = larger):
+The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We want to mask land and sea-level cells (values >= 0) to `NA` and negate the remaining values so that depth is expressed as a positive number (deeper = larger). We can do both in a single step using `terra::ifel()`, the terra equivalent of `dplyr::if_else()`: it takes a logical raster and returns a new raster with one value where the condition is `TRUE` and another where it is `FALSE`. Here the `TRUE` branch becomes `NA` (masking land) and the `FALSE` branch flips the sign of marine cells:
 
 ```{r}
 #| label: process-bathymetry
-bathymetry[bathymetry >= 0] <- NA
-depth <- -1 * bathymetry
+depth <- terra::ifel(bathymetry >= 0, NA, -bathymetry)
 names(depth) <- "depth_m"
 ```
 
@@ -757,7 +756,7 @@ cms_products_list() |>
   knitr::kable()
 ```
 
-A Copernicus **product** plays the same role as an EMODnet **service** (like `"biology"` or `"bathymetry"`): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product ([MEDSEA_MULTIYEAR_PHY_006_004](https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description)) provides \~4.2 km resolution compared to \~8 km for the global product.
+A Copernicus **product** plays the same role as an EMODnet **service** (like `"biology"` or `"bathymetry"`): it is a thematic collection that groups related layers together. For small study areas, regional products typically offer higher resolution and are specifically validated for that region. For our Gulf of Lion study, the Mediterranean product ([MEDSEA_MULTIYEAR_PHY_006_004](https://doi.org/10.48670/mds-00375)) provides \~4.2 km resolution compared to \~8 km for the global product.
 
 ### Browsing Available Variables
 
@@ -797,7 +796,7 @@ Each layer carries rich variable metadata in its `cube:variables` property. The 
 str(med_services$properties[[1]]$`cube:variables`[[1]], max.level = 2)
 ```
 
-The standard STAC datacube fields include `dimensions` (which axes the variable spans), `type` (`"data"` for measured values), and `unit`. In standard STAC, each variable is identified by its key name in the `cube:variables` map. Copernicus Marine also stores this as an explicit `id` field inside each variable object, along with other Copernicus-specific additions: `name$en` (a human-readable description), `standardName` (the [CF convention](https://cfconventions.org/Data/cf-standard-names/current/build/cf-standard-name-table.html) name), and visualisation hints like `colormapId` and value ranges.
+The standard STAC datacube fields include `dimensions` (which axes the variable spans), `type` (`"data"` for measured values), and `unit`. In standard STAC, each variable is identified by its key name in the `cube:variables` map. Copernicus Marine also stores this as an explicit `id` field inside each variable object, along with other Copernicus-specific additions: `name$en` (a human-readable description), `standardName` (the [CF convention](https://cf-convention.github.io/cf-conventions/cf-conventions.html#_description_of_the_data) name), and visualisation hints like `colormapId` and value ranges.
 
 We can use these fields to build a clear mapping of layers to their variables. Since we need bottom temperature, we filter to the temperature layers:
 
@@ -1582,11 +1581,11 @@ interactive_map <- leaflet() |>
 # Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
 htmlwidgets::saveWidget(
   interactive_map,
-  get_output_path("biozone_bodysize_map.html", "tutorials"),
+  get_output_path("biozone_bodysize_map.html", "tutorials/maps"),
   selfcontained = TRUE
 )
 
-knitr::include_url("biozone_bodysize_map.html", height = "600px")
+knitr::include_url("maps/biozone_bodysize_map.html", height = "600px")
 ```
 
 The `popup` arguments use HTML strings to format the pop-up content. Tags like `<b>...</b>` for bold text and `<br>` for line breaks give control over how information is presented when a user clicks a feature. This is a key advantage of `leaflet` over `tmap`: full HTML support in pop-ups means you can style text, add links, or even embed images. See the [Leaflet for R documentation on popups and labels](https://rstudio.github.io/leaflet/articles/popups.html) for more examples.

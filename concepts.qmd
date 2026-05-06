@@ -242,15 +242,15 @@ Before downloading data, WCS services provide metadata about available coverages
 -   Habitat suitability models
 -   Gridded biodiversity metrics
 
-### Advantages of Web Services
+### Finding Authoritative Product Documentation
 
-Compared to direct file downloads, web services offer:
+The metadata exposed by WFS `GetCapabilities` and WCS `DescribeCoverage` (titles, abstracts, attributes) is publisher-dependent: sometimes it carries full product descriptions, often it carries only a short summary. For the authoritative, scientifically detailed account of an EMODnet data product (methodology, formulas, source datasets, units, version history), the canonical references live elsewhere:
 
--   **On-demand access** - Get only the data you need, when you need it
--   **Spatial filtering** - Request data for specific regions using bounding boxes
--   **Temporal subsetting** - Extract data for particular time periods
--   **Always current** - Access the latest data without managing downloads
--   **Reproducibility** - Script your data access for transparent, repeatable workflows
+-   **[EMODnet Data Product Catalogue (Geonetwork)](https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search)** -- Each EMODnet data product has a metadata record describing how it was built and where the underlying data came from. Searchable by keyword, organisation, and theme.
+-   **GitHub product repositories** -- Many EMODnet products (especially in Biology and Seabed Habitats) publish their full processing code openly under the [EMODnet GitHub organisation](https://github.com/EMODnet). These contain the methods, parameters, and references behind the gridded products.
+-   **EMODnet thematic portal pages** -- [Biology](https://emodnet.ec.europa.eu/en/biology), [Bathymetry](https://emodnet.ec.europa.eu/en/bathymetry), [Seabed Habitats](https://emodnet.ec.europa.eu/en/seabed-habitats), [Human Activities](https://emodnet.ec.europa.eu/en/human-activities), etc., each maintain product index and news pages with user-facing descriptions.
+
+When working with a layer or coverage in R, start with the in-API metadata for quick orientation; then consult the catalogue or product repository for definitions you can rely on for analysis.
 
 ## Coordinate Reference Systems (CRS)
 

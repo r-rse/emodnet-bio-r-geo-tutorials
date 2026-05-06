@@ -37,7 +37,7 @@ By the end of this tutorial, you will be able to:
 
 | Coverage ID | Description |
 |-------------|-------------|
-| `Emodnetbio__cal_fin_*` | *Calanus finmarchicus* - key prey for gadoid larvae |
+| [`Emodnetbio__cal_fin_*`](https://emodnet.ec.europa.eu/geonetwork/srv/eng/catalog.search#/metadata/6d617269-6e65-696e-666f-000000008220) | *Calanus finmarchicus* - key prey for gadoid larvae |
 | `Emodnetbio__tem_lon_*` | *Temora longicornis* - important coastal copepod |
 | `Emodnetbio__tot_lar_*` | Total large copepods |
 | `Emodnetbio__tot_sma_*` | Total small copepods |
@@ -1031,10 +1031,10 @@ interactive_map <- tm_basemap("Esri.WorldGrayCanvas", group.control = "none") +
 # Save to standalone HTML to avoid pandoc hanging on large htmlwidgets
 tmap_save(
   interactive_map,
-  get_output_path("copepod_spawning_map.html", "tutorials")
+  get_output_path("copepod_spawning_map.html", "tutorials/maps")
 )
 
-knitr::include_url("copepod_spawning_map.html", height = "600px")
+knitr::include_url("maps/copepod_spawning_map.html", height = "600px")
 ```
 
 ::: {.callout-tip}

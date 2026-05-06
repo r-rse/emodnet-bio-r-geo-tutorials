@@ -9,14 +9,15 @@ get_output_path(filename, subdir = NULL)
 \arguments{
 \item{filename}{The filename to save (e.g., "interactive_map.html")}
 
-\item{subdir}{Optional subdirectory within the output dir (e.g., "tutorials")}
+\item{subdir}{Optional subdirectory relative to the project root
+(e.g., "tutorials/maps"). Created if it does not already exist.}
 }
 \value{
 Full path to save the file
 }
 \description{
-Constructs the appropriate output path for files that need to be saved
-alongside rendered HTML (e.g., interactive widgets saved as standalone HTML).
-When rendering as a Quarto project, saves to the output directory; otherwise
-saves to the current directory.
+Constructs an absolute path anchored at the Quarto project root, so files
+written from inside a chunk (e.g. standalone htmlwidgets saved via
+\code{tmap_save()}) land in a stable location regardless of the chunk's working
+directory. Falls back to the bare filename when not inside a Quarto project.
 }

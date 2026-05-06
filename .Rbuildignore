@@ -46,3 +46,6 @@
 
 # Development artifacts
 ^\.attic$
+^Rplots\.pdf$
+^\.lycheeignore$
+^data-raw$

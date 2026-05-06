@@ -1172,8 +1172,8 @@ These techniques for combining vector features with raster surfaces are widely a
 
 ## Further Resources
 
--   [EMODnet Biology](https://www.emodnet-biology.eu/): Source portal for the biodiversity data used here
--   [EMODnet Bathymetry](https://www.emodnet-bathymetry.eu/): Source portal for the depth data
+-   [EMODnet Biology](https://emodnet.ec.europa.eu/en/biology): Source for the biodiversity data used here
+-   [EMODnet Bathymetry](https://emodnet.ec.europa.eu/en/bathymetry): Source for the depth data
 -   [emodnet.wfs documentation](https://emodnet.github.io/emodnet.wfs/): Full package reference for WFS access
 -   [emodnet.wcs documentation](https://emodnet.github.io/emodnet.wcs/): Full package reference for WCS access
 -   [terra::extract() documentation](https://rspatial.github.io/terra/reference/extract.html): Details on raster value extraction methods

@@ -677,12 +677,11 @@ EMODnet bathymetry uses the convention of **negative values for depth below sea 
 terra::global(bathymetry, range, na.rm = TRUE)
 ```
 
-The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We set land and sea-level cells (values >= 0) to `NA`, then negate the remaining values so that depth is expressed as a positive number (deeper = larger):
+The negative minimum confirms deep marine areas. The positive maximum (~1,900 m) may seem surprising for a marine study area, but our bounding box extends to 44°N, which reaches well inland over southern France into the foothills of the Pyrenees and Massif Central. EMODnet bathymetry is a digital terrain model that covers both sea and land, so these terrestrial elevations are included in the download. We want to mask land and sea-level cells (values >= 0) to `NA` and negate the remaining values so that depth is expressed as a positive number (deeper = larger). We can do both in a single step using `terra::ifel()`, the terra equivalent of `dplyr::if_else()`: it takes a logical raster and returns a new raster with one value where the condition is `TRUE` and another where it is `FALSE`. Here the `TRUE` branch becomes `NA` (masking land) and the `FALSE` branch flips the sign of marine cells:
 
 ```{r}
 #| label: process-bathymetry
-bathymetry[bathymetry >= 0] <- NA
-depth <- -1 * bathymetry
+depth <- terra::ifel(bathymetry >= 0, NA, -bathymetry)
 names(depth) <- "depth_m"
 ```
 

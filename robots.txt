@@ -1,1 +1,1 @@
-Sitemap: https://r-rse.github.io/emodnet-bio-r-geo-tutorials/sitemap.xml
+Sitemap: https://emodnet.github.io/emodnet-bio-r-geo-tutorials/sitemap.xml

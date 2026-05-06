@@ -108,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo light-content"><img src="./assets/images/eu-logo-inverted.png" alt="European Commission Logo" class="navbar-logo dark-content"></a>
+    <img src="./assets/images/emodnet-logo.png" alt="EMODnet Logo" class="navbar-logo light-content"><img src="./assets/images/emodnet-logo.png" alt="EMODnet Logo" class="navbar-logo dark-content"></a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">EMODnet Biology Geospatial R Tutorials</span>
     </a>
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/EMODnet/emodnet-bio-r-geo-tutorials"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -274,7 +274,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/concepts.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/edit/main/concepts.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
@@ -391,7 +391,7 @@ Figure&nbsp;2: Web service request flow from R to EMODnet data services
 </div>
 </section><section id="ogc-standards-and-spatial-data-types" class="level3"><h3 class="anchored" data-anchor-id="ogc-standards-and-spatial-data-types">OGC Standards and Spatial Data Types</h3>
 <p>The <strong>Open Geospatial Consortium (OGC)</strong> has developed different standard protocols optimized for different types of spatial data. The protocols, underlying database technologies, and data formats all differ based on whether you’re working with vector or raster data.</p>
-<p><a href="./about.html#emodnet-web-services">EMODnet</a> provides two primary types of OGC-compliant geospatial web services, each designed for a specific spatial data type:</p>
+<p><a href="https://emodnet.ec.europa.eu/en/emodnet-web-service-documentation">EMODnet</a> provides two primary types of OGC-compliant geospatial web services, each designed for a specific spatial data type:</p>
 </section><section id="wfs-web-feature-service" class="level3"><h3 class="anchored" data-anchor-id="wfs-web-feature-service">WFS (Web Feature Service)</h3>
 <p>WFS delivers <strong>vector data</strong>: discrete geographic features with attributes.</p>
 <p><strong>Key characteristics:</strong></p>
@@ -436,7 +436,7 @@ Figure&nbsp;2: Web service request flow from R to EMODnet data services
 <li>
 <strong>GitHub product repositories</strong> – Many EMODnet products (especially in Biology and Seabed Habitats) publish their full processing code openly under the <a href="https://github.com/EMODnet">EMODnet GitHub organisation</a>. These contain the methods, parameters, and references behind the gridded products.</li>
 <li>
-<strong>EMODnet thematic portal pages</strong> – <a href="https://emodnet.ec.europa.eu/en/biology">Biology</a>, <a href="https://emodnet.ec.europa.eu/en/bathymetry">Bathymetry</a>, <a href="https://emodnet.ec.europa.eu/en/seabed-habitats">Seabed Habitats</a>, <a href="https://emodnet.ec.europa.eu/en/human-activities">Human Activities</a>, etc., each maintain product index and news pages with user-facing descriptions.</li>
+<strong>EMODnet thematic service pages</strong> – <a href="https://emodnet.ec.europa.eu/en/biology">Biology</a>, <a href="https://emodnet.ec.europa.eu/en/bathymetry">Bathymetry</a>, <a href="https://emodnet.ec.europa.eu/en/seabed-habitats">Seabed Habitats</a>, <a href="https://emodnet.ec.europa.eu/en/human-activities">Human Activities</a>, etc., each maintain product index and news pages with user-facing descriptions.</li>
 </ul>
 <p>When working with a layer or coverage in R, start with the in-API metadata for quick orientation; then consult the catalogue or product repository for definitions you can rely on for analysis.</p>
 </section></section><section id="coordinate-reference-systems-crs" class="level2"><h2 class="anchored" data-anchor-id="coordinate-reference-systems-crs">Coordinate Reference Systems (CRS)</h2>
@@ -1049,7 +1049,7 @@ Table&nbsp;1
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/r-rse\.github\.io\/emodnet-bio-r-geo-tutorials");
+        var filterRegex = new RegExp("https:\/\/emodnet\.github\.io\/emodnet-bio-r-geo-tutorials");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1389,10 +1389,10 @@ Table&nbsp;1
 <p><img src="assets/images/emodnet-logo.png" height="60"></p>
 </div>   
     <div class="nav-footer-center">
-<p>© 2025 [COPYRIGHT HOLDER / PROJECT FUNDER]</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/edit/main/concepts.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/r-rse/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<p>© 2025 CINEA</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/edit/main/concepts.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/EMODnet/emodnet-bio-r-geo-tutorials/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
-<p><a href="https://emodnet.ec.europa.eu/en">EMODnet Portal</a> | <a href="https://emodnet.ec.europa.eu/en/biology">Biology Data</a></p>
+<p><a href="https://emodnet.ec.europa.eu/en">EMODnet Portal</a> | <a href="https://emodnet.ec.europa.eu/geoviewer/?layers=6d617269-6e65-696e-666f-000000001510:1:1&amp;basemap=ebwbl&amp;active=12639&amp;bounds=-7305078.789731367,3082466.8149999995,10259119.945731366,11459766.29&amp;filters=&amp;projection=EPSG:3857">Biology Data</a></p>
 </div>
   </div>
 </footer>
